@@ -12,50 +12,19 @@
       companion-asset="{{companion.asset}}"
       companion-name="{{companion.name}}"
       message="{{companion.transientActive && companion.transientMessage ? companion.transientMessage : worldState.message}}"
-      header-text="{{hasPlan ? planDurationDays + '天轻旅 · 第' + planDay + '天' : '我的小轻花园 · 第' + planDay + '天'}}"
-      subtitle-text="{{dateCN}}"
+      header-text="{{worldHeaderText}}"
+      subtitle-text="{{worldSubtitleText}}"
       energy-text="{{companion.energyBandText}} 轻能量"
       settings-visible="{{showPlanSettingsEntry}}"
+      discoveries="{{worldDiscoveries}}"
+      discovery-count="{{discoveryCount}}"
       bind:companiontap="onClickCompanion"
       bind:journeytap="onOpenJourney"
       bind:settingtap="onOpenPlanSettings"
+      bind:discoverytap="onWorldDiscoveryTap"
+      bind:discoveriesentry="onOpenDiscoveries"
+      bind:nextunlocktap="onNextUnlockTap"
     />
-  </view>
-
-  <!-- V10：旧用户"加入计划"提示卡（无 plan 且未 dismiss 时显示） -->
-  <view wx:if="{{joinPlanPrompt.visible}}" class="section join-plan-card">
-    <view class="jp-title">要不要把接下来的记录加入一个28天计划？</view>
-    <view class="jp-sub muted">每天完成一点点就够了。</view>
-    <view class="jp-actions">
-      <view class="btn-primary btn-sm" bindtap="onStartJoinPlan" hover-class="btn-primary-hover">
-        <text>开始计划</text>
-      </view>
-      <view class="btn-link" bindtap="onDismissJoinPlan"><text>暂时不要</text></view>
-    </view>
-  </view>
-
-  <!-- V10：计划完成入口（planDay > durationDays 时显示，优先级高于周总结入口） -->
-  <view
-    wx:if="{{planCompletedEntry.visible}}"
-    class="section entry-card completed-card"
-    bindtap="onOpenPlanSummary"
-    hover-class="entry-card-hover"
-  >
-    <view class="entry-text">{{planCompletedEntry.text}}</view>
-    <view class="entry-sub muted">看看这 {{planDurationDays}} 天发生了什么</view>
-    <view class="entry-arrow">›</view>
-  </view>
-
-  <!-- V10：周总结入口（已生成但未查看的周总结） -->
-  <view
-    wx:if="{{weeklySummaryEntry.visible}}"
-    class="section entry-card weekly-card"
-    bindtap="onOpenWeeklySummary"
-    hover-class="entry-card-hover"
-  >
-    <view class="entry-text">{{weeklySummaryEntry.text}}</view>
-    <view class="entry-sub muted">点击查看</view>
-    <view class="entry-arrow">›</view>
   </view>
 
   <!-- V12：每日 3 任务（核心动作） -->
@@ -64,6 +33,12 @@
       <text class="section-title">今天的3件小事</text>
       <text class="daily-count">{{companion.completedCount}} / 3</text>
     </view>
+    <view wx:if="{{worldState.todayAllCompleted}}" class="tasks-complete-compact">
+      <block wx:for="{{dailyTasks}}" wx:for-item="task" wx:key="key">
+        <view class="compact-task"><text>{{task.emoji}}</text><text>{{task.title}}</text><text class="compact-check">✓</text></view>
+      </block>
+    </view>
+    <block wx:else>
     <block wx:for="{{dailyTasks}}" wx:for-item="task" wx:key="key">
       <view
         class="task-row {{task.completed ? 'task-done' : 'task-todo'}}"
@@ -96,10 +71,35 @@
         </view>
       </view>
     </block>
+    </block>
     <view wx:if="{{allDailyCompleteBonusAwarded}}" class="bonus-row">
       <text class="bonus-icon">✨</text>
       <text class="bonus-text">今天的三件小事都完成了，额外 +20 能量</text>
     </view>
+  </view>
+
+  <!-- 计划/总结信息位于任务之后，避免与世界争夺第一屏。 -->
+  <view wx:if="{{joinPlanPrompt.visible}}" class="section join-plan-card">
+    <view class="jp-title">要不要把接下来的记录加入一个28天计划？</view>
+    <view class="jp-sub muted">每天完成一点点就够了。</view>
+    <view class="jp-actions">
+      <view class="btn-primary btn-sm" bindtap="onStartJoinPlan" hover-class="btn-primary-hover"><text>开始计划</text></view>
+      <view class="btn-link" bindtap="onDismissJoinPlan"><text>暂时不要</text></view>
+    </view>
+  </view>
+
+  <view wx:if="{{planCompletedEntry.visible}}" class="section completed-journey-compact">
+    <view class="completed-summary" bindtap="onOpenPlanSummary" hover-class="entry-card-hover">
+      <text class="completed-summary-title">{{planCompletedEntry.text}}</text>
+      <text class="completed-summary-link">查看{{planDurationDays}}天总结 ›</text>
+    </view>
+    <view class="new-journey-link" bindtap="onStartNewJourney">开始新的旅程 ›</view>
+  </view>
+
+  <view wx:if="{{weeklySummaryEntry.visible}}" class="section entry-card weekly-card" bindtap="onOpenWeeklySummary" hover-class="entry-card-hover">
+    <view class="entry-text">{{weeklySummaryEntry.text}}</view>
+    <view class="entry-sub muted">点击查看</view>
+    <view class="entry-arrow">›</view>
   </view>
 
   <!-- 现实奖励保留为一行，不与世界争夺首屏 -->
@@ -368,6 +368,29 @@
           hover-class="btn-primary-hover"
         ><text>继续出发</text></view>
       </view>
+    </view>
+  </view>
+
+  <!-- V13.5：新发现轻提示；最多一次展示一个。 -->
+  <view wx:if="{{discoveryNotice.visible}}" class="discovery-notice-mask" catchtap="onCloseDiscoveryNotice">
+    <view class="discovery-notice" catchtap="stopPropagation">
+      <text class="discovery-notice-emoji">{{discoveryNotice.emoji}}</text>
+      <view class="discovery-notice-copy">
+        <text class="discovery-notice-kicker">花园里有了新发现</text>
+        <text class="discovery-notice-title">{{discoveryNotice.name}}</text>
+        <text class="discovery-notice-message">小轻：“{{discoveryNotice.companionMessage}}”</text>
+      </view>
+      <view class="discovery-notice-button" bindtap="onCloseDiscoveryNotice">知道啦</view>
+    </view>
+  </view>
+
+  <view wx:if="{{discoveryDetail.visible}}" class="welcome-mask" catchtap="onCloseDiscoveryDetail">
+    <view class="welcome-card discovery-detail-card" catchtap="stopPropagation">
+      <view class="discovery-detail-emoji">{{discoveryDetail.emoji}}</view>
+      <view class="welcome-title">{{discoveryDetail.name}}</view>
+      <view class="discovery-detail-date">{{discoveryDetail.unlockedAtText}}</view>
+      <view class="welcome-body">{{discoveryDetail.description}}</view>
+      <view class="welcome-actions"><view class="btn-primary" bindtap="onCloseDiscoveryDetail">知道啦</view></view>
     </view>
   </view>
 

@@ -1,0 +1,28 @@
+<view class="page">
+  <view class="intro">
+    <view class="title">我的发现</view>
+    <view class="subtitle">花园里有些变化，不需要催促。</view>
+    <view class="count">已经遇见 {{unlockedCount}} / 6</view>
+  </view>
+
+  <view class="grid">
+    <block wx:for="{{items}}" wx:key="id">
+      <view class="discovery-card {{item.unlocked ? 'unlocked' : 'locked'}}" data-id="{{item.id}}" bindtap="onItemTap" hover-class="card-hover">
+        <view class="emoji">{{item.emoji}}</view>
+        <view class="name">{{item.name}}</view>
+        <view wx:if="{{item.unlocked}}" class="date">{{item.discoveredAtText}}</view>
+        <view wx:else class="date">等待相遇</view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{selected}}" class="mask" catchtap="onCloseDetail">
+    <view class="detail" catchtap="stopPropagation">
+      <view class="detail-emoji">{{selected.emoji}}</view>
+      <view class="detail-title">{{selected.name}}</view>
+      <view wx:if="{{selected.discoveredAtText}}" class="detail-date">{{selected.discoveredAtText}}</view>
+      <view class="detail-copy">{{selected.description}}</view>
+      <view class="detail-button" bindtap="onCloseDetail">知道啦</view>
+    </view>
+  </view>
+</view>

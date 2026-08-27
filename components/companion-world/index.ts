@@ -12,6 +12,8 @@ Component({
     subtitleText: { type: String, value: '' },
     energyText: { type: String, value: '' },
     settingsVisible: { type: Boolean, value: false },
+    discoveries: { type: Array, value: [] },
+    discoveryCount: { type: Number, value: 0 },
   },
 
   methods: {
@@ -23,6 +25,15 @@ Component({
     },
     onSettingsTap() {
       this.triggerEvent('settingtap');
+    },
+    onDiscoveryTap(e: any) {
+      this.triggerEvent('discoverytap', { discoveryId: e?.currentTarget?.dataset?.id || '' });
+    },
+    onDiscoveriesEntryTap() {
+      this.triggerEvent('discoveriesentry');
+    },
+    onNextUnlockTap() {
+      this.triggerEvent('nextunlocktap');
     },
   },
 });

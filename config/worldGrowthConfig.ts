@@ -32,7 +32,7 @@ export const WORLD_ELEMENT_CHANGE_LABELS: Record<WorldElementType, string> = {
 };
 
 export const WORLD_JOURNEY_LANDMARKS: WorldJourneyLandmark[] = [
-  { visible: true, dayRequired: 7, title: '森林入口', emoji: '🌲', hint: '去看看' },
+  { visible: true, dayRequired: 7, title: '森林入口', emoji: '🌲', hint: '已经可以前往' },
   { visible: true, dayRequired: 14, title: '湖边', emoji: '💧', hint: '去看看' },
   { visible: true, dayRequired: 21, title: '星光营地', emoji: '🌙', hint: '去看看' },
   { visible: true, dayRequired: 28, title: '山顶', emoji: '⛰️', hint: '去看看' },

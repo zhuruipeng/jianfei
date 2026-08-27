@@ -339,6 +339,12 @@ export const USAGE_EVENT_NAMES = {
   // 最小性能（不发送云端，只本地统计）
   PERF_APP_LAUNCH:        'perf_app_launch_ms',        // App 启动耗时
   PERF_MEAL_SAVE:         'perf_meal_save_ms',         // 餐次保存耗时（本地 setStorage 部分）
+
+  // V13.5 小轻世界：只记录非敏感的展示/发现行为
+  WORLD_FEEDBACK_SHOWN:      'world_feedback_shown',
+  WORLD_DISCOVERY_UNLOCKED:  'world_discovery_unlocked',
+  WORLD_DISCOVERY_VIEWED:    'world_discovery_viewed',
+  NEXT_UNLOCK_VIEWED:        'next_unlock_viewed',
 } as const;
 export type UsageEventName = (typeof USAGE_EVENT_NAMES)[keyof typeof USAGE_EVENT_NAMES];
 
@@ -777,12 +783,18 @@ export type CompanionEventNameV2 =
 // =========================================================================
 
 export type WorldElementType = 'plant' | 'path' | 'water';
+export type WorldUnlockType = WorldElementType | 'journey';
 export type WorldLevel = 0 | 1 | 2 | 3 | 4;
 
 export interface WorldUnlock {
-  type: WorldElementType;
-  nextLevel: WorldLevel;
-  targetDays: number;
+  type: WorldUnlockType;
+  remaining: number;
+  title: string;
+  description: string;
+  imageKey?: string;
+  nextLevel?: WorldLevel;
+  targetDays?: number;
+  /** 兼容 V13 组件字段。 */
   remainingDays: number;
   text: string;
 }
@@ -807,6 +819,8 @@ export interface WorldState {
   mealActiveDays: number;
   exerciseGoalDays: number;
   waterGoalDays: number;
+  meaningfulDays: number;
+  allCompleteDays: number;
 
   todayMealCompleted: boolean;
   todayExerciseCompleted: boolean;
@@ -821,9 +835,13 @@ export interface WorldState {
 
 /** 仅用于避免重复播放动画，不是业务完成态。 */
 export interface WorldUiState {
+  schemaVersion: 2;
   lastSeenPlantLevel: WorldLevel;
   lastSeenPathLevel: WorldLevel;
   lastSeenWaterLevel: WorldLevel;
+  lastMealFeedbackDate?: string;
+  lastExerciseFeedbackDate?: string;
+  lastWaterFeedbackDate?: string;
   lastAllCompleteAnimationDate?: string;
 }
 
@@ -845,3 +863,35 @@ export interface WorldTransition {
   message: string;
   durationMs: number;
 }
+
+// =========================================================================
+// V13.5：花园发现（资格来自真实历史；只持久化“已经发现”这一展示结果）
+// =========================================================================
+
+export type WorldDiscoveryId = 'butterfly' | 'mushroom' | 'bird' | 'bench' | 'firefly' | 'rainbow';
+export type WorldDiscoveryConditionType =
+  | 'meal_days'
+  | 'exercise_days'
+  | 'meaningful_days'
+  | 'all_complete_days'
+  | 'plan_day';
+
+export interface WorldDiscoveryConfigItem {
+  id: WorldDiscoveryId;
+  name: string;
+  emoji: string;
+  description: string;
+  companionMessage: string;
+  conditionType: WorldDiscoveryConditionType;
+  threshold: number;
+  imageKey: string;
+  sceneClass: string;
+}
+
+export interface WorldDiscoveryState {
+  discoveryId: WorldDiscoveryId;
+  unlockedAt: string;
+  hasSeenUnlockAnimation: boolean;
+}
+
+export const STORAGE_KEY_WORLD_DISCOVERIES = 'world_discoveries';

@@ -11,7 +11,8 @@
     "pages/plan-settings/plan-settings",
     "pages/weekly-summary/weekly-summary",
     "pages/plan-summary/plan-summary",
-    "pages/journey/journey"
+    "pages/journey/journey",
+    "pages/discoveries/discoveries"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

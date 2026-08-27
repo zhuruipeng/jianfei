@@ -38,6 +38,7 @@ import {
   STORAGE_KEY_JOURNEY_CARDS_UNLOCKED_V1,
   // V13：世界动画已读状态（业务状态不存储）
   STORAGE_KEY_WORLD_UI_STATE,
+  STORAGE_KEY_WORLD_DISCOVERIES,
 } from '../types/index';
 import { isDevEnv } from './devService';
 
@@ -257,6 +258,7 @@ export function clearAllTestData(): ClearAllTestDataResult {
       STORAGE_KEY_JOURNEY_CARDS_UNLOCKED_V1,
       // V13：世界动画缓存
       STORAGE_KEY_WORLD_UI_STATE,
+      STORAGE_KEY_WORLD_DISCOVERIES,
     ];
     for (const k of list) {
       try { wx.removeStorageSync(k); clearedKeys += 1; } catch { /* ignore */ }

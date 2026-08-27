@@ -20,6 +20,7 @@ import {
   GROWTH_CONFIG,
   type WorldState,
   type WorldTransition,
+  type WorldDiscoveryId,
 } from '../../types/index';
 import {
   getTodayString,
@@ -102,13 +103,22 @@ import {
 } from '../../utils/companionMessages';
 import {
   buildWorldState,
-  buildWorldTransition,
+  buildWorldFeedbackQueue,
+  markWorldFeedbackShown,
   syncWorldUiState,
 } from '../../services/worldService';
 import {
   getWorldAssetSet,
   type WorldAssetSet,
 } from '../../config/worldGrowthConfig';
+import {
+  markWorldDiscoverySeen,
+  syncWorldDiscoveries,
+  trackWorldDiscoveryViewed,
+  type WorldDiscoveryView,
+} from '../../services/discoveryService';
+import { trackEvent } from '../../services/usageService';
+import { USAGE_EVENT_NAMES } from '../../types/index';
 
 // ----------------------------- 辅助类型 -----------------------------
 interface NextRewardCard {
@@ -249,6 +259,8 @@ interface IndexPageData {
   planProgressPercent: number;   // 时间进度 0~100
   planProgressText: string;      // "6 / 28天"
   showPlanSettingsEntry: boolean; // hero 右上角 ··· 入口
+  worldHeaderText: string;
+  worldSubtitleText: string;
 
   // V10：周总结入口 / 计划完成入口 / 加入计划提示
   weeklySummaryEntry: WeeklySummaryEntry;
@@ -311,6 +323,20 @@ interface IndexPageData {
   worldTransition: WorldTransition;
   worldAssets: WorldAssetSet;
   showMoreHomeDetails: boolean;
+  worldDiscoveries: WorldDiscoveryView[];
+  discoveryCount: number;
+  discoveryNotice: DiscoveryNoticeVM;
+  discoveryDetail: DiscoveryNoticeVM;
+}
+
+interface DiscoveryNoticeVM {
+  visible: boolean;
+  discoveryId: WorldDiscoveryId | '';
+  emoji: string;
+  name: string;
+  description: string;
+  companionMessage: string;
+  unlockedAtText: string;
 }
 
 const EMPTY_NEXT_REWARD: NextRewardCard = {
@@ -375,6 +401,9 @@ const EMPTY_LEVELUP: LevelUpModalVM = {
   assetAfter: _emptyAssetAfter(), journeyCardsUnlocked: [], banner: '',
 };
 const EMPTY_INTRO: IntroCardVM = { visible: false, welcomeBonusGivenNow: false };
+const EMPTY_DISCOVERY_NOTICE: DiscoveryNoticeVM = {
+  visible: false, discoveryId: '', emoji: '', name: '', description: '', companionMessage: '', unlockedAtText: '',
+};
 
 function emptyWorldState(): WorldState {
   return {
@@ -384,6 +413,8 @@ function emptyWorldState(): WorldState {
     mealActiveDays: 0,
     exerciseGoalDays: 0,
     waterGoalDays: 0,
+    meaningfulDays: 0,
+    allCompleteDays: 0,
     todayMealCompleted: false,
     todayExerciseCompleted: false,
     todayWaterCompleted: false,
@@ -474,6 +505,8 @@ Page({
     planProgressPercent: 0,
     planProgressText: '',
     showPlanSettingsEntry: false,
+    worldHeaderText: '我的小轻花园 · 第1天',
+    worldSubtitleText: '',
 
     weeklySummaryEntry: { visible: false, planId: '', weekNumber: 0, text: '' },
     planCompletedEntry: { visible: false, planId: '', text: '' },
@@ -522,6 +555,10 @@ Page({
     worldTransition: emptyWorldTransition(),
     worldAssets: getWorldAssetSet(0, 0, 0),
     showMoreHomeDetails: false,
+    worldDiscoveries: [],
+    discoveryCount: 0,
+    discoveryNotice: EMPTY_DISCOVERY_NOTICE,
+    discoveryDetail: EMPTY_DISCOVERY_NOTICE,
   } as IndexPageData,
 
   today: '' as string,
@@ -571,6 +608,8 @@ Page({
     try {
       const timer = (this as any).__worldTransitionTimer;
       if (timer) clearTimeout(timer);
+      const discoveryTimer = (this as any).__discoveryNoticeTimer;
+      if (discoveryTimer) clearTimeout(discoveryTimer);
     } catch { /* ignore */ }
   },
 
@@ -592,6 +631,8 @@ Page({
     let planProgressText = '';
     let hasPlan = false;
     let showPlanSettingsEntry = false;
+    let worldHeaderText = '我的小轻花园 · 第1天';
+    let worldSubtitleText = formatDateCN(today);
     const weeklySummaryEntry: WeeklySummaryEntry = { visible: false, planId: '', weekNumber: 0, text: '' };
     const planCompletedEntry: PlanCompletedEntry = { visible: false, planId: '', text: '' };
     const joinPlanPrompt: JoinPlanPrompt = { visible: false };
@@ -626,8 +667,12 @@ Page({
       if (planDay > planDurationDays) {
         planCompletedEntry.visible = true;
         planCompletedEntry.planId = plan.id;
-        planCompletedEntry.text = `🎉 ${plan.durationDays}天计划完成`;
+        planCompletedEntry.text = '🎉 第一段轻旅完成';
+        worldHeaderText = `${plan.durationDays}天轻旅完成 🎉`;
+        worldSubtitleText = '今天也可以继续一起成长';
+        showPlanSettingsEntry = false;
       } else {
+        worldHeaderText = `${plan.durationDays}天轻旅 · 第${planDay}天`;
         // 进入首页时幂等生成已结束的完整周总结（completedWeeks = floor((planDay-1)/7)）
         try {
           weeklySummaryService.ensureWeeklySummariesUpTo(plan, planDay);
@@ -659,6 +704,7 @@ Page({
       }
       // planDay 兜底用 firstLaunchDate（保留旧 hero 文案"第N天"）
       planDay = calculatePlanDay(firstDate, today);
+      worldHeaderText = `我的小轻花园 · 第${planDay}天`;
     }
 
     const msg = pickRandom(ENCOURAGE_MESSAGES);
@@ -773,9 +819,18 @@ Page({
       : null;
     const worldState = buildWorldState({ date: today, planDay });
     const worldPresentation = syncWorldUiState(worldState, today);
-    const worldTransition = buildWorldTransition(previousWorldState, worldState, worldPresentation);
+    const worldFeedbackQueue = buildWorldFeedbackQueue(previousWorldState, worldState, worldPresentation, today);
+    const worldTransition = emptyWorldTransition();
     (this as any).__worldStateReady = true;
     const worldAssets = getWorldAssetSet(worldState.plantLevel, worldState.pathLevel, worldState.waterLevel);
+    const discoveryResult = syncWorldDiscoveries({
+      mealDays: worldState.mealActiveDays,
+      exerciseDays: worldState.exerciseGoalDays,
+      meaningfulDays: worldState.meaningfulDays,
+      allCompleteDays: worldState.allCompleteDays,
+      planDay,
+    });
+    if (discoveryResult.toAnnounce) (this as any).__pendingDiscovery = discoveryResult.toAnnounce;
 
     const _newlyAwardedKeys: string[] = gr && Array.isArray(gr.newlyAwarded) ? gr.newlyAwarded.map((x: any) => String(x.key || '')) : [];
     const _bonusAwarded: boolean = !!(gr && gr.bonusAwarded);
@@ -787,14 +842,9 @@ Page({
     let _transientKind: CompanionCardVM['transientKind'] = '';
     let _transientMessage = '';
     let _transientMs = 0;
-    const _allJustDone = worldTransition.kind === 'all' ||
-      !!_bonusAwarded ||
+    const _allJustDone = !!_bonusAwarded ||
       (_countAfterGrant === 3 && _countBeforeGrant < 3);
-    if (worldTransition.kind) {
-      _transientKind = worldTransition.kind === 'all' ? 'all3' : 'task1';
-      _transientMessage = worldTransition.message;
-      _transientMs = worldTransition.durationMs;
-    } else if (_allJustDone) {
+    if (_allJustDone && worldFeedbackQueue.length === 0) {
       _transientKind = 'all3';
       _transientMessage = pickAllThreeDoneMessage();
       _transientMs = 2800;
@@ -977,6 +1027,8 @@ Page({
       planProgressPercent,
       planProgressText,
       showPlanSettingsEntry,
+      worldHeaderText,
+      worldSubtitleText,
 
       weeklySummaryEntry,
       planCompletedEntry,
@@ -1012,43 +1064,139 @@ Page({
       worldState,
       worldTransition,
       worldAssets,
+      worldDiscoveries: discoveryResult.all,
+      discoveryCount: discoveryResult.all.length,
     });
 
-    // 返回首页后的场景反馈只持续 1.5~2.8 秒，不写入业务数据。
-    if (worldTransition.kind && worldTransition.durationMs > 0) {
-      try {
-        const previousTimer = (this as any).__worldTransitionTimer;
-        if (previousTimer) clearTimeout(previousTimer);
-        (this as any).__worldTransitionTimer = setTimeout(() => {
-          try {
-            const currentTransition = (this.data as IndexPageData).worldTransition;
-            if (currentTransition && currentTransition.sequence === worldTransition.sequence) {
-              this.setData({
-                worldTransition: emptyWorldTransition(),
-                'companion.transientActive': false,
-                'companion.transientKind': '',
-                'companion.transientMessage': '',
-                'companion.sparkleAllDone': false,
-              });
-            }
-          } catch { /* ignore */ }
-        }, worldTransition.durationMs + 120);
-      } catch { /* ignore */ }
+    // 严格顺序：单项世界反馈 → 3/3 → 小轻升级 → 新发现。
+    this._startWorldFeedbackQueue(worldFeedbackQueue);
+  },
+
+  _startWorldFeedbackQueue(queue: WorldTransition[]) {
+    try {
+      const timer = (this as any).__worldTransitionTimer;
+      if (timer) clearTimeout(timer);
+    } catch { /* ignore */ }
+    (this as any).__worldFeedbackQueue = Array.isArray(queue) ? queue.slice() : [];
+    this._playNextWorldFeedback();
+  },
+
+  _playNextWorldFeedback() {
+    const queue = ((this as any).__worldFeedbackQueue || []) as WorldTransition[];
+    const next = queue.shift();
+    (this as any).__worldFeedbackQueue = queue;
+    if (!next) {
+      this.setData({
+        worldTransition: emptyWorldTransition(),
+        'companion.transientActive': false,
+        'companion.transientKind': '',
+        'companion.transientMessage': '',
+        'companion.sparkleAllDone': false,
+      });
+      this._showDeferredWorldOverlay();
+      return;
     }
 
-    // 如果有升级弹层：等上一个 setData 渲染完再弹（避免遮罩层闪一下）
+    const today = this.today || getTodayString();
+    markWorldFeedbackShown(next.kind, today);
+    trackEvent(USAGE_EVENT_NAMES.WORLD_FEEDBACK_SHOWN, { feedbackType: next.kind }, { date: today });
+    this.setData({
+      worldTransition: next,
+      'companion.transientActive': true,
+      'companion.transientUntilMs': Date.now() + next.durationMs,
+      'companion.transientMood': 'happy',
+      'companion.transientKind': next.kind === 'all' ? 'all3' : 'task1',
+      'companion.transientMessage': next.message,
+      'companion.sparkleAllDone': next.kind === 'all',
+    });
+    (this as any).__worldTransitionTimer = setTimeout(() => {
+      try { this._playNextWorldFeedback(); } catch { /* ignore */ }
+    }, next.durationMs + 140);
+  },
+
+  _showDeferredWorldOverlay() {
+    const data = this.data as IndexPageData;
+    if (data.introCard.visible || data.showWelcomeCard) return;
     if ((this as any).__pendingLevelUp) {
       const pending = (this as any).__pendingLevelUp as LevelUpModalVM;
       delete (this as any).__pendingLevelUp;
-      // 下一帧再显示
-      setTimeout(() => {
-        try {
-          this.setData({
-            levelUpModal: pending,
-          });
-        } catch { /* ignore */ }
-      }, 180);
+      this.setData({ levelUpModal: pending });
+      return;
     }
+    this._showPendingDiscovery();
+  },
+
+  _showPendingDiscovery() {
+    const pending = (this as any).__pendingDiscovery as WorldDiscoveryView | undefined;
+    if (!pending) return;
+    delete (this as any).__pendingDiscovery;
+    markWorldDiscoverySeen(pending.state.discoveryId);
+    const unlockedDate = String(pending.state.unlockedAt || '').slice(0, 10);
+    this.setData({
+      discoveryNotice: {
+        visible: true,
+        discoveryId: pending.state.discoveryId,
+        emoji: pending.config.emoji,
+        name: pending.config.name,
+        description: pending.config.description,
+        companionMessage: pending.config.companionMessage,
+        unlockedAtText: unlockedDate ? `${unlockedDate} 发现` : '今天发现',
+      } as DiscoveryNoticeVM,
+      'companion.transientActive': true,
+      'companion.transientMood': 'happy',
+      'companion.transientKind': 'levelup',
+      'companion.transientMessage': pending.config.companionMessage,
+    });
+    try {
+      const oldTimer = (this as any).__discoveryNoticeTimer;
+      if (oldTimer) clearTimeout(oldTimer);
+      (this as any).__discoveryNoticeTimer = setTimeout(() => this.onCloseDiscoveryNotice(), 2600);
+    } catch { /* ignore */ }
+  },
+
+  onCloseDiscoveryNotice() {
+    try {
+      const timer = (this as any).__discoveryNoticeTimer;
+      if (timer) clearTimeout(timer);
+    } catch { /* ignore */ }
+    this.setData({
+      discoveryNotice: EMPTY_DISCOVERY_NOTICE,
+      'companion.transientActive': false,
+      'companion.transientKind': '',
+      'companion.transientMessage': '',
+    });
+  },
+
+  onWorldDiscoveryTap(e: any) {
+    const id = e?.detail?.discoveryId as WorldDiscoveryId;
+    const view = (this.data as IndexPageData).worldDiscoveries.find((item) => item.state.discoveryId === id);
+    if (!view) return;
+    trackWorldDiscoveryViewed(id);
+    this.setData({
+      discoveryDetail: {
+        visible: true,
+        discoveryId: id,
+        emoji: view.config.emoji,
+        name: view.config.name,
+        description: view.config.description,
+        companionMessage: view.config.companionMessage,
+        unlockedAtText: `${String(view.state.unlockedAt).slice(0, 10)} 发现`,
+      } as DiscoveryNoticeVM,
+    });
+  },
+
+  onCloseDiscoveryDetail() {
+    this.setData({ discoveryDetail: EMPTY_DISCOVERY_NOTICE });
+  },
+
+  onOpenDiscoveries() {
+    try { wx.navigateTo({ url: '/pages/discoveries/discoveries' }); } catch { /* ignore */ }
+  },
+
+  onNextUnlockTap() {
+    const next = (this.data as IndexPageData).worldState.nextUnlock;
+    if (!next) return;
+    trackEvent(USAGE_EVENT_NAMES.NEXT_UNLOCK_VIEWED, { unlockType: next.type, remaining: next.remaining });
   },
 
   // ---------------- 点击：三餐 → 进入 meal 页 ----------------
@@ -1076,6 +1224,7 @@ Page({
   onClickWelcomeClose() {
     markWelcomeShown();
     this.setData({ showWelcomeCard: false });
+    this._showDeferredWorldOverlay();
   },
 
   stopPropagation() { /* 阻止弹窗内部点击冒泡到遮罩层 */ },
@@ -1236,6 +1385,15 @@ Page({
       });
     } catch (e) {
       console.error('[index] navigateTo plan-summary failed', e);
+    }
+  },
+
+  onStartNewJourney() {
+    try {
+      wx.navigateTo({ url: '/pages/plan-setup/plan-setup' });
+    } catch (e) {
+      console.error('[index] navigateTo new journey failed', e);
+      try { wx.showToast({ title: '暂时打不开，请稍后再试。', icon: 'none' }); } catch { /* ignore */ }
     }
   },
 
@@ -1516,12 +1674,14 @@ Page({
     try {
       this.setData({ levelUpModal: EMPTY_LEVELUP });
     } catch { /* ignore */ }
+    this._showPendingDiscovery();
   },
 
   // ---------------- V12 养成：关闭"认识一下小轻"欢迎卡 ----------------
   onCloseIntroCard() {
     try { companionService.markIntroDismissed(); } catch { /* ignore */ }
     try { this.setData({ introCard: EMPTY_INTRO }); } catch { /* ignore */ }
+    this._showDeferredWorldOverlay();
   },
 
   // ---------------- V12 开发环境：+20 能量 / +100 能量 / 模拟下一天 / 重置养成 ----------------

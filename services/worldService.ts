@@ -34,6 +34,7 @@ import {
   loadAnyDailyRecordForDate,
 } from '../utils/summary';
 import { getTodayString, isSameDayYYYYMMDD } from '../utils/date';
+import { WORLD_FEEDBACK_MESSAGES } from '../config/companionWorldMessages';
 
 interface BuildWorldStateInput {
   date?: string;
@@ -104,13 +105,13 @@ function loadDailyRecordsThrough(date: string): DailyRecord[] {
   }
 }
 
-function countMealActiveDaysThrough(date: string): number {
+function getMealActiveDatesThrough(date: string): Set<string> {
   const days = new Set<string>();
   for (const meal of loadAllMealRecords()) {
     if (!meal || !isSameDayYYYYMMDD(meal.date) || meal.date > date) continue;
     days.add(meal.date);
   }
-  return days.size;
+  return days;
 }
 
 function countExerciseGoalDays(records: DailyRecord[]): number {
@@ -138,6 +139,10 @@ function buildUnlockCandidate(type: WorldElementType, days: number, level: World
   const remainingDays = Math.max(1, nextStage.requiredDays - Math.max(0, days));
   return {
     type,
+    remaining: remainingDays,
+    title: `下一次${WORLD_ELEMENT_CHANGE_LABELS[type]}`,
+    description: `再完成${remainingDays}天${WORLD_ELEMENT_LABELS[type]}`,
+    imageKey: type,
     nextLevel: nextStage.level,
     targetDays: nextStage.requiredDays,
     remainingDays,
@@ -152,13 +157,29 @@ export function getNextWorldUnlock(input: {
   plantLevel: WorldLevel;
   pathLevel: WorldLevel;
   waterLevel: WorldLevel;
+  planDay?: number;
 }): WorldUnlock | undefined {
   const candidates = [
     buildUnlockCandidate('plant', input.mealActiveDays, input.plantLevel),
     buildUnlockCandidate('path', input.exerciseGoalDays, input.pathLevel),
     buildUnlockCandidate('water', input.waterGoalDays, input.waterLevel),
   ].filter((item): item is WorldUnlock => item !== null);
-  const priority: Record<WorldElementType, number> = { plant: 0, path: 1, water: 2 };
+  const safePlanDay = Math.max(1, Math.floor(Number(input.planDay) || 1));
+  const nextJourney = WORLD_JOURNEY_LANDMARKS.find((item) => item.dayRequired > safePlanDay);
+  if (nextJourney) {
+    const remaining = nextJourney.dayRequired - safePlanDay;
+    candidates.push({
+      type: 'journey',
+      remaining,
+      remainingDays: remaining,
+      targetDays: nextJourney.dayRequired,
+      title: `${nextJourney.emoji} ${remaining === 1 ? '明天' : `再走${remaining}天`}将到达${nextJourney.title}`,
+      description: '旅程地标会出现在花园远处',
+      imageKey: `day${nextJourney.dayRequired}`,
+      text: `${nextJourney.emoji} ${remaining === 1 ? '明天' : `再走${remaining}天`}将到达${nextJourney.title}`,
+    });
+  }
+  const priority: Record<WorldUnlock['type'], number> = { journey: 0, plant: 1, path: 2, water: 3 };
   candidates.sort((a, b) => a.remainingDays - b.remainingDays || priority[a.type] - priority[b.type]);
   return candidates[0];
 }
@@ -183,9 +204,22 @@ export function buildWorldState(input: BuildWorldStateInput = {}): WorldState {
   const date = input.date || getTodayString();
   const planDay = Math.max(1, Math.floor(Number(input.planDay) || 1));
   const dailyRecords = loadDailyRecordsThrough(date);
-  const mealActiveDays = countMealActiveDaysThrough(date);
+  const mealDates = getMealActiveDatesThrough(date);
+  const mealActiveDays = mealDates.size;
   const exerciseGoalDays = countExerciseGoalDays(dailyRecords);
   const waterGoalDays = countWaterGoalDays(dailyRecords);
+  const meaningfulDates = new Set<string>(mealDates);
+  let allCompleteDays = 0;
+  for (const record of dailyRecords) {
+    const exercise = typeof record.exerciseMinutes === 'number' ? record.exerciseMinutes : 0;
+    const water = typeof record.waterCups === 'number' ? record.waterCups : 0;
+    if (exercise > 0 || water > 0) meaningfulDates.add(record.date);
+    if (
+      mealDates.has(record.date) &&
+      exercise >= getEffectiveExerciseGoal(record) &&
+      water >= getEffectiveWaterGoal(record)
+    ) allCompleteDays += 1;
+  }
 
   const plantLevel = getPlantLevel(mealActiveDays);
   const pathLevel = getPathLevel(exerciseGoalDays);
@@ -206,6 +240,8 @@ export function buildWorldState(input: BuildWorldStateInput = {}): WorldState {
     mealActiveDays,
     exerciseGoalDays,
     waterGoalDays,
+    meaningfulDays: meaningfulDates.size,
+    allCompleteDays,
     todayMealCompleted,
     todayExerciseCompleted,
     todayWaterCompleted,
@@ -218,6 +254,7 @@ export function buildWorldState(input: BuildWorldStateInput = {}): WorldState {
       plantLevel,
       pathLevel,
       waterLevel,
+      planDay,
     }),
     journeyLandmark: getJourneyLandmark(planDay),
     message: getWorldMessage(todayCompletedCount),
@@ -227,9 +264,13 @@ export function buildWorldState(input: BuildWorldStateInput = {}): WorldState {
 function normalizeWorldUiState(raw: any): WorldUiState | null {
   if (!raw || typeof raw !== 'object') return null;
   return {
+    schemaVersion: Number(raw.schemaVersion) === 2 ? 2 : (1 as any),
     lastSeenPlantLevel: clampWorldLevel(raw.lastSeenPlantLevel),
     lastSeenPathLevel: clampWorldLevel(raw.lastSeenPathLevel),
     lastSeenWaterLevel: clampWorldLevel(raw.lastSeenWaterLevel),
+    lastMealFeedbackDate: typeof raw.lastMealFeedbackDate === 'string' ? raw.lastMealFeedbackDate : undefined,
+    lastExerciseFeedbackDate: typeof raw.lastExerciseFeedbackDate === 'string' ? raw.lastExerciseFeedbackDate : undefined,
+    lastWaterFeedbackDate: typeof raw.lastWaterFeedbackDate === 'string' ? raw.lastWaterFeedbackDate : undefined,
     lastAllCompleteAnimationDate: typeof raw.lastAllCompleteAnimationDate === 'string'
       ? raw.lastAllCompleteAnimationDate
       : undefined,
@@ -247,11 +288,15 @@ export function syncWorldUiState(state: WorldState, date: string): WorldPresenta
   let previous: WorldUiState | null = null;
   try { previous = normalizeWorldUiState(wx.getStorageSync(STORAGE_KEY_WORLD_UI_STATE)); } catch { previous = null; }
 
-  if (!previous) {
+  if (!previous || previous.schemaVersion !== 2) {
     saveWorldUiState({
+      schemaVersion: 2,
       lastSeenPlantLevel: state.plantLevel,
       lastSeenPathLevel: state.pathLevel,
       lastSeenWaterLevel: state.waterLevel,
+      lastMealFeedbackDate: state.todayMealCompleted ? date : undefined,
+      lastExerciseFeedbackDate: state.todayExerciseCompleted ? date : undefined,
+      lastWaterFeedbackDate: state.todayWaterCompleted ? date : undefined,
       lastAllCompleteAnimationDate: state.todayAllCompleted ? date : undefined,
     });
     return { plantLevelUp: false, pathLevelUp: false, waterLevelUp: false, allCompleteFirstSeen: false };
@@ -265,48 +310,93 @@ export function syncWorldUiState(state: WorldState, date: string): WorldPresenta
   };
 
   saveWorldUiState({
+    ...previous,
+    schemaVersion: 2,
     lastSeenPlantLevel: state.plantLevel,
     lastSeenPathLevel: state.pathLevel,
     lastSeenWaterLevel: state.waterLevel,
-    lastAllCompleteAnimationDate: state.todayAllCompleted
-      ? date
-      : previous.lastAllCompleteAnimationDate,
   });
   return delta;
 }
 
 let transitionSequence = 0;
 
+function transition(kind: WorldTransition['kind']): WorldTransition {
+  const durations: Partial<Record<WorldTransition['kind'], number>> = {
+    plant: 2100, path: 2100, water: 2100, all: 2800,
+    'plant-level': 2100, 'path-level': 2100, 'water-level': 2100,
+  };
+  return {
+    kind,
+    sequence: ++transitionSequence,
+    message: WORLD_FEEDBACK_MESSAGES[kind] || '',
+    durationMs: durations[kind] || 0,
+  };
+}
+
+/** 单项在前、3/3 在后；页面逐个播放，离开页面不会影响业务状态。 */
+export function buildWorldFeedbackQueue(
+  previous: WorldState | null | undefined,
+  current: WorldState,
+  presentation: WorldPresentationDelta,
+  date: string,
+): WorldTransition[] {
+  let ui: WorldUiState | null = null;
+  try { ui = normalizeWorldUiState(wx.getStorageSync(STORAGE_KEY_WORLD_UI_STATE)); } catch { ui = null; }
+  if (!ui || ui.schemaVersion !== 2) return [];
+  const queue: WorldTransition[] = [];
+  const mealJustDone = !!previous && !previous.todayMealCompleted && current.todayMealCompleted;
+  const exerciseJustDone = !!previous && !previous.todayExerciseCompleted && current.todayExerciseCompleted;
+  const waterJustDone = !!previous && !previous.todayWaterCompleted && current.todayWaterCompleted;
+
+  if (current.todayMealCompleted && ui.lastMealFeedbackDate !== date) queue.push(transition('plant'));
+  if (current.todayExerciseCompleted && ui.lastExerciseFeedbackDate !== date) queue.push(transition('path'));
+  if (current.todayWaterCompleted && ui.lastWaterFeedbackDate !== date) queue.push(transition('water'));
+  if (presentation.plantLevelUp && !mealJustDone) queue.push(transition('plant-level'));
+  if (presentation.pathLevelUp && !exerciseJustDone) queue.push(transition('path-level'));
+  if (presentation.waterLevelUp && !waterJustDone) queue.push(transition('water-level'));
+  if (current.todayAllCompleted && ui.lastAllCompleteAnimationDate !== date) queue.push(transition('all'));
+  return queue;
+}
+
+export function markWorldFeedbackShown(kind: WorldTransition['kind'], date: string): void {
+  let ui: WorldUiState | null = null;
+  try { ui = normalizeWorldUiState(wx.getStorageSync(STORAGE_KEY_WORLD_UI_STATE)); } catch { ui = null; }
+  if (!ui || ui.schemaVersion !== 2) return;
+  if (kind === 'plant') ui.lastMealFeedbackDate = date;
+  if (kind === 'path') ui.lastExerciseFeedbackDate = date;
+  if (kind === 'water') ui.lastWaterFeedbackDate = date;
+  if (kind === 'all') ui.lastAllCompleteAnimationDate = date;
+  saveWorldUiState(ui);
+}
+
 export function buildWorldTransition(
   previous: WorldState | null | undefined,
   current: WorldState,
   presentation: WorldPresentationDelta,
 ): WorldTransition {
-  const none = (): WorldTransition => ({ kind: '', sequence: ++transitionSequence, message: '', durationMs: 0 });
+  const none = (): WorldTransition => transition('');
 
   if (presentation.allCompleteFirstSeen || (!!previous && !previous.todayAllCompleted && current.todayAllCompleted)) {
-    return {
-      kind: 'all', sequence: ++transitionSequence,
-      message: '今天的花园完整啦。\n我们一起让这里又变好了一点。', durationMs: 2800,
-    };
+    return transition('all');
   }
   if (previous && !previous.todayMealCompleted && current.todayMealCompleted) {
-    return { kind: 'plant', sequence: ++transitionSequence, message: '它长出新叶子啦。', durationMs: 2200 };
+    return transition('plant');
   }
   if (previous && !previous.todayExerciseCompleted && current.todayExerciseCompleted) {
-    return { kind: 'path', sequence: ++transitionSequence, message: '路又往前了一点。', durationMs: 2200 };
+    return transition('path');
   }
   if (previous && !previous.todayWaterCompleted && current.todayWaterCompleted) {
-    return { kind: 'water', sequence: ++transitionSequence, message: '听，水回来了。', durationMs: 2200 };
+    return transition('water');
   }
   if (presentation.plantLevelUp) {
-    return { kind: 'plant-level', sequence: ++transitionSequence, message: '花园里长出了新的植物。', durationMs: 2200 };
+    return transition('plant-level');
   }
   if (presentation.pathLevelUp) {
-    return { kind: 'path-level', sequence: ++transitionSequence, message: '小路通向了更远的地方。', durationMs: 2200 };
+    return transition('path-level');
   }
   if (presentation.waterLevelUp) {
-    return { kind: 'water-level', sequence: ++transitionSequence, message: '水池变得更清澈了。', durationMs: 2200 };
+    return transition('water-level');
   }
   return none();
 }

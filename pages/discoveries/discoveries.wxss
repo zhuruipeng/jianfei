@@ -1,0 +1,21 @@
+.page { min-height: 100vh; padding: 42rpx 30rpx 80rpx; box-sizing: border-box; background: linear-gradient(180deg,#f7f5ea,#edf3e4); }
+.intro { padding: 8rpx 8rpx 34rpx; }
+.title { color: #3f4d39; font-size: 44rpx; font-weight: 750; }
+.subtitle { margin-top: 12rpx; color: #7d8774; font-size: 25rpx; }
+.count { display: inline-block; margin-top: 20rpx; padding: 9rpx 18rpx; border-radius: 22rpx; color: #6c765e; font-size: 22rpx; background: rgba(255,255,255,.66); }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20rpx; }
+.discovery-card { display: flex; min-height: 220rpx; align-items: center; justify-content: center; flex-direction: column; border-radius: 30rpx; background: rgba(255,255,255,.78); box-shadow: 0 12rpx 34rpx rgba(72,91,57,.08); }
+.discovery-card.locked { background: rgba(255,255,255,.46); border: 2rpx dashed rgba(101,116,91,.14); box-shadow: none; }
+.card-hover { transform: scale(.98); }
+.emoji { font-size: 68rpx; }
+.locked .emoji { display: flex; width: 68rpx; height: 68rpx; align-items: center; justify-content: center; border-radius: 50%; color: #a8afa1; font-size: 34rpx; background: rgba(116,128,108,.1); }
+.name { margin-top: 15rpx; color: #4d5946; font-size: 27rpx; font-weight: 700; }
+.locked .name { color: #939b8d; }
+.date { margin-top: 7rpx; color: #9ba293; font-size: 20rpx; }
+.mask { position: fixed; z-index: 50; inset: 0; display: flex; align-items: center; justify-content: center; padding: 48rpx; background: rgba(44,55,39,.38); }
+.detail { width: 100%; padding: 38rpx 34rpx 30rpx; box-sizing: border-box; border-radius: 34rpx; text-align: center; background: #fffdf6; box-shadow: 0 24rpx 70rpx rgba(39,53,33,.2); }
+.detail-emoji { font-size: 88rpx; }
+.detail-title { margin-top: 8rpx; color: #3f4d39; font-size: 34rpx; font-weight: 750; }
+.detail-date { margin-top: 8rpx; color: #9b8a6e; font-size: 21rpx; }
+.detail-copy { margin-top: 22rpx; color: #697361; font-size: 25rpx; line-height: 1.65; }
+.detail-button { margin-top: 30rpx; padding: 19rpx; border-radius: 25rpx; color: #fff; font-size: 25rpx; font-weight: 700; background: #718b61; }

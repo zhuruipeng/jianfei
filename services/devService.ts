@@ -503,6 +503,7 @@ import {
   STORAGE_KEY_SPECIAL_TASK_SKIPPED_PREFIX,
   STORAGE_KEY_JOURNEY_CARDS_UNLOCKED_V1,
   STORAGE_KEY_WORLD_UI_STATE,
+  STORAGE_KEY_WORLD_DISCOVERIES,
   JOURNEY_CARDS,
 } from '../types/index';
 import { awardEnergy, calculateTotalEnergy, loadEnergyLedger } from '../utils/energy';
@@ -610,6 +611,7 @@ export function devResetCompanionSystem(): { ok: boolean; reason?: string; clear
     STORAGE_KEY_COMPANION_WELCOME_GIVEN,
     STORAGE_KEY_JOURNEY_CARDS_UNLOCKED_V1,
     STORAGE_KEY_WORLD_UI_STATE,
+    STORAGE_KEY_WORLD_DISCOVERIES,
   ];
   for (const k of delKeys) {
     try { wx.removeStorageSync(k); cleared++; } catch { /* ignore */ }

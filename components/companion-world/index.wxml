@@ -43,6 +43,7 @@
         </view>
         <text wx:if="{{state.waterLevel >= 3}}" class="water-reed">🌾</text>
         <text wx:if="{{state.waterLevel >= 4}}" class="water-lily">🪷</text>
+        <text wx:if="{{transition.kind === 'water'}}" class="water-drop">💧</text>
       </view>
 
       <view class="plant-layer plant-level-{{state.plantLevel}}">
@@ -66,6 +67,15 @@
         <text class="sparkle sparkle-c">✦</text>
         <text class="sparkle sparkle-d">✨</text>
       </view>
+    </block>
+
+    <block wx:for="{{discoveries}}" wx:for-item="discovery" wx:key="id">
+      <view
+        class="world-discovery discovery-{{discovery.config.sceneClass}}"
+        data-id="{{discovery.state.discoveryId}}"
+        bindtap="onDiscoveryTap"
+        hover-class="world-discovery-hover"
+      >{{discovery.config.emoji}}</view>
     </block>
 
     <view
@@ -108,13 +118,20 @@
     </view>
   </view>
 
-  <view wx:if="{{state.nextUnlock}}" class="next-unlock">
-    <text class="next-unlock-label">明天的期待</text>
-    <text class="next-unlock-text">{{state.nextUnlock.text}}</text>
+  <view wx:if="{{state.nextUnlock}}" class="next-unlock" bindtap="onNextUnlockTap" hover-class="next-unlock-hover">
+    <view class="next-unlock-preview preview-{{state.nextUnlock.type}}">{{state.nextUnlock.type === 'journey' ? '◇' : state.nextUnlock.type === 'plant' ? '♧' : state.nextUnlock.type === 'path' ? '⌁' : '◌'}}</view>
+    <view class="next-unlock-copy">
+      <text class="next-unlock-label">下一次变化</text>
+      <text class="next-unlock-text">{{state.nextUnlock.text}}</text>
+      <text class="next-unlock-description">{{state.nextUnlock.description}}</text>
+    </view>
   </view>
 
   <view class="world-footer">
     <text class="energy-text">✨ {{energyText}}</text>
-    <view class="journey-link" bindtap="onJourneyTap" hover-class="journey-link-hover">查看28天旅程 ›</view>
+    <view class="world-footer-links">
+      <button class="discovery-link discovery-button" bindtap="onDiscoveriesEntryTap" hover-class="journey-link-hover">发现 {{discoveryCount}}/6 ›</button>
+      <view class="journey-link" bindtap="onJourneyTap" hover-class="journey-link-hover">查看旅程 ›</view>
+    </view>
   </view>
 </view>
