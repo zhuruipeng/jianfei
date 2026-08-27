@@ -1,4 +1,10 @@
+import { WORLD_DECOR_ASSETS } from '../../config/worldDiscoveryConfig';
+
 Component({
+  data: {
+    decorAssets: WORLD_DECOR_ASSETS,
+  },
+
   properties: {
     state: { type: Object, value: null },
     assets: { type: Object, value: null },

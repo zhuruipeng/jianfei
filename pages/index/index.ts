@@ -332,7 +332,7 @@ interface IndexPageData {
 interface DiscoveryNoticeVM {
   visible: boolean;
   discoveryId: WorldDiscoveryId | '';
-  emoji: string;
+  asset: string;
   name: string;
   description: string;
   companionMessage: string;
@@ -402,7 +402,7 @@ const EMPTY_LEVELUP: LevelUpModalVM = {
 };
 const EMPTY_INTRO: IntroCardVM = { visible: false, welcomeBonusGivenNow: false };
 const EMPTY_DISCOVERY_NOTICE: DiscoveryNoticeVM = {
-  visible: false, discoveryId: '', emoji: '', name: '', description: '', companionMessage: '', unlockedAtText: '',
+  visible: false, discoveryId: '', asset: '', name: '', description: '', companionMessage: '', unlockedAtText: '',
 };
 
 function emptyWorldState(): WorldState {
@@ -1136,7 +1136,7 @@ Page({
       discoveryNotice: {
         visible: true,
         discoveryId: pending.state.discoveryId,
-        emoji: pending.config.emoji,
+        asset: pending.asset,
         name: pending.config.name,
         description: pending.config.description,
         companionMessage: pending.config.companionMessage,
@@ -1176,7 +1176,7 @@ Page({
       discoveryDetail: {
         visible: true,
         discoveryId: id,
-        emoji: view.config.emoji,
+        asset: view.asset,
         name: view.config.name,
         description: view.config.description,
         companionMessage: view.config.companionMessage,

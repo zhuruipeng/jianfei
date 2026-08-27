@@ -7,14 +7,15 @@
 .discovery-card { display: flex; min-height: 220rpx; align-items: center; justify-content: center; flex-direction: column; border-radius: 30rpx; background: rgba(255,255,255,.78); box-shadow: 0 12rpx 34rpx rgba(72,91,57,.08); }
 .discovery-card.locked { background: rgba(255,255,255,.46); border: 2rpx dashed rgba(101,116,91,.14); box-shadow: none; }
 .card-hover { transform: scale(.98); }
-.emoji { font-size: 68rpx; }
-.locked .emoji { display: flex; width: 68rpx; height: 68rpx; align-items: center; justify-content: center; border-radius: 50%; color: #a8afa1; font-size: 34rpx; background: rgba(116,128,108,.1); }
+.discovery-image { width: 112rpx; height: 112rpx; }
+.locked-symbol { display: flex; width: 68rpx; height: 68rpx; align-items: center; justify-content: center; border-radius: 50%; color: #a8afa1; font-size: 34rpx; background: rgba(116,128,108,.1); }
 .name { margin-top: 15rpx; color: #4d5946; font-size: 27rpx; font-weight: 700; }
 .locked .name { color: #939b8d; }
 .date { margin-top: 7rpx; color: #9ba293; font-size: 20rpx; }
 .mask { position: fixed; z-index: 50; inset: 0; display: flex; align-items: center; justify-content: center; padding: 48rpx; background: rgba(44,55,39,.38); }
 .detail { width: 100%; padding: 38rpx 34rpx 30rpx; box-sizing: border-box; border-radius: 34rpx; text-align: center; background: #fffdf6; box-shadow: 0 24rpx 70rpx rgba(39,53,33,.2); }
-.detail-emoji { font-size: 88rpx; }
+.detail-image { width: 176rpx; height: 176rpx; margin: 0 auto; }
+.detail-locked-symbol { display: flex; width: 110rpx; height: 110rpx; margin: 0 auto; align-items: center; justify-content: center; border-radius: 50%; color: #a8afa1; font-size: 52rpx; background: rgba(116,128,108,.1); }
 .detail-title { margin-top: 8rpx; color: #3f4d39; font-size: 34rpx; font-weight: 750; }
 .detail-date { margin-top: 8rpx; color: #9b8a6e; font-size: 21rpx; }
 .detail-copy { margin-top: 22rpx; color: #697361; font-size: 25rpx; line-height: 1.65; }

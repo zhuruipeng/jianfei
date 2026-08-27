@@ -69,13 +69,19 @@
       </view>
     </block>
 
+    <image class="world-decor decor-flower" src="{{decorAssets.flower}}" mode="aspectFit"></image>
+    <image class="world-decor decor-stone" src="{{decorAssets.stone}}" mode="aspectFit"></image>
+    <image class="world-decor decor-grass" src="{{decorAssets.grass}}" mode="aspectFit"></image>
+
     <block wx:for="{{discoveries}}" wx:for-item="discovery" wx:key="id">
       <view
         class="world-discovery discovery-{{discovery.config.sceneClass}}"
         data-id="{{discovery.state.discoveryId}}"
         bindtap="onDiscoveryTap"
         hover-class="world-discovery-hover"
-      >{{discovery.config.emoji}}</view>
+      >
+        <image class="world-discovery-image" src="{{discovery.asset}}" mode="aspectFit"></image>
+      </view>
     </block>
 
     <view
@@ -130,7 +136,7 @@
   <view class="world-footer">
     <text class="energy-text">✨ {{energyText}}</text>
     <view class="world-footer-links">
-      <button class="discovery-link discovery-button" bindtap="onDiscoveriesEntryTap" hover-class="journey-link-hover">发现 {{discoveryCount}}/6 ›</button>
+      <view class="discovery-link" bindtap="onDiscoveriesEntryTap" hover-class="journey-link-hover">发现 {{discoveryCount}}/6 ›</view>
       <view class="journey-link" bindtap="onJourneyTap" hover-class="journey-link-hover">查看旅程 ›</view>
     </view>
   </view>

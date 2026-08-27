@@ -5,7 +5,11 @@ import {
   type WorldDiscoveryId,
   type WorldDiscoveryState,
 } from '../types/index';
-import { WORLD_DISCOVERY_BY_ID, WORLD_DISCOVERY_CONFIG } from '../config/worldDiscoveryConfig';
+import {
+  WORLD_DISCOVERY_ASSETS,
+  WORLD_DISCOVERY_BY_ID,
+  WORLD_DISCOVERY_CONFIG,
+} from '../config/worldDiscoveryConfig';
 import { trackEvent } from './usageService';
 
 export interface WorldDiscoveryMetrics {
@@ -18,6 +22,7 @@ export interface WorldDiscoveryMetrics {
 
 export interface WorldDiscoveryView {
   id: WorldDiscoveryId;
+  asset: string;
   state: WorldDiscoveryState;
   config: (typeof WORLD_DISCOVERY_CONFIG)[number];
 }
@@ -72,7 +77,12 @@ function metricFor(type: WorldDiscoveryConditionType, metrics: WorldDiscoveryMet
 }
 
 function asView(state: WorldDiscoveryState): WorldDiscoveryView {
-  return { id: state.discoveryId, state, config: WORLD_DISCOVERY_BY_ID[state.discoveryId] };
+  return {
+    id: state.discoveryId,
+    asset: WORLD_DISCOVERY_ASSETS[state.discoveryId],
+    state,
+    config: WORLD_DISCOVERY_BY_ID[state.discoveryId],
+  };
 }
 
 /**

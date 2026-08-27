@@ -42,8 +42,21 @@ export const WORLD_DISCOVERY_BY_ID = WORLD_DISCOVERY_CONFIG.reduce((map, item) =
   return map;
 }, {} as Record<WorldDiscoveryId, WorldDiscoveryConfigItem>);
 
-export const WORLD_DISCOVERY_ASSET_DIR = '/assets/world/discoveries';
+export const WORLD_DISCOVERY_ASSETS: Record<WorldDiscoveryId, string> = {
+  butterfly: '/assets/world/discoveries/butterfly.webp',
+  bird: '/assets/world/discoveries/bird.webp',
+  mushroom: '/assets/world/discoveries/mushroom.webp',
+  bench: '/assets/world/discoveries/bench.webp',
+  firefly: '/assets/world/discoveries/firefly.webp',
+  rainbow: '/assets/world/discoveries/rainbow.webp',
+};
+
+export const WORLD_DECOR_ASSETS = {
+  flower: '/assets/world/decor/flower.webp',
+  stone: '/assets/world/decor/stone.webp',
+  grass: '/assets/world/decor/grass.webp',
+} as const;
 
 export function getWorldDiscoveryAsset(imageKey: string): string {
-  return `${WORLD_DISCOVERY_ASSET_DIR}/${imageKey}.webp`;
+  return WORLD_DISCOVERY_ASSETS[imageKey as WorldDiscoveryId] || '';
 }

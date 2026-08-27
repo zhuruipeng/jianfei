@@ -147,14 +147,23 @@
 .plant-tree { left: 94rpx; bottom: 175rpx; font-size: 158rpx; }
 .plant-f { left: 246rpx; bottom: 110rpx; font-size: 68rpx; }
 
-.world-discovery { position: absolute; z-index: 10; font-size: 38rpx; filter: drop-shadow(0 5rpx 5rpx rgba(47,70,37,.18)); transition: transform .2s ease; }
+.world-decor { position: absolute; z-index: 6; pointer-events: none; }
+.decor-flower { left: 300rpx; bottom: 58rpx; width: 40rpx; height: 40rpx; }
+.decor-stone { right: 18rpx; bottom: 30rpx; width: 55rpx; height: 55rpx; }
+.decor-grass { left: 20rpx; bottom: 20rpx; width: 70rpx; height: 70rpx; }
+
+.world-discovery { position: absolute; z-index: 10; filter: drop-shadow(0 5rpx 5rpx rgba(47,70,37,.18)); transition: transform .2s ease; }
+.world-discovery-image { display: block; width: 100%; height: 100%; }
 .world-discovery-hover { transform: scale(1.14); }
-.discovery-near-plants { left: 196rpx; bottom: 252rpx; animation: butterflyFloat 3.2s ease-in-out infinite; }
-.discovery-grass-edge { left: 28rpx; bottom: 50rpx; font-size: 42rpx; }
-.discovery-far-path { right: 118rpx; top: 135rpx; font-size: 34rpx; }
-.discovery-by-road { left: 410rpx; bottom: 124rpx; font-size: 44rpx; }
-.discovery-night-air { right: 46rpx; top: 210rpx; color: #fff3a5; text-shadow: 0 0 18rpx rgba(255,239,130,.85); animation: fireflyGlow 2.4s ease-in-out infinite; }
-.discovery-in-sky { left: 50%; top: 46rpx; font-size: 64rpx; transform: translateX(-50%); opacity: .8; }
+.discovery-near-plants { left: 196rpx; bottom: 252rpx; width: 58rpx; height: 58rpx; }
+.discovery-near-plants .world-discovery-image { animation: butterflyFloat 3.2s ease-in-out infinite; }
+.discovery-grass-edge { left: 28rpx; bottom: 50rpx; width: 76rpx; height: 76rpx; }
+.discovery-far-path { right: 118rpx; top: 135rpx; width: 62rpx; height: 62rpx; }
+.discovery-by-road { left: 410rpx; bottom: 108rpx; width: 116rpx; height: 116rpx; }
+.discovery-night-air { right: 46rpx; top: 210rpx; width: 50rpx; height: 50rpx; }
+.discovery-night-air .world-discovery-image { animation: fireflyGlow 2.4s ease-in-out infinite; }
+.discovery-in-sky { left: 50%; top: 28rpx; width: 148rpx; height: 148rpx; transform: translateX(-50%); opacity: .86; }
+.discovery-in-sky.world-discovery-hover { transform: translateX(-50%) scale(1.08); }
 
 .journey-landmark { position: absolute; z-index: 12; right: 30rpx; top: 28rpx; display: flex; align-items: center; gap: 9rpx; max-width: 218rpx; padding: 10rpx 14rpx 10rpx 10rpx; border-radius: 26rpx; background: rgba(255,255,255,.75); box-shadow: 0 8rpx 22rpx rgba(54,72,43,.12); }
 .journey-landmark-hover { transform: scale(.97); }
@@ -208,8 +217,6 @@
 .journey-link { color: #617750; font-size: 22rpx; font-weight: 600; }
 .world-footer-links { display: flex; align-items: center; gap: 20rpx; }
 .discovery-link { color: #8a7252; font-size: 22rpx; font-weight: 600; }
-.discovery-button { width: auto; min-width: 0; margin: 0; padding: 0; border: 0; border-radius: 0; line-height: 1.4; background: transparent; }
-.discovery-button::after { border: 0; }
 .journey-link-hover { opacity: .65; }
 
 .transition-plant .plant-layer, .transition-plant-level .plant-layer { animation: plantGrow .9s cubic-bezier(.2,.8,.2,1) both; }

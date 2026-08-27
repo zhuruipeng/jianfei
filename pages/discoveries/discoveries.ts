@@ -1,4 +1,4 @@
-import { WORLD_DISCOVERY_CONFIG } from '../../config/worldDiscoveryConfig';
+import { WORLD_DISCOVERY_ASSETS, WORLD_DISCOVERY_CONFIG } from '../../config/worldDiscoveryConfig';
 import { loadWorldDiscoveries, trackWorldDiscoveryViewed } from '../../services/discoveryService';
 import type { WorldDiscoveryId } from '../../types/index';
 
@@ -6,7 +6,7 @@ interface DiscoveryListItem {
   id: WorldDiscoveryId;
   unlocked: boolean;
   name: string;
-  emoji: string;
+  asset: string;
   description: string;
   discoveredAtText: string;
 }
@@ -31,14 +31,14 @@ Page({
         id: config.id,
         unlocked: true,
         name: config.name,
-        emoji: config.emoji,
+        asset: WORLD_DISCOVERY_ASSETS[config.id],
         description: config.description,
         discoveredAtText: formatDiscoveryDate(state.unlockedAt),
       } : {
         id: config.id,
         unlocked: false,
         name: '尚未发现',
-        emoji: '?',
+        asset: '',
         description: '继续照顾花园，也许会遇见新的小惊喜。',
         discoveredAtText: '',
       };

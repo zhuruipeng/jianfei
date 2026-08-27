@@ -374,7 +374,7 @@
   <!-- V13.5：新发现轻提示；最多一次展示一个。 -->
   <view wx:if="{{discoveryNotice.visible}}" class="discovery-notice-mask" catchtap="onCloseDiscoveryNotice">
     <view class="discovery-notice" catchtap="stopPropagation">
-      <text class="discovery-notice-emoji">{{discoveryNotice.emoji}}</text>
+      <image class="discovery-notice-image" src="{{discoveryNotice.asset}}" mode="aspectFit"></image>
       <view class="discovery-notice-copy">
         <text class="discovery-notice-kicker">花园里有了新发现</text>
         <text class="discovery-notice-title">{{discoveryNotice.name}}</text>
@@ -386,7 +386,7 @@
 
   <view wx:if="{{discoveryDetail.visible}}" class="welcome-mask" catchtap="onCloseDiscoveryDetail">
     <view class="welcome-card discovery-detail-card" catchtap="stopPropagation">
-      <view class="discovery-detail-emoji">{{discoveryDetail.emoji}}</view>
+      <image class="discovery-detail-image" src="{{discoveryDetail.asset}}" mode="aspectFit"></image>
       <view class="welcome-title">{{discoveryDetail.name}}</view>
       <view class="discovery-detail-date">{{discoveryDetail.unlockedAtText}}</view>
       <view class="welcome-body">{{discoveryDetail.description}}</view>

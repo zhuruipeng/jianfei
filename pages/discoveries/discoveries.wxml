@@ -8,7 +8,8 @@
   <view class="grid">
     <block wx:for="{{items}}" wx:key="id">
       <view class="discovery-card {{item.unlocked ? 'unlocked' : 'locked'}}" data-id="{{item.id}}" bindtap="onItemTap" hover-class="card-hover">
-        <view class="emoji">{{item.emoji}}</view>
+        <image wx:if="{{item.unlocked}}" class="discovery-image" src="{{item.asset}}" mode="aspectFit"></image>
+        <view wx:else class="locked-symbol">?</view>
         <view class="name">{{item.name}}</view>
         <view wx:if="{{item.unlocked}}" class="date">{{item.discoveredAtText}}</view>
         <view wx:else class="date">等待相遇</view>
@@ -18,7 +19,8 @@
 
   <view wx:if="{{selected}}" class="mask" catchtap="onCloseDetail">
     <view class="detail" catchtap="stopPropagation">
-      <view class="detail-emoji">{{selected.emoji}}</view>
+      <image wx:if="{{selected.unlocked}}" class="detail-image" src="{{selected.asset}}" mode="aspectFit"></image>
+      <view wx:else class="detail-locked-symbol">?</view>
       <view class="detail-title">{{selected.name}}</view>
       <view wx:if="{{selected.discoveredAtText}}" class="detail-date">{{selected.discoveredAtText}}</view>
       <view class="detail-copy">{{selected.description}}</view>
