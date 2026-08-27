@@ -1,0 +1,143 @@
+<!-- pages/reward/reward.wxml 奖励页 -->
+<view class="page">
+
+  <!-- 头部：累计积分 -->
+  <view class="reward-hero card">
+    <view class="hero-top">我的奖励</view>
+    <view class="hero-row">
+      <text class="hero-label">累计积分</text>
+    </view>
+    <view class="hero-points">
+      <text class="points-emoji">🟟</text>
+      <text class="points-num">{{totalPoints}}</text>
+    </view>
+    <view class="hero-tip">{{heroTip}}</view>
+  </view>
+
+  <!-- 新建按钮 -->
+  <view class="new-reward-wrap">
+    <view class="btn-primary full" bindtap="onClickNewReward" hover-class="btn-primary-hover">
+      <text class="btn-icon">+</text>
+      <text>新建奖励</text>
+    </view>
+  </view>
+
+  <!-- 奖励列表（有数据时） -->
+  <block wx:if="{{displayRewards.length > 0}}">
+    <view class="section-title">
+      <text>我的奖励</text>
+    </view>
+
+    <view
+      class="reward-card card {{item.reward.redeemed ? 'reward-redeemed' : (item.achieved ? 'reward-unlocked' : 'reward-pending')}}"
+      wx:for="{{displayRewards}}"
+      wx:key="id"
+    >
+      <!-- 头部：emoji + 标题 + 状态 -->
+      <view class="reward-head">
+        <view class="reward-title-row">
+          <text class="reward-emoji">{{item.reward.emoji}}</text>
+          <text class="reward-title">{{item.reward.title}}</text>
+        </view>
+        <view class="reward-status">
+          <block wx:if="{{item.reward.redeemed}}">
+            <text class="status status-redeemed">✓ 已领取</text>
+          </block>
+          <block wx:else>
+            <block wx:if="{{item.achieved}}">
+              <text class="status status-unlocked">🟟 奖励解锁</text>
+            </block>
+            <block wx:else>
+              <text class="status status-pending">未达成</text>
+            </block>
+          </block>
+        </view>
+      </view>
+
+      <!-- 所需积分 -->
+      <view class="reward-meta-row">
+        <view class="meta-item">
+          <text class="meta-label">需要积分</text>
+          <text class="meta-value">{{item.reward.requiredPoints}}</text>
+        </view>
+      </view>
+
+      <!-- 进度 / 说明 -->
+      <block wx:if="{{!item.reward.redeemed}}">
+        <view class="reward-progress-area">
+          <view class="progress-info">
+            <text class="progress-text">
+              当前 {{item.progress.current}} / {{item.progress.required}}
+            </text>
+            <block wx:if="{{!item.achieved}}">
+              <text class="progress-remain">还差 {{item.progress.remain}} 积分</text>
+            </block>
+            <block wx:else>
+              <text class="progress-remain achieved-text">🟟 已经达成，可以领取</text>
+            </block>
+          </view>
+          <view class="progress-track">
+            <view class="progress-fill" style="{{'width:' + item.progress.percent + '%'}}"></view>
+          </view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="reward-meta-row redeemed-time">
+          <text class="meta-label muted">领取时间：{{item.reward.redeemedAt}}</text>
+        </view>
+      </block>
+
+      <!-- 操作按钮 -->
+      <view class="reward-actions">
+        <!-- 未领取 -->
+        <block wx:if="{{!item.reward.redeemed}}">
+          <view
+            class="btn-ghost"
+            data-id="{{item.reward.id}}"
+            catchtap="onClickEditReward"
+            hover-class="btn-ghost-hover"
+          >编辑</view>
+          <view
+            class="btn-ghost danger"
+            data-id="{{item.reward.id}}"
+            catchtap="onClickDeleteReward"
+            hover-class="btn-ghost-hover"
+          >删除</view>
+          <view
+            class="{{item.achieved ? 'btn-primary' : 'btn-primary btn-disabled'}}"
+            data-id="{{item.reward.id}}"
+            catchtap="onClickRedeemReward"
+            hover-class="btn-primary-hover"
+          >
+            领取奖励
+          </view>
+        </block>
+        <!-- 已领取：仍允许删除，但不能编辑标题改积分（留个小入口，避免数据锁死） -->
+        <block wx:else>
+          <view
+            class="btn-ghost danger"
+            data-id="{{item.reward.id}}"
+            catchtap="onClickDeleteReward"
+            hover-class="btn-ghost-hover"
+          >删除记录</view>
+        </block>
+      </view>
+    </view>
+  </block>
+
+  <!-- 空状态（用户把默认奖励也删了） -->
+  <block wx:else>
+    <view class="empty card">
+      <view class="empty-emoji">🟟</view>
+      <view class="empty-title">还没有给自己设置奖励</view>
+      <view class="empty-desc">给坚持这件事一点期待。</view>
+      <view class="btn-primary full" bindtap="onClickNewReward" hover-class="btn-primary-hover">
+        <text class="btn-icon">+</text>
+        <text>设置第一个奖励</text>
+      </view>
+    </view>
+  </block>
+
+  <view class="bottom-space"></view>
+</view>

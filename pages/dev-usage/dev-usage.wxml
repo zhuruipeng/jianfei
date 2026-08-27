@@ -1,0 +1,189 @@
+<!-- pages/dev-usage/dev-usage.wxml  仅开发环境可见 -->
+<view class="page" wx:if="{{devAccessOk}}">
+
+  <!-- ===== 顶部固定 6 大核心指标（V9-19） ===== -->
+  <view class="hero-6">
+    <view class="hero-title">7 天测试核心指标</view>
+    <view class="hero-sub muted">测试开始：{{testStartDateCN}}</view>
+
+    <view class="core-grid">
+      <view class="core-cell">
+        <view class="core-num">{{coreActiveDays}}</view>
+        <view class="core-label">活跃天数</view>
+      </view>
+      <view class="core-cell">
+        <view class="core-num">{{coreMeaningfulDays}}</view>
+        <view class="core-label">有效记录天数</view>
+      </view>
+      <view class="core-cell">
+        <view class="core-num">{{coreTotalMeals}}</view>
+        <view class="core-label">累计餐次</view>
+      </view>
+      <view class="core-cell">
+        <view class="core-num">{{coreExerciseDays}}</view>
+        <view class="core-label">运动完成天数</view>
+      </view>
+      <view class="core-cell">
+        <view class="core-num">{{coreRedeemedRewards}}</view>
+        <view class="core-label">奖励领取</view>
+      </view>
+      <view class="core-cell">
+        <view class="core-num">{{coreAiStarted}}</view>
+        <view class="core-label">AI 分析</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 主统计卡片：详情 18 项 ===== -->
+  <view class="card">
+    <view class="sec-title">测试统计 · 总览</view>
+    <view class="kv-list">
+      <view class="kv-row" wx:for="{{coreMetricsRows}}" wx:key="label">
+        <text class="kv-k {{item.accent === 'good' ? 'good' : ''}}">{{item.label}}</text>
+        <text class="kv-v {{item.accent === 'hero' ? 'hero' : (item.accent === 'good' ? 'good' : '')}}">{{item.value}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 7 天：活跃行（app_open） ===== -->
+  <view class="card">
+    <view class="sec-title">7 天留存视图 · 活跃</view>
+    <view class="sec-sub muted">当天只要打开过小程序，就视为 active</view>
+    <view class="day-grid">
+      <view class="day-cell" wx:for="{{dailyActiveMark}}" wx:key="day">
+        <view class="day-label muted">D{{item.day}}</view>
+        <view class="day-icon {{item.activeIcon === '✅' ? 'check' : (item.activeIcon === '❌' ? 'cross' : 'dash')}}">{{item.activeIcon}}</view>
+        <view class="day-date muted">{{item.dateCN}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 7 天：有效记录行（meaningful） ===== -->
+  <view class="card">
+    <view class="sec-title">7 天视图 · 真正记录（meaningful day）</view>
+    <view class="sec-sub muted">当天保存一餐 / 记录运动 / 记录体重 / 达成喝水，任一即算</view>
+    <view class="day-grid">
+      <view class="day-cell" wx:for="{{dailyMeaningfulMark}}" wx:key="day">
+        <view class="day-label muted">D{{item.day}}</view>
+        <view class="day-icon {{item.meaningfulIcon === '✅' ? 'check' : (item.meaningfulIcon === '❌' ? 'cross' : 'dash')}}">{{item.meaningfulIcon}}</view>
+        <view class="day-date muted">{{item.dateCN}}</view>
+      </view>
+    </view>
+    <view class="day-detail-grid">
+      <view class="day-detail-cell" wx:for="{{dailyMeaningfulMark}}" wx:key="day">
+        <view class="day-detail-day muted">D{{item.day}}</view>
+        <view class="day-detail-row"><text class="dd-label muted">早</text><text class="dd-num">{{item.breakfast}}</text></view>
+        <view class="day-detail-row"><text class="dd-label muted">午</text><text class="dd-num">{{item.lunch}}</text></view>
+        <view class="day-detail-row"><text class="dd-label muted">晚</text><text class="dd-num">{{item.dinner}}</text></view>
+        <view class="day-detail-row"><text class="dd-label muted">运</text><text class="dd-val {{item.exercise ? 'tag' : ''}}">{{item.exercise || '—'}}</text></view>
+        <view class="day-detail-row"><text class="dd-label muted">重</text><text class="dd-val {{item.weight ? 'tag' : ''}}">{{item.weight || '—'}}</text></view>
+        <view class="day-detail-row"><text class="dd-label muted">水</text><text class="dd-val {{item.water ? 'tag' : ''}}">{{item.water || '—'}}</text></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 三餐使用情况 ===== -->
+  <view class="card">
+    <view class="sec-title">三餐记录使用率</view>
+    <view class="meal-row">
+      <view class="meal-cell">
+        <view class="meal-num">{{breakfastTotal}}</view>
+        <view class="meal-label muted">早餐</view>
+      </view>
+      <view class="meal-cell">
+        <view class="meal-num">{{lunchTotal}}</view>
+        <view class="meal-label muted">午餐</view>
+      </view>
+      <view class="meal-cell">
+        <view class="meal-num">{{dinnerTotal}}</view>
+        <view class="meal-label muted">晚餐</view>
+      </view>
+      <view class="meal-cell">
+        <view class="meal-num">{{mealPhotoAdded}}</view>
+        <view class="meal-label muted">拍照记录</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 运动 / 体重 / 奖励 / AI ===== -->
+  <view class="card">
+    <view class="sec-title">运动 / 体重 / 奖励</view>
+    <view class="kv-list">
+      <view class="kv-row"><text class="kv-k">运动记录（达标天数）</text><text class="kv-v">{{exerciseSavedDays}} 天</text></view>
+      <view class="kv-row"><text class="kv-k">体重记录天数</text><text class="kv-v">{{weightSavedDays}} 天</text></view>
+      <view class="kv-row"><text class="kv-k">创建奖励</text><text class="kv-v">{{rewardsCreated}} 个</text></view>
+      <view class="kv-row"><text class="kv-k">奖励解锁</text><text class="kv-v">{{rewardsUnlocked}} 个</text></view>
+      <view class="kv-row"><text class="kv-k">奖励领取</text><text class="kv-v good">{{rewardsRedeemed}} 个</text></view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="sec-title">AI 分析使用情况</view>
+    <view class="kv-list">
+      <view class="kv-row"><text class="kv-k">点击分析（started）</text><text class="kv-v hero">{{aiStarted}} 次</text></view>
+      <view class="kv-row"><text class="kv-k">AI 成功</text><text class="kv-v good">{{aiSucceeded}} 次</text></view>
+      <view class="kv-row"><text class="kv-k">AI 失败</text><text class="kv-v bad">{{aiFailed}} 次</text></view>
+      <view class="kv-row"><text class="kv-k">成功率</text><text class="kv-v">{{aiSuccessRateText}}</text></view>
+    </view>
+  </view>
+
+  <!-- ===== 用户反馈 ===== -->
+  <view class="card">
+    <view class="sec-title">用户反馈</view>
+    <view class="fb-counts">
+      <view class="fb-cell good">
+        <view class="fb-num">{{feedbackCounts.good}}</view>
+        <view class="fb-label">很好用</view>
+      </view>
+      <view class="fb-cell okay">
+        <view class="fb-num">{{feedbackCounts.okay}}</view>
+        <view class="fb-label">还可以</view>
+      </view>
+      <view class="fb-cell diff">
+        <view class="fb-num">{{feedbackCounts.difficult}}</view>
+        <view class="fb-label">有点麻烦</view>
+      </view>
+    </view>
+    <view class="sec-sub muted" style="margin-top: 20rpx;">共 {{feedbackCounts.total}} 条反馈 · 最近 10 条</view>
+    <block wx:if="{{recentFeedback.length > 0}}">
+      <view class="fb-item" wx:for="{{recentFeedback}}" wx:key="id">
+        <view class="fb-head">
+          <text class="fb-rating {{item.ratingClass}}">{{item.ratingLabel}}</text>
+          <text class="fb-time muted">{{item.createdAt}}</text>
+        </view>
+        <view class="fb-content" wx:if="{{item.contentPreview.length > 0}}">「{{item.contentPreview}}」</view>
+      </view>
+    </block>
+    <view class="empty-desc muted small" wx:else>还没有反馈。</view>
+  </view>
+
+  <!-- ===== 本地存储 & 性能 ===== -->
+  <view class="card">
+    <view class="sec-title">本地存储 & 最小性能</view>
+    <view class="kv-list">
+      <view class="kv-row"><text class="kv-k">本地 Storage 占用</text><text class="kv-v">{{storageKbText}}</text></view>
+      <view class="kv-row"><text class="kv-k">本地饮食照片</text><text class="kv-v">{{imageUsageText}}</text></view>
+      <view class="kv-row"><text class="kv-k">App 启动耗时中位数</text><text class="kv-v">{{medianAppLaunchMsText}}</text></view>
+      <view class="kv-row"><text class="kv-k">三餐保存耗时中位数</text><text class="kv-v">{{medianMealSaveMsText}}</text></view>
+    </view>
+  </view>
+
+  <!-- ===== 开发环境：清除测试数据 ===== -->
+  <view class="card danger-zone">
+    <view class="sec-title danger">开发环境 · 清除测试数据</view>
+    <view class="sec-sub muted danger-sub">清除：三餐/体重/奖励/使用记录/反馈/本地照片/进度开关\n（点击会二次确认）</view>
+    <view class="btn-danger" bindtap="onClickClearAllData" hover-class="btn-danger-hover">
+      <text>清除全部测试数据</text>
+    </view>
+  </view>
+
+  <view class="bottom-tip muted">本页只在开发环境（envVersion === develop）可访问。下拉可刷新统计。</view>
+</view>
+
+<view class="not-dev" wx:else>
+  <view class="not-dev-inner">
+    <view class="not-dev-emoji">⛔️</view>
+    <view class="not-dev-title">仅开发环境可访问</view>
+    <view class="not-dev-desc muted">正式/体验/预览版本，不会显示测试统计。</view>
+  </view>
+</view>

@@ -1,0 +1,287 @@
+/* pages/dev-usage/dev-usage.wxss */
+.page {
+  padding: 24rpx 24rpx 120rpx;
+  box-sizing: border-box;
+  background: #F2F4F7;
+  min-height: 100vh;
+}
+.muted { color: #8A93A5; }
+.small { font-size: 24rpx; line-height: 1.5; }
+
+.card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx 24rpx 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(16, 24, 40, 0.04);
+}
+
+.sec-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 6rpx;
+}
+.sec-sub {
+  font-size: 24rpx;
+  margin-bottom: 20rpx;
+}
+.sec-title.danger { color: #D04343; }
+.danger-sub { white-space: pre-line; }
+
+/* ===== Hero 6 大核心指标 ===== */
+.hero-6 {
+  background: linear-gradient(135deg, #334155 0%, #0F172A 100%);
+  color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx 28rpx 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 12rpx 28rpx rgba(15, 23, 42, 0.22);
+}
+.hero-6 .hero-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+.hero-6 .hero-sub {
+  margin-top: 6rpx;
+  opacity: 0.82;
+  color: #CBD5E1;
+}
+.core-grid {
+  margin-top: 22rpx;
+  display: flex;
+  flex-wrap: wrap;
+}
+.core-cell {
+  width: 33.33%;
+  box-sizing: border-box;
+  margin-bottom: 20rpx;
+  padding: 18rpx 14rpx;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.12);
+}
+.core-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  letter-spacing: 0.5rpx;
+}
+.core-label {
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  color: #CBD5E1;
+  opacity: 0.9;
+}
+
+/* ===== KV 列表 ===== */
+.kv-list { margin-top: 4rpx; }
+.kv-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14rpx 0;
+  border-bottom: 2rpx solid #F3F4F6;
+}
+.kv-row:last-child { border-bottom: none; }
+.kv-k { font-size: 28rpx; color: #4A5568; }
+.kv-k.good { color: #10B981; }
+.kv-v { font-size: 28rpx; color: #111827; font-weight: 500; }
+.kv-v.hero { font-weight: 700; color: #0F172A; }
+.kv-v.good { color: #10B981; font-weight: 600; }
+.kv-v.bad  { color: #D04343; font-weight: 600; }
+
+/* ===== 7 天 Day1~Day7 网格 ===== */
+.day-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-top: 10rpx;
+  margin-bottom: 20rpx;
+}
+.day-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-right: 10rpx;
+  background: #F9FAFB;
+  border-radius: 16rpx;
+  padding: 14rpx 6rpx;
+  text-align: center;
+  border: 1rpx solid #E5E7EB;
+}
+.day-cell:last-child { margin-right: 0; }
+.day-label { font-size: 22rpx; }
+.day-icon  {
+  margin: 8rpx 0;
+  font-size: 36rpx;
+  line-height: 1.1;
+}
+.day-icon.check { color: #10B981; }
+.day-icon.cross { color: #D04343; }
+.day-icon.dash  { color: #9CA3AF; }
+.day-date {
+  font-size: 20rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== 每日详情网格（早午晚 运 重 水） ===== */
+.day-detail-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10rpx;
+}
+.day-detail-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+  background: #FAFBFC;
+  border-radius: 14rpx;
+  padding: 10rpx 8rpx;
+  font-size: 22rpx;
+  border: 1rpx solid #EEF0F3;
+}
+.day-detail-cell:last-child { margin-right: 0; }
+.day-detail-day { font-size: 20rpx; margin-bottom: 8rpx; }
+.day-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rpx 0;
+}
+.dd-label { width: 28rpx; }
+.dd-num   { font-weight: 600; color: #111827; }
+.dd-val { color: #6B7280; }
+.dd-val.tag { color: #0F766E; font-weight: 600; }
+
+/* ===== 三餐次数 ===== */
+.meal-row {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 10rpx;
+  flex-wrap: wrap;
+}
+.meal-cell {
+  flex: 1 1 0;
+  min-width: 140rpx;
+  background: linear-gradient(180deg, #F8FAFC 0%, #EEF2F7 100%);
+  border-radius: 16rpx;
+  padding: 18rpx 10rpx;
+  text-align: center;
+  border: 1rpx solid #E5E7EB;
+}
+.meal-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #0F172A;
+}
+.meal-label { margin-top: 4rpx; font-size: 22rpx; }
+
+/* ===== 反馈 ===== */
+.fb-counts {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 10rpx;
+}
+.fb-cell {
+  flex: 1;
+  border-radius: 16rpx;
+  padding: 16rpx 12rpx;
+  text-align: center;
+  background: #F9FAFB;
+  border: 2rpx solid #E5E7EB;
+}
+.fb-cell.good { background: #ECFDF5; border-color: #6EE7B7; color: #065F46; }
+.fb-cell.okay { background: #EFF6FF; border-color: #93C5FD; color: #1E40AF; }
+.fb-cell.diff { background: #FEF2F2; border-color: #FCA5A5; color: #991B1B; }
+.fb-num { font-size: 36rpx; font-weight: 700; }
+.fb-label { font-size: 22rpx; margin-top: 4rpx; }
+
+.fb-item {
+  margin-top: 16rpx;
+  background: #FAFBFC;
+  border-radius: 14rpx;
+  padding: 14rpx 16rpx;
+  border: 1rpx solid #EEF0F3;
+}
+.fb-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6rpx;
+}
+.fb-rating {
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 4rpx 12rpx;
+  border-radius: 9999rpx;
+  background: #F3F4F6;
+  color: #374151;
+}
+.fb-rating.fb-good { background: #ECFDF5; color: #065F46; }
+.fb-rating.fb-okay { background: #EFF6FF; color: #1E40AF; }
+.fb-rating.fb-diff { background: #FEF2F2; color: #991B1B; }
+.fb-time { font-size: 20rpx; }
+.fb-content {
+  font-size: 26rpx;
+  color: #374151;
+  line-height: 1.55;
+}
+.empty-desc {
+  margin-top: 12rpx;
+  text-align: center;
+}
+
+/* ===== 开发环境红色危险区：清除数据按钮 ===== */
+.danger-zone { background: #FFFAFA; border: 2rpx solid #FECACA; }
+.btn-danger {
+  margin-top: 16rpx;
+  min-height: 96rpx;
+  border-radius: 9999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 700;
+  box-shadow: 0 10rpx 24rpx rgba(239, 68, 68, 0.25);
+}
+.btn-danger-hover { filter: brightness(0.95); }
+
+.bottom-tip {
+  margin-top: 36rpx;
+  text-align: center;
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+
+.not-dev {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F7F8FA;
+}
+.not-dev-inner {
+  background: #FFFFFF;
+  padding: 40rpx 32rpx;
+  border-radius: 24rpx;
+  max-width: 640rpx;
+  width: 88%;
+  text-align: center;
+  box-shadow: 0 10rpx 28rpx rgba(16, 24, 40, 0.08);
+}
+.not-dev-emoji { font-size: 64rpx; }
+.not-dev-title {
+  margin-top: 16rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.not-dev-desc {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+}

@@ -1,0 +1,100 @@
+<!--pages/plan-summary/plan-summary.wxml  V10 28/90 天计划总结页
+  - 入口参数：planId
+  - 数据来源：PlanSummaryAggregate（聚合 weekly summaries + 尾段）
+-->
+<view class="psmp" wx:if="{{loaded}}">
+  <!-- Hero -->
+  <view class="hero">
+    <view class="brand">轻步 🟟</view>
+    <view class="title">{{planTitle}}</view>
+    <view class="subtitle muted">{{dateRangeText}}</view>
+  </view>
+
+  <!-- 主文案 -->
+  <view class="lead">
+    <view class="lead-main">认真记录 {{summary.totalMeaningfulDays}} / {{summary.plan.durationDays}} 天</view>
+    <view class="lead-sub muted">{{summary.message}}</view>
+  </view>
+
+  <!-- 指标列表 -->
+  <view class="section">
+    <view class="metric-row">
+      <view class="metric-label">累计饮食记录</view>
+      <view class="metric-value">{{summary.totalMealCount}} 餐</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">运动达标</view>
+      <view class="metric-value">{{summary.totalExerciseGoalDays}} 天</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">喝水达标</view>
+      <view class="metric-value">{{summary.totalWaterGoalDays}} 天</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">累计积分</view>
+      <view class="metric-value">{{summary.totalPointsEarned}}</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">领取奖励</view>
+      <view class="metric-value">{{summary.totalRewardsRedeemed}} 个</view>
+    </view>
+  </view>
+
+  <!-- 体重变化 -->
+  <view class="section">
+    <view class="section-title">体重变化</view>
+    <block wx:if="{{weightHasTwo}}">
+      <view class="weight-flow">
+        <view class="weight-pill">
+          <view class="weight-num">{{weightStartText}}</view>
+          <view class="weight-tag muted">开始</view>
+        </view>
+        <view class="weight-arrow">↓</view>
+        <view class="weight-pill">
+          <view class="weight-num">{{weightEndText}}</view>
+          <view class="weight-tag muted">现在</view>
+        </view>
+      </view>
+      <view class="weight-change {{weightChangeNegative ? 'wc-down' : 'wc-up'}}">{{weightChangeText}}</view>
+      <view class="weight-tip muted">体重每天都会自然波动，\n关注长期趋势就好。</view>
+    </block>
+    <block wx:else>
+      <view class="weight-tip muted">这个计划周期没有体重记录。</view>
+      <view class="weight-tip muted">没关系，饮食和运动习惯本身也值得记录。</view>
+    </block>
+  </view>
+
+  <!-- 错误提示 -->
+  <view wx:if="{{errorMsg}}" class="err-msg">{{errorMsg}}</view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <view
+      class="btn-primary"
+      bindtap="onStartNewPlan"
+      hover-class="btn-primary-hover"
+    >
+      <text>再开始一个计划</text>
+    </view>
+    <view
+      class="btn-secondary"
+      bindtap="onKeepRecording"
+      hover-class="btn-secondary-hover"
+    >
+      <text>先保持记录</text>
+    </view>
+    <view class="footer-tip muted">无论怎么选，原来的数据都还在。</view>
+  </view>
+</view>
+
+<!-- 加载中 / 出错兜底 -->
+<view class="psmp" wx:else>
+  <view class="hero">
+    <view class="title">{{errorMsg || '正在加载...'}}</view>
+  </view>
+  <view wx:if="{{errorMsg}}" class="footer">
+    <view class="btn-primary" bindtap="onGoHome" hover-class="btn-primary-hover">
+      <text>回首页</text>
+    </view>
+  </view>
+</view>

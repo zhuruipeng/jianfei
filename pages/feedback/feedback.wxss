@@ -1,0 +1,176 @@
+/* pages/feedback/feedback.wxss */
+.page {
+  padding: 32rpx 32rpx 180rpx;
+  box-sizing: border-box;
+  background: #FAFAFA;
+  min-height: 100vh;
+}
+.muted { color: #8A93A5; }
+
+.card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx 28rpx 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(16, 24, 40, 0.04);
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #FFE9D8 0%, #FFD6C4 100%);
+  color: #5A3E2B;
+  box-shadow: 0 10rpx 24rpx rgba(255, 156, 120, 0.15);
+}
+.hero-title { font-size: 34rpx; font-weight: 700; margin-bottom: 8rpx; }
+.hero-desc  { font-size: 26rpx; opacity: 0.85; }
+
+.rating-row {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 28rpx;
+  flex-wrap: wrap;
+}
+.rating-item {
+  flex: 1 1 0;
+  min-width: 190rpx;
+  padding: 28rpx 20rpx;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.95);
+  color: #5A3E2B;
+  text-align: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+}
+.rating-item-hover { transform: scale(0.99); }
+.rating-item-selected {
+  background: #FFFFFF;
+  border-color: #FF8A65;
+  box-shadow: 0 6rpx 14rpx rgba(255, 120, 80, 0.18);
+  font-weight: 600;
+}
+.rating-label { font-size: 28rpx; line-height: 1.4; }
+
+.input-title { font-size: 30rpx; font-weight: 600; color: #2A2A2A; margin-bottom: 8rpx; }
+.input-hint  { font-size: 24rpx; margin-bottom: 16rpx; }
+.feedback-area {
+  width: 100%;
+  min-height: 220rpx;
+  background: #F7F7F9;
+  border-radius: 16rpx;
+  padding: 20rpx 20rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #2A2A2A;
+  line-height: 1.6;
+}
+.counter {
+  font-size: 22rpx;
+  text-align: right;
+  margin-top: 10rpx;
+}
+
+.bottom-row { margin-top: 24rpx; }
+.foot-tip {
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  text-align: center;
+}
+
+/* ===== Primary 按钮（和 app 统一 tokens） ===== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 92rpx;
+  padding: 0 40rpx;
+  box-sizing: border-box;
+  border-radius: 9999rpx;
+  background: linear-gradient(90deg, #4ECDC4 0%, #FF6B6B 100%);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 22rpx rgba(255, 107, 107, 0.22);
+}
+.btn-primary.full { width: 100%; }
+.btn-primary-disabled {
+  background: #C6C9D0 !important;
+  box-shadow: none !important;
+  color: #FFFFFF !important;
+}
+.btn-primary-hover { filter: brightness(0.96); }
+.btn-primary:active { filter: brightness(0.92); }
+
+/* V11：提交中态（保持 disabled 视觉，避免用户以为可点） */
+.btn-primary-submitting {
+  background: #C6C9D0 !important;
+  box-shadow: none !important;
+  color: #FFFFFF !important;
+}
+
+/* V11：rating 锁定态（提交中不可改） */
+.rating-item-locked { opacity: 0.7; }
+
+/* ===== V11：待重试卡片 ===== */
+.pending-card {
+  background: #FFF7ED;
+  border: 2rpx solid #FBD38D;
+  border-radius: 20rpx;
+  padding: 24rpx 24rpx 20rpx;
+  margin-bottom: 24rpx;
+}
+.pending-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #92400E;
+  margin-bottom: 16rpx;
+}
+.pending-item {
+  background: #FFFFFF;
+  border-radius: 14rpx;
+  padding: 18rpx 18rpx 16rpx;
+  margin-top: 12rpx;
+}
+.pending-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+.pending-tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 9999rpx;
+  background: #FFE9D8;
+  color: #9A3412;
+  font-size: 22rpx;
+}
+.pending-time { font-size: 22rpx; }
+.pending-content {
+  font-size: 26rpx;
+  color: #2A2A2A;
+  line-height: 1.5;
+  margin: 4rpx 0 12rpx;
+  word-break: break-all;
+}
+.pending-actions { display: flex; justify-content: flex-end; }
+
+/* V11：次级按钮（重新提交） */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64rpx;
+  padding: 0 28rpx;
+  border-radius: 9999rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #4ECDC4;
+  color: #2C7A7B;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.btn-secondary-hover { background: #F0FBFA; }
+.btn-secondary-disabled {
+  opacity: 0.5;
+  background: #F2F2F2 !important;
+  border-color: #C6C9D0 !important;
+  color: #8A93A5 !important;
+}

@@ -1,0 +1,9 @@
+{
+  "name": "updateFeedbackStatus",
+  "version": "1.0.0",
+  "description": "管理员更新反馈状态",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "^4.0.2"
+  }
+}

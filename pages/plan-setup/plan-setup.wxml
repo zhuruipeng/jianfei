@@ -1,0 +1,118 @@
+<!--pages/plan-setup/plan-setup.wxml  V10 首次计划设置页
+  - 第一次进入小程序 / 旧用户首次"加入计划"均来到这里
+  - 配置：计划周期 / 运动目标 / 喝水目标 / 当前体重 / 目标体重
+-->
+<view class="psp">
+  <!-- Hero -->
+  <view class="hero">
+    <view class="brand">轻步 🟟</view>
+    <view class="title">开始我的轻步计划</view>
+    <view class="subtitle">不用一下改变很多。</view>
+    <view class="subtitle">先给自己28天，</view>
+    <view class="subtitle">每天完成一点点就够了。</view>
+  </view>
+
+  <!-- 计划周期 -->
+  <view class="section">
+    <view class="section-title">计划周期</view>
+    <view class="opt-row">
+      <block wx:for="{{durationOptions}}" wx:key="value">
+        <view
+          class="pill {{item.selected ? 'pill-on' : ''}}"
+          data-field="duration"
+          data-value="{{item.value}}"
+          bindtap="onSelectOption"
+          hover-class="pill-hover"
+        >
+          <view class="pill-main">{{item.label}}</view>
+          <view class="pill-sub muted">{{item.sub}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 每日运动目标 -->
+  <view class="section">
+    <view class="section-title">每日运动目标</view>
+    <view class="opt-row">
+      <block wx:for="{{exerciseOptions}}" wx:key="value">
+        <view
+          class="pill pill-sm {{item.selected ? 'pill-on' : ''}}"
+          data-field="exercise"
+          data-value="{{item.value}}"
+          bindtap="onSelectOption"
+          hover-class="pill-hover"
+        >
+          <view class="pill-main">{{item.label}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 每日喝水目标 -->
+  <view class="section">
+    <view class="section-title">每日喝水目标</view>
+    <view class="opt-row">
+      <block wx:for="{{waterOptions}}" wx:key="value">
+        <view
+          class="pill pill-sm {{item.selected ? 'pill-on' : ''}}"
+          data-field="water"
+          data-value="{{item.value}}"
+          bindtap="onSelectOption"
+          hover-class="pill-hover"
+        >
+          <view class="pill-main">{{item.label}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 当前体重（可选） -->
+  <view class="section">
+    <view class="section-title">当前体重 <text class="section-title-hint muted">（可选）</text></view>
+    <view class="input-row">
+      <input
+        class="weight-input"
+        type="digit"
+        placeholder="如 72.5"
+        value="{{startWeightInput}}"
+        data-field="startWeight"
+        bindinput="onWeightInput"
+      />
+      <view class="input-unit">kg</view>
+    </view>
+    <view class="input-tip muted">可以跳过，不影响开始计划。</view>
+  </view>
+
+  <!-- 目标体重（可选） -->
+  <view class="section">
+    <view class="section-title">目标体重 <text class="section-title-hint muted">（可选）</text></view>
+    <view class="input-row">
+      <input
+        class="weight-input"
+        type="digit"
+        placeholder="如 68.0"
+        value="{{targetWeightInput}}"
+        data-field="targetWeight"
+        bindinput="onWeightInput"
+      />
+      <view class="input-unit">kg</view>
+    </view>
+    <view class="input-tip muted">只用来展示目标，不会自动算每日卡路里。</view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view wx:if="{{errorMsg}}" class="err-msg">{{errorMsg}}</view>
+
+  <!-- 底部主按钮 -->
+  <view class="footer">
+    <view
+      class="btn-primary {{submitting ? 'btn-primary-disabled' : ''}}"
+      bindtap="onClickStart"
+      hover-class="btn-primary-hover"
+    >
+      <text>开始我的计划</text>
+    </view>
+    <view class="footer-tip muted">数据都保存在你的手机上。</view>
+  </view>
+</view>

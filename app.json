@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/onboarding/onboarding",
+    "pages/index/index",
+    "pages/progress/progress",
+    "pages/reward/reward",
+    "pages/meal/meal",
+    "pages/feedback/feedback",
+    "pages/dev-usage/dev-usage",
+    "pages/plan-setup/plan-setup",
+    "pages/plan-settings/plan-settings",
+    "pages/weekly-summary/weekly-summary",
+    "pages/plan-summary/plan-summary",
+    "pages/journey/journey"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "轻一点",
+    "backgroundColor": "#F7F8FA",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8A93A5",
+    "selectedColor": "#FF6B6B",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "今日"
+      },
+      {
+        "pagePath": "pages/progress/progress",
+        "text": "进展"
+      },
+      {
+        "pagePath": "pages/reward/reward",
+        "text": "奖励"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

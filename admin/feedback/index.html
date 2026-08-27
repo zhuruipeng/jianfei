@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>轻步 · 用户反馈</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+  <!-- ============ 登录页 ============ -->
+  <section id="loginPage" class="login-page">
+    <div class="login-card">
+      <h1>轻步 · 用户反馈</h1>
+      <p class="muted">管理员登录</p>
+      <form id="loginForm" class="login-form" autocomplete="off">
+        <label>
+          <span>账号</span>
+          <input id="loginUser" type="text" placeholder="管理员账号" autocomplete="username" />
+        </label>
+        <label>
+          <span>密码</span>
+          <input id="loginPass" type="password" placeholder="管理员密码" autocomplete="current-password" />
+        </label>
+        <button id="btnLogin" class="btn-primary full" type="submit">登录</button>
+        <p id="loginError" class="login-error hidden"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 管理主页 ============ -->
+  <header id="topbar" class="topbar hidden">
+    <h1>轻步 · 用户反馈</h1>
+    <div class="topbar-right">
+      <span id="topUser" class="muted small"></span>
+      <button id="btnLogout" class="link-btn" type="button">退出</button>
+    </div>
+  </header>
+
+  <main id="main" class="container hidden">
+    <!-- 统计 -->
+    <section class="stats">
+      <div class="stat-item stat-total">
+        <div class="stat-num" id="statTotal">-</div>
+        <div class="stat-label">全部反馈</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num good" id="statGood">-</div>
+        <div class="stat-label">很好用</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num okay" id="statOkay">-</div>
+        <div class="stat-label">还可以</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num difficult" id="statDifficult">-</div>
+        <div class="stat-label">有点麻烦</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num unread" id="statUnread">-</div>
+        <div class="stat-label">未读</div>
+      </div>
+    </section>
+
+    <!-- 筛选 -->
+    <section class="filters">
+      <button class="filter-btn active" data-filter="all" type="button">全部</button>
+      <button class="filter-btn" data-filter="good" type="button">很好用</button>
+      <button class="filter-btn" data-filter="okay" type="button">还可以</button>
+      <button class="filter-btn" data-filter="difficult" type="button">有点麻烦</button>
+      <button class="filter-btn" data-filter="unread" type="button">未读</button>
+    </section>
+
+    <!-- 列表 -->
+    <section id="list" class="list">
+      <div class="empty muted">加载中...</div>
+    </section>
+
+    <!-- 分页 -->
+    <section class="pager">
+      <button id="btnPrev" class="btn-secondary" type="button" disabled>上一页</button>
+      <span id="pageInfo" class="muted small">第 1 页</span>
+      <button id="btnNext" class="btn-secondary" type="button">下一页</button>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

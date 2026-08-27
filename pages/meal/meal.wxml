@@ -1,0 +1,294 @@
+<!--pages/meal/meal.wxml  V8：快速记录顶置，其余字段可选-->
+<view class="meal-page">
+  <!-- 头部大卡片 -->
+  <view class="hero-card">
+    <view class="hero-head">
+      <view class="hero-title">{{pageTitle}}</view>
+      <view class="hero-tip">不用每顿都完美，先记下来就好。</view>
+    </view>
+  </view>
+
+  <!-- 快速记录（顶置，2 步完成：一键饱腹 + 保存） -->
+  <view class="section quick-section">
+    <view class="section-title">
+      <text>快速记录</text>
+      <text class="section-subtitle muted">点一下，再点保存就完成</text>
+    </view>
+    <view class="quick-grid">
+      <block wx:for="{{satietyOptions}}" wx:key="level">
+        <view
+          class="quick-item {{item.emoji === '✅' ? 'quick-item-on' : ''}}"
+          data-level="{{item.level}}"
+          bindtap="selectSatiety"
+          hover-class="quick-item-hover"
+        >
+          <view class="quick-icon">{{item.emoji === '✅' ? '🟟' : '🟟'}}</view>
+          <view class="quick-label">{{item.label}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- ========= 新增：照片区域（这一餐） ========= -->
+  <view class="section photo-section">
+    <view class="section-title">这一餐</view>
+
+    <!-- 未选照片：大占位卡 -->
+    <block wx:if="{{!photoPath || photoError}}">
+      <view
+        class="photo-empty"
+        bindtap="onClickPickPhoto"
+        hover-class="photo-empty-hover"
+      >
+        <block wx:if="{{photoPath && photoError}}">
+          <view class="photo-empty-icon">🟠</view>
+          <view class="photo-empty-main">照片暂时无法显示</view>
+          <view class="photo-empty-sub">可以重新选择或删除</view>
+          <view class="photo-empty-actions">
+            <view class="photo-pick-btn photo-pick-btn-primary">
+              <text>重新选择</text>
+            </view>
+          </view>
+        </block>
+        <block wx:else>
+          <view class="photo-empty-icon">🟟</view>
+          <view class="photo-empty-main">拍下这一餐</view>
+          <view class="photo-empty-sub">留下一张今天的饮食记录</view>
+          <view class="photo-empty-actions">
+            <view class="photo-pick-btn">
+              <text>📷 拍照 / 从相册选择</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </block>
+
+    <!-- 已有照片：预览 + 重新选择/删除 -->
+    <block wx:else>
+      <view class="photo-wrap">
+        <view
+          class="photo-preview"
+          bindtap="onClickPreviewPhoto"
+          hover-class="photo-preview-hover"
+        >
+          <image
+            class="photo-img"
+            src="{{photoPath}}"
+            mode="aspectFill"
+            binderror="onPhotoError"
+            show-menu-by-longpress="{{false}}"
+          />
+        </view>
+        <view class="photo-action-row">
+          <view
+            class="photo-action-btn outline"
+            bindtap="onClickPickPhoto"
+            hover-class="photo-action-btn-hover"
+          >
+            <text>重新选择</text>
+          </view>
+          <view
+            class="photo-action-btn danger-outline"
+            bindtap="onClickDeletePhoto"
+            hover-class="photo-action-btn-hover"
+          >
+            <text>删除照片</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- ========= V6 新增：AI 分析入口（只在主动点击时上传） ========= -->
+  <view class="section ai-section">
+    <view class="section-title">AI 看看这一餐</view>
+
+    <block wx:if="{{!photoPath || photoError}}">
+      <view class="ai-disabled-card">
+        <view class="ai-disabled-text muted">先拍下一餐，才能使用AI分析</view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="ai-row">
+        <view
+          class="ai-btn {{isUploading ? 'ai-btn-disabled' : ''}}"
+          bindtap="onClickAnalyzeAi"
+          hover-class="{{isUploading ? '' : 'photo-action-btn-hover'}}"
+        >
+          <block wx:if="{{isUploading}}">
+            <view class="loading-dot"></view>
+            <text class="ai-btn-text">正在看看这一餐…</text>
+          </block>
+          <block wx:else>
+            <text class="ai-emoji">✨</text>
+            <text class="ai-btn-text">AI看看这一餐</text>
+          </block>
+        </view>
+      </view>
+      <block wx:if="{{aiHint.length > 0 && aiStatus !== 'completed' && aiStatus !== 'failed'}}">
+        <view
+          class="ai-hint-row ai-hint-info"
+        >
+          <text>{{aiHint}}</text>
+        </view>
+      </block>
+      <block wx:if="{{aiStatus === 'failed'}}">
+        <view class="ai-failed-card">
+          <view class="ai-failed-title">这次没有分析成功</view>
+          <view class="ai-failed-sub">你的饮食记录和照片都已经保存，</view>
+          <view class="ai-failed-sub">可以稍后重新试一次。</view>
+          <view class="ai-result-actions">
+            <view class="photo-action-btn outline" bindtap="onClickAnalyzeAi" hover-class="photo-action-btn-hover">
+              <text>重新分析</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      <!-- V7：AI 分析结果结构化卡片（非聊天机器人） -->
+      <block wx:if="{{aiStatus === 'completed' && aiAnalysis}}">
+        <view class="ai-result-card">
+          <view class="ai-result-title">✨ AI 看了这一餐</view>
+          <view class="ai-foods" wx:if="{{aiAnalysis.foods.length > 0}}">
+            <text>看起来有：</text>
+            <block wx:for="{{aiAnalysis.foods}}" wx:key="*this">
+              <text class="ai-food-item">{{item}}{{index < (aiAnalysis.foods.length - 1) ? ' · ' : ''}}</text>
+            </block>
+          </view>
+          <view class="ai-foods" wx:else>
+            <text>看起来有：（未能识别具体食物）</text>
+          </view>
+
+          <view class="ai-section-row">
+            <text class="ai-label">整体分量</text>
+            <text class="ai-value">{{aiAnalysis.portionLevel === 'light' ? '偏少' : aiAnalysis.portionLevel === 'appropriate' ? '✅ 合适' : aiAnalysis.portionLevel === 'heavy' ? '偏多' : '暂时无法判断'}}</text>
+          </view>
+
+          <view class="ai-struct-grid">
+            <view class="ai-struct-item">
+              <view class="ai-struct-title">🟟 蔬菜</view>
+              <view class="ai-struct-value">{{veggieCN}}</view>
+            </view>
+            <view class="ai-struct-item">
+              <view class="ai-struct-title">🟟 蛋白质</view>
+              <view class="ai-struct-value">{{proteinCN}}</view>
+            </view>
+            <view class="ai-struct-item">
+              <view class="ai-struct-title">🟟 主食</view>
+              <view class="ai-struct-value">{{stapleCN}}</view>
+            </view>
+          </view>
+
+          <view class="ai-divider"></view>
+
+          <view class="ai-suggestion-label">给下一餐一个小建议</view>
+          <view class="ai-suggestion">{{aiAnalysis.primarySuggestion}}</view>
+
+          <view class="ai-confidence-low-hint" wx:if="{{aiAnalysis.confidence === 'low'}}">
+            照片信息有限，下面的判断仅供参考。
+          </view>
+
+          <view class="ai-disclaimer">仅供日常饮食记录参考</view>
+
+          <view class="ai-result-actions">
+            <view class="photo-action-btn outline" bindtap="onClickReAnalyzeAi" hover-class="photo-action-btn-hover">
+              <text>重新分析</text>
+            </view>
+          </view>
+
+          <view class="ai-dirty-hint" wx:if="{{recordDirtyAfterAi}}">
+            <text>饮食记录已修改，AI分析可能与当前记录不完全一致</text>
+            <text class="ai-dirty-link" bindtap="onClickReAnalyzeAi">重新分析</text>
+          </view>
+        </view>
+      </block>
+    </block>
+  </view>
+
+  <!-- 吃了什么 -->
+  <view class="section">
+    <view class="section-title">今天吃了什么？</view>
+    <view class="textarea-card">
+      <textarea
+        class="textarea"
+        placeholder="例如：米饭、鸡肉、青菜"
+        placeholder-class="textarea-placeholder"
+        maxlength="100"
+        value="{{foodText}}"
+        auto-height
+        bindinput="onInputFood"
+      />
+      <view class="count-line">
+        <text class="count-text muted">{{foodText.length}}/100（可空）</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 饱腹程度 -->
+  <view class="section">
+    <view class="section-title">吃到什么程度？</view>
+    <view class="satiety-grid">
+      <block wx:for="{{satietyOptions}}" wx:key="level">
+        <view
+          class="satiety-item {{item.emoji === '✅' ? 'satiety-item-on' : ''}}"
+          data-level="{{item.level}}"
+          bindtap="selectSatiety"
+          hover-class="satiety-item-hover"
+        >
+          <view class="satiety-head">{{item.emoji}}</view>
+          <view class="satiety-label">{{item.label}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 标签多选 -->
+  <view class="section">
+    <view class="section-title">这一餐有什么？</view>
+    <view class="tag-grid">
+      <block wx:for="{{tagOptions}}" wx:key="key">
+        <view
+          class="tag-chip {{item.selected ? 'tag-chip-on' : ''}}"
+          data-key="{{item.key}}"
+          bindtap="toggleTag"
+          hover-class="tag-chip-hover"
+        >
+          <text class="tag-check">{{item.selected ? '✅' : '🟟'}}</text>
+          <text class="tag-label">{{item.label}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="section">
+    <view class="section-title">备注</view>
+    <view class="textarea-card">
+      <textarea
+        class="textarea"
+        placeholder="今天聚餐，吃得比平时多一点"
+        placeholder-class="textarea-placeholder"
+        maxlength="200"
+        value="{{note}}"
+        auto-height
+        bindinput="onInputNote"
+      />
+      <view class="count-line">
+        <text class="count-text muted">{{note.length}}/200（可空）</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮区 -->
+  <view class="bottom-actions">
+    <block wx:if="{{hasRecord}}">
+      <view class="btn-delete" bindtap="onClickDelete" hover-class="btn-delete-hover">
+        <text>删除本次记录</text>
+      </view>
+    </block>
+    <view class="btn-primary" bindtap="onClickSave" hover-class="btn-primary-hover">
+      <text>{{isEdit ? '保存修改' : '保存'}}</text>
+    </view>
+  </view>
+  <view class="bottom-safe"/>
+</view>

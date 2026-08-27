@@ -1,0 +1,120 @@
+<view class="world-card transition-{{transition.kind}} mood-{{companionMood}} stage-{{companionStage}}">
+  <view class="world-header">
+    <view>
+      <view class="world-title">{{headerText}}</view>
+      <view wx:if="{{subtitleText}}" class="world-subtitle">{{subtitleText}}</view>
+    </view>
+    <view wx:if="{{settingsVisible}}" class="world-settings" bindtap="onSettingsTap" hover-class="world-settings-hover">···</view>
+  </view>
+
+  <view class="world-scene">
+    <!-- 美术就位后直接切换成同一套分层图片；占位阶段不请求不存在的资源。 -->
+    <block wx:if="{{assets.useImages}}">
+      <image class="image-layer background-image" src="{{assets.background}}" mode="aspectFill"></image>
+      <image class="image-layer ground-image" src="{{assets.ground}}" mode="aspectFit"></image>
+      <image class="image-layer path-image" src="{{assets.path}}" mode="aspectFit"></image>
+      <image class="image-layer water-image" src="{{assets.water}}" mode="aspectFit"></image>
+      <image class="image-layer plant-image" src="{{assets.plant}}" mode="aspectFit"></image>
+      <image wx:if="{{state.todayAllCompleted}}" class="image-layer sunlight-image" src="{{assets.sunlight}}" mode="aspectFit"></image>
+      <image wx:if="{{state.todayAllCompleted}}" class="image-layer flowers-image" src="{{assets.flowers}}" mode="aspectFit"></image>
+      <image wx:if="{{transition.kind === 'all'}}" class="image-layer sparkle-image" src="{{assets.sparkle}}" mode="aspectFit"></image>
+    </block>
+
+    <block wx:else>
+      <view class="sky-glow {{state.todayAllCompleted ? 'is-on' : ''}}"></view>
+      <view class="cloud cloud-a"></view>
+      <view class="cloud cloud-b"></view>
+      <view class="hill hill-back"></view>
+      <view class="hill hill-front"></view>
+      <view class="ground"></view>
+
+      <view class="path-layer path-level-{{state.pathLevel}}">
+        <view class="path-main"></view>
+        <view wx:if="{{state.pathLevel >= 2}}" class="path-extension"></view>
+        <view wx:if="{{state.pathLevel >= 3}}" class="path-far"></view>
+        <view wx:if="{{transition.kind === 'path' || transition.kind === 'path-level'}}" class="footprints">👣</view>
+      </view>
+
+      <view class="water-layer water-level-{{state.waterLevel}}">
+        <view class="pond-shadow"></view>
+        <view class="pond">
+          <view class="water-ripple ripple-a"></view>
+          <view class="water-ripple ripple-b"></view>
+        </view>
+        <text wx:if="{{state.waterLevel >= 3}}" class="water-reed">🌾</text>
+        <text wx:if="{{state.waterLevel >= 4}}" class="water-lily">🪷</text>
+      </view>
+
+      <view class="plant-layer plant-level-{{state.plantLevel}}">
+        <text wx:if="{{state.plantLevel >= 1}}" class="plant plant-a">🌱</text>
+        <text wx:if="{{state.plantLevel >= 2}}" class="plant plant-b">🌿</text>
+        <text wx:if="{{state.plantLevel >= 2}}" class="plant plant-c">🌱</text>
+        <text wx:if="{{state.plantLevel >= 3}}" class="plant plant-d">🌼</text>
+        <text wx:if="{{state.plantLevel >= 3}}" class="plant plant-e">🌷</text>
+        <text wx:if="{{state.plantLevel >= 4}}" class="plant plant-tree">🌳</text>
+        <text wx:if="{{state.plantLevel >= 4}}" class="plant plant-f">🌻</text>
+      </view>
+
+      <view wx:if="{{state.todayAllCompleted}}" class="complete-effects">
+        <text class="sun">☀️</text>
+        <text class="flower flower-a">🌼</text>
+        <text class="flower flower-b">🌸</text>
+      </view>
+      <view wx:if="{{transition.kind === 'all'}}" class="sparkles">
+        <text class="sparkle sparkle-a">✨</text>
+        <text class="sparkle sparkle-b">✨</text>
+        <text class="sparkle sparkle-c">✦</text>
+        <text class="sparkle sparkle-d">✨</text>
+      </view>
+    </block>
+
+    <view
+      wx:if="{{state.journeyLandmark.visible}}"
+      class="journey-landmark"
+      bindtap="onJourneyTap"
+      hover-class="journey-landmark-hover"
+    >
+      <text class="landmark-emoji">{{state.journeyLandmark.emoji}}</text>
+      <view class="landmark-copy">
+        <text class="landmark-title">{{state.journeyLandmark.title}}</text>
+        <text class="landmark-hint">{{state.journeyLandmark.hint}} ›</text>
+      </view>
+    </view>
+
+    <view class="companion-home" bindtap="onCompanionTap" hover-class="companion-home-hover">
+      <view class="companion-shadow"></view>
+      <image wx:if="{{companionAsset.useImage}}" class="companion-image" src="{{companionAsset.src}}" mode="aspectFit"></image>
+      <view wx:else class="companion-placeholder">
+        <text class="companion-leaf">{{companionAsset.emoji}}</text>
+        <view class="companion-body">
+          <text class="companion-face">{{companionMood === 'happy' ? '˶ᵔ ᵕ ᵔ˶' : '•ᴗ•'}}</text>
+        </view>
+      </view>
+      <text class="companion-name">{{companionName}}</text>
+    </view>
+  </view>
+
+  <view class="world-message {{transition.kind ? 'is-live' : ''}}">{{message}}</view>
+
+  <view class="world-status-row">
+    <view class="status-pill {{state.todayMealCompleted ? 'is-done' : ''}}">
+      <text>🌱</text><text>植物 {{state.plantLevel}}/4</text>
+    </view>
+    <view class="status-pill {{state.todayExerciseCompleted ? 'is-done' : ''}}">
+      <text>🛤️</text><text>小路 {{state.pathLevel}}/4</text>
+    </view>
+    <view class="status-pill {{state.todayWaterCompleted ? 'is-done' : ''}}">
+      <text>💧</text><text>水池 {{state.waterLevel}}/4</text>
+    </view>
+  </view>
+
+  <view wx:if="{{state.nextUnlock}}" class="next-unlock">
+    <text class="next-unlock-label">明天的期待</text>
+    <text class="next-unlock-text">{{state.nextUnlock.text}}</text>
+  </view>
+
+  <view class="world-footer">
+    <text class="energy-text">✨ {{energyText}}</text>
+    <view class="journey-link" bindtap="onJourneyTap" hover-class="journey-link-hover">查看28天旅程 ›</view>
+  </view>
+</view>

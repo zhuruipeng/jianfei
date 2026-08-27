@@ -1,0 +1,9 @@
+{
+  "name": "submitFeedback",
+  "version": "1.0.0",
+  "description": "用户反馈云端提交",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "^4.0.2"
+  }
+}

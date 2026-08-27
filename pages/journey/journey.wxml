@@ -1,0 +1,105 @@
+<!-- pages/journey/journey.wxml - V12.1 28天旅程地图 + 旅程收藏卡 -->
+<view class="page">
+  <view class="hero">
+    <view class="back-btn" bindtap="onGoBack" hover-class="back-btn-hover"><text>‹</text></view>
+    <view class="hero-title">{{planTitle}}</view>
+    <view wx:if="{{startDateText}}" class="hero-sub">{{startDateText}} · 第 {{planDay}} 天</view>
+    <view wx:else class="hero-sub">第 {{planDay}} 天</view>
+  </view>
+
+  <!-- 站点列表 -->
+  <view class="stops-card">
+    <block wx:for="{{stops}}" wx:for-item="stop" wx:for-index="idx" wx:key="planDay">
+      <view class="stop-row">
+        <view class="stop-anchor {{stop.reached ? 'stop-reached' : 'stop-future'}} {{stop.isCurrent ? 'stop-current' : ''}}">
+          <text wx:if="{{stop.reached}}" class="stop-icon-done">●</text>
+          <text wx:else class="stop-icon-dot">○</text>
+        </view>
+        <view class="stop-body">
+          <view class="stop-head">
+            <text class="stop-day">Day {{stop.planDay}}</text>
+            <text wx:if="{{stop.dateText}}" class="stop-date muted">{{stop.dateText}}</text>
+          </view>
+          <view class="stop-name {{stop.reached ? 'stop-name-on' : 'stop-name-off'}}">
+            {{stop.name}}
+          </view>
+          <view wx:if="{{stop.isCurrent}}" class="stop-current-tag">
+            <text>当前站</text>
+          </view>
+        </view>
+      </view>
+      <!-- 连接线：除了最后一项都画 -->
+      <view wx:if="{{idx < stops.length - 1}}" class="stop-connector {{stop.reached ? 'conn-reached' : 'conn-future'}}"></view>
+    </block>
+  </view>
+
+  <view class="tip-card">
+    <text>{{tipText}}</text>
+  </view>
+
+  <!-- V12.1：我的旅程卡（网格 2列，未解锁显示轮廓 + ?） -->
+  <view class="jc-section">
+    <view class="jc-head">
+      <text class="jc-title">我的旅程卡</text>
+      <text class="jc-count">{{cardsTitleSuffix}}</text>
+    </view>
+    <view class="jc-grid">
+      <block wx:for="{{cards}}" wx:for-item="c" wx:key="id">
+        <view
+          class="jc-card {{c.unlocked ? 'jc-unlocked' : 'jc-locked'}}"
+          bindtap="onClickJourneyCard"
+          data-id="{{c.id}}"
+          hover-class="jc-card-hover"
+        >
+          <!-- 卡片封面 -->
+          <view class="jc-cover {{c.unlocked ? 'jc-cover-on' : 'jc-cover-off'}}">
+            <block wx:if="{{c.asset.useImage}}">
+              <image class="jc-cover-img" src="{{c.asset.src}}" mode="aspectFit"></image>
+            </block>
+            <block wx:else>
+              <text class="jc-cover-emoji {{c.unlocked ? 'on' : 'off'}}">{{c.emoji}}</text>
+            </block>
+            <view wx:if="{{!c.unlocked}}" class="jc-cover-mask">
+              <text class="jc-q">?</text>
+            </view>
+          </view>
+          <view class="jc-foot">
+            <text class="jc-foot-text {{c.unlocked ? 'on' : 'off'}}">{{c.titleMasked}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="bottom-space"></view>
+</view>
+
+<!-- V12.1：旅程卡详情遮罩（只有已解锁可打开） -->
+<view wx:if="{{cardDetail.visible}}" class="welcome-mask" catchtap="onCloseCardDetail">
+  <view class="welcome-card jc-detail-card" catchtap="stopPropagation">
+    <view class="jc-d-head">
+      <text class="jc-d-title">{{cardDetail.title}}</text>
+      <text class="jc-d-day">Day {{cardDetail.dayRequired}}</text>
+    </view>
+    <view class="jc-d-cover">
+      <block wx:if="{{cardDetail.asset.useImage}}">
+        <image class="jc-d-img" src="{{cardDetail.asset.src}}" mode="widthFix"></image>
+      </block>
+      <block wx:else>
+        <text class="jc-d-emoji">{{cardDetail.asset.emoji}}</text>
+      </block>
+    </view>
+    <view class="jc-d-desc">{{cardDetail.description}}</view>
+    <view wx:if="{{cardDetail.extraSentence}}" class="jc-d-extra">{{cardDetail.extraSentence}}</view>
+    <view wx:if="{{cardDetail.unlockedAtText}}" class="jc-d-unlocked">
+      <text>{{cardDetail.unlockedAtText}} 解锁</text>
+    </view>
+    <view class="welcome-actions">
+      <view
+        class="btn-primary"
+        bindtap="onCloseCardDetail"
+        hover-class="btn-primary-hover"
+      ><text>收起来</text></view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,147 @@
+/* pages/plan-setup/plan-setup.wxss  V10 首次计划设置页（沿用 onboarding 风格） */
+.psp {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFF0EE 0%, #F7F8FA 50%);
+  padding: 96rpx 48rpx calc(env(safe-area-inset-bottom) + 40rpx) 48rpx;
+  box-sizing: border-box;
+}
+
+.muted { color: #8A93A5; }
+
+/* ============ Hero ============ */
+.hero { margin-bottom: 56rpx; }
+.brand {
+  font-size: 36rpx;
+  color: #FF6B6B;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+.title {
+  margin-top: 24rpx;
+  font-size: 48rpx;
+  line-height: 1.35;
+  color: #1F2937;
+  font-weight: 800;
+}
+.subtitle {
+  margin-top: 8rpx;
+  font-size: 28rpx;
+  color: #8A93A5;
+  line-height: 1.7;
+}
+
+/* ============ Section ============ */
+.section {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx 24rpx;
+  margin-top: 24rpx;
+  box-shadow: 0 2rpx 16rpx rgba(31, 41, 55, 0.04);
+}
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 20rpx;
+}
+.section-title-hint {
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+/* ============ 选项 pill ============ */
+.opt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.pill {
+  flex: 1 1 calc(33.33% - 16rpx);
+  min-width: 160rpx;
+  background: #F7F8FA;
+  border: 2rpx solid #E7EAF1;
+  border-radius: 20rpx;
+  padding: 22rpx 16rpx;
+  text-align: center;
+  transition: transform .1s, border-color .2s, background .2s;
+}
+.pill-sm {
+  flex: 1 1 calc(25% - 16rpx);
+  min-width: 120rpx;
+  padding: 20rpx 8rpx;
+}
+.pill-hover { transform: scale(0.98); }
+.pill-on {
+  border-color: #FF6B6B;
+  background: rgba(255, 107, 107, 0.06);
+}
+.pill-main {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1.2;
+}
+.pill-on .pill-main { color: #FF6B6B; }
+.pill-sub {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  line-height: 1.2;
+}
+
+/* ============ 体重输入 ============ */
+.input-row {
+  display: flex;
+  align-items: center;
+  background: #F7F8FA;
+  border: 2rpx solid #E7EAF1;
+  border-radius: 20rpx;
+  padding: 18rpx 24rpx;
+}
+.weight-input {
+  flex: 1;
+  font-size: 32rpx;
+  color: #1F2937;
+  font-weight: 600;
+}
+.input-unit {
+  margin-left: 16rpx;
+  font-size: 28rpx;
+  color: #8A93A5;
+}
+.input-tip {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+/* ============ 错误提示 ============ */
+.err-msg {
+  margin-top: 24rpx;
+  padding: 18rpx 24rpx;
+  background: rgba(255, 107, 107, 0.08);
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  color: #FF6B6B;
+  text-align: center;
+}
+
+/* ============ 底部主按钮 ============ */
+.footer { margin-top: 48rpx; }
+.btn-primary {
+  height: 88rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #4ECDC4 0%, #FF6B6B 100%);
+  color: #FFFFFF;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.20);
+}
+.btn-primary-hover { opacity: .92; }
+.btn-primary-disabled { opacity: .6; }
+.footer-tip {
+  text-align: center;
+  margin-top: 20rpx;
+  font-size: 24rpx;
+}

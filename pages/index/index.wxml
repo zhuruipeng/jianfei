@@ -1,0 +1,474 @@
+<!-- pages/index/index.wxml 今日首页（V13 小轻世界版） -->
+<view class="page">
+
+  <!-- V13 第一屏：角色住进由真实行动驱动的花园场景 -->
+  <view class="world-shell">
+    <companion-world
+      state="{{worldState}}"
+      assets="{{worldAssets}}"
+      transition="{{worldTransition}}"
+      companion-stage="{{companion.visualStageKey}}"
+      companion-mood="{{companion.transientActive ? companion.transientMood : companion.mood}}"
+      companion-asset="{{companion.asset}}"
+      companion-name="{{companion.name}}"
+      message="{{companion.transientActive && companion.transientMessage ? companion.transientMessage : worldState.message}}"
+      header-text="{{hasPlan ? planDurationDays + '天轻旅 · 第' + planDay + '天' : '我的小轻花园 · 第' + planDay + '天'}}"
+      subtitle-text="{{dateCN}}"
+      energy-text="{{companion.energyBandText}} 轻能量"
+      settings-visible="{{showPlanSettingsEntry}}"
+      bind:companiontap="onClickCompanion"
+      bind:journeytap="onOpenJourney"
+      bind:settingtap="onOpenPlanSettings"
+    />
+  </view>
+
+  <!-- V10：旧用户"加入计划"提示卡（无 plan 且未 dismiss 时显示） -->
+  <view wx:if="{{joinPlanPrompt.visible}}" class="section join-plan-card">
+    <view class="jp-title">要不要把接下来的记录加入一个28天计划？</view>
+    <view class="jp-sub muted">每天完成一点点就够了。</view>
+    <view class="jp-actions">
+      <view class="btn-primary btn-sm" bindtap="onStartJoinPlan" hover-class="btn-primary-hover">
+        <text>开始计划</text>
+      </view>
+      <view class="btn-link" bindtap="onDismissJoinPlan"><text>暂时不要</text></view>
+    </view>
+  </view>
+
+  <!-- V10：计划完成入口（planDay > durationDays 时显示，优先级高于周总结入口） -->
+  <view
+    wx:if="{{planCompletedEntry.visible}}"
+    class="section entry-card completed-card"
+    bindtap="onOpenPlanSummary"
+    hover-class="entry-card-hover"
+  >
+    <view class="entry-text">{{planCompletedEntry.text}}</view>
+    <view class="entry-sub muted">看看这 {{planDurationDays}} 天发生了什么</view>
+    <view class="entry-arrow">›</view>
+  </view>
+
+  <!-- V10：周总结入口（已生成但未查看的周总结） -->
+  <view
+    wx:if="{{weeklySummaryEntry.visible}}"
+    class="section entry-card weekly-card"
+    bindtap="onOpenWeeklySummary"
+    hover-class="entry-card-hover"
+  >
+    <view class="entry-text">{{weeklySummaryEntry.text}}</view>
+    <view class="entry-sub muted">点击查看</view>
+    <view class="entry-arrow">›</view>
+  </view>
+
+  <!-- V12：每日 3 任务（核心动作） -->
+  <view class="section daily-tasks">
+    <view class="section-header">
+      <text class="section-title">今天的3件小事</text>
+      <text class="daily-count">{{companion.completedCount}} / 3</text>
+    </view>
+    <block wx:for="{{dailyTasks}}" wx:for-item="task" wx:key="key">
+      <view
+        class="task-row {{task.completed ? 'task-done' : 'task-todo'}}"
+        data-key="{{task.key}}"
+        bindtap="onClickDailyTask"
+        hover-class="row-hover"
+      >
+        <text class="task-icon">{{task.emoji}}</text>
+        <view class="task-main">
+          <view class="task-title">{{task.title}}</view>
+          <view class="task-sub {{task.completed ? '' : 'muted'}}">
+            <block wx:if="{{task.completed}}">
+              ✓ 已完成
+            </block>
+            <block wx:else>
+              {{task.progressText}}
+            </block>
+          </view>
+        </view>
+        <view class="task-right">
+          <block wx:if="{{task.completed && task.energyAwarded}}">
+            <text class="task-energy-tag awarded">+{{task.amount}}能量</text>
+          </block>
+          <block wx:elif="{{task.completed}}">
+            <text class="task-energy-tag pending">能量稍后到</text>
+          </block>
+          <block wx:else>
+            <text class="task-energy-tag todo">+{{task.amount}}能量</text>
+          </block>
+        </view>
+      </view>
+    </block>
+    <view wx:if="{{allDailyCompleteBonusAwarded}}" class="bonus-row">
+      <text class="bonus-icon">✨</text>
+      <text class="bonus-text">今天的三件小事都完成了，额外 +20 能量</text>
+    </view>
+  </view>
+
+  <!-- 现实奖励保留为一行，不与世界争夺首屏 -->
+  <view class="section reward-compact" bindtap="jumpToRewardTab" hover-class="reward-compact-hover">
+    <text class="reward-compact-icon">{{nextReward.hasNext ? nextReward.emoji : '🎁'}}</text>
+    <view class="reward-compact-main">
+      <text class="reward-compact-label">下一个现实奖励</text>
+      <text class="reward-compact-title">{{nextReward.hasNext ? nextReward.title : '给自己设置一个小期待'}}</text>
+    </view>
+    <text class="reward-compact-remain">{{nextReward.hasNext ? nextReward.remainText : '去设置'}} ›</text>
+  </view>
+
+  <!-- 旧功能全部保留，但首页默认折叠，形成第三个弱化区域 -->
+  <view class="section home-more-toggle" bindtap="onToggleMoreHomeDetails" hover-class="home-more-toggle-hover">
+    <view>
+      <text class="home-more-title">今日记录与更多</text>
+      <text class="home-more-sub">三餐、积分、体重和小挑战都在这里</text>
+    </view>
+    <text class="home-more-arrow">{{showMoreHomeDetails ? '收起 ︿' : '展开 ﹀'}}</text>
+  </view>
+
+  <view wx:if="{{showMoreHomeDetails}}" class="home-more-content">
+
+  <!-- V12：今日特别任务（每周 3~4 天出现，按日期稳定，可跳过不惩罚） -->
+  <view
+    wx:if="{{specialTask.visible && !specialTask.skipped}}"
+    class="section special-task {{specialTask.completed ? 'sp-done' : 'sp-todo'}}"
+  >
+    <view class="sp-head">
+      <text class="sp-badge">🌟 今日小挑战</text>
+    </view>
+    <view class="sp-text">{{specialTask.text}}</view>
+    <view class="sp-foot">
+      <text class="sp-energy">+{{specialTask.amount}}轻能量</text>
+      <view class="sp-actions">
+        <view class="btn-link btn-skip" bindtap="onClickSkipSpecialTask"><text>今天不做这个</text></view>
+        <block wx:if="{{specialTask.completed}}">
+          <view class="btn-ghost done" disabled>
+            <text>✓ 已完成</text>
+          </view>
+        </block>
+        <block wx:else>
+          <view class="btn-primary btn-sm" bindtap="onClickCompleteSpecialTask" hover-class="btn-primary-hover">
+            <text>我完成了</text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view class="divider"></view>
+
+  <!-- 今日记录（旧功能：三餐 / 运动 / 喝水 / 体重，继续保留） -->
+  <view class="section today-list">
+    <view class="section-header"><text class="section-title">今日记录</text></view>
+
+    <!-- 三行三餐（真正的记录入口） -->
+    <block wx:for="{{mealCards}}" wx:key="mealType">
+      <view
+        class="row row-{{item.recorded ? 'done' : 'todo'}}"
+        data-type="{{item.mealType}}"
+        bindtap="onClickMealCard"
+        hover-class="row-hover"
+      >
+        <view class="row-left">
+          <text class="row-icon">{{item.icon}}</text>
+          <view class="row-main">
+            <view class="row-title">{{item.mealCn}}</view>
+            <view class="row-sub line-clamp-1">
+              <block wx:if="{{item.recorded}}">
+                <block wx:if="{{item.summaryText.length > 0}}">{{item.summaryText}}</block>
+                <block wx:else>已记录</block>
+              </block>
+              <block wx:else>还没有记录</block>
+            </view>
+            <view wx:if="{{item.recorded && item.satietyText.length > 0}}" class="row-tag">{{item.satietyText}}</view>
+          </view>
+        </view>
+        <view class="row-right">
+          <block wx:if="{{item.recorded}}">
+            <view class="check check-on"><text class="check-icon">✓</text></view>
+          </block>
+          <block wx:else>
+            <text class="row-arrow">›</text>
+          </block>
+        </view>
+      </view>
+    </block>
+
+    <!-- 运动 -->
+    <view
+      class="row row-{{exerciseCompleted ? 'done' : 'todo'}}"
+      bindtap="openExerciseInput"
+      hover-class="row-hover"
+    >
+      <view class="row-left">
+        <text class="row-icon">🏃</text>
+        <view class="row-main">
+          <view class="row-title">运动</view>
+          <view class="row-sub muted">目标 {{effectiveExerciseGoal}} 分钟</view>
+        </view>
+      </view>
+      <view class="row-right">
+        <text class="row-progress {{exerciseCompleted ? 'done' : ''}}">
+          {{exerciseMinutes}} / {{effectiveExerciseGoal}}分钟
+        </text>
+        <text class="row-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 喝水（内嵌 +/-） -->
+    <view class="row row-{{waterCompleted ? 'done' : 'todo'}} row-water">
+      <view class="row-left" bindtap="increaseWater" hover-class="row-hover">
+        <text class="row-icon">💧</text>
+        <view class="row-main">
+          <view class="row-title">喝水</view>
+          <view class="row-sub muted">目标 {{effectiveWaterGoal}} 杯</view>
+        </view>
+      </view>
+      <view class="row-right row-water-controls">
+        <view
+          class="mini-btn {{waterCups <= 0 ? 'disabled' : ''}}"
+          catchtap="decreaseWater"
+          hover-class="mini-btn-hover"
+        ><text>−</text></view>
+        <text class="row-progress {{waterCompleted ? 'done' : ''}}">
+          {{waterCups}} / {{effectiveWaterGoal}}杯
+        </text>
+        <view
+          class="mini-btn plus"
+          catchtap="increaseWater"
+          hover-class="mini-btn-hover"
+        ><text>+</text></view>
+      </view>
+    </view>
+
+    <!-- 今日体重：弱化小入口 -->
+    <view
+      class="row row-todo row-weight"
+      bindtap="onClickWeightEntry"
+      hover-class="row-hover"
+    >
+      <view class="row-left">
+        <text class="row-icon">⚖️</text>
+        <view class="row-main">
+          <view class="row-title">今日体重</view>
+          <view class="row-sub muted">
+            <block wx:if="{{todayWeight.hasTodayRecord}}">
+              {{todayWeight.todayKgText}}
+              <text wx:if="{{todayWeight.diffText.length > 0}}" class="row-diff"> {{todayWeight.diffText}}</text>
+            </block>
+            <block wx:else>今天还没有记录体重</block>
+          </view>
+        </view>
+      </view>
+      <view class="row-right">
+        <text class="row-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="divider"></view>
+
+  <!-- 今日获得 / 累计努力 -->
+  <view class="section points-two-col">
+    <view class="points-col">
+      <view class="points-label">今日获得</view>
+      <view class="points-value">🟟 <text class="points-num">{{todayPoints}}</text></view>
+    </view>
+    <view class="points-sep"></view>
+    <view class="points-col">
+      <view class="points-label">累计努力</view>
+      <view class="points-value">🟟 <text class="points-num">{{totalPoints}}</text></view>
+    </view>
+  </view>
+
+  <view class="divider"></view>
+
+  </view>
+
+  <!-- 首次欢迎卡（显示一次，不与养成欢迎冲突） -->
+  <view wx:if="{{showWelcomeCard && !introCard.visible}}" class="welcome-mask">
+    <view class="welcome-card">
+      <view class="welcome-title">欢迎来到轻一点 🟟</view>
+      <view class="welcome-body">
+        不用一下改变所有事情。
+        今天先做一件小事：
+        记录你的第一餐。
+      </view>
+      <view class="welcome-actions">
+        <view
+          class="btn-primary"
+          bindtap="onClickWelcomeRecordFirst"
+          hover-class="btn-primary-hover"
+        ><text>记录第一餐</text></view>
+        <view class="welcome-close" bindtap="onClickWelcomeClose"><text>先跳过</text></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- V12：旧用户升级欢迎卡（认识一下小轻） -->
+  <view wx:if="{{introCard.visible}}" class="welcome-mask">
+    <view class="welcome-card intro-card">
+      <view class="intro-emoji">👋</view>
+      <view class="welcome-title">认识一下小轻</view>
+      <view class="welcome-body">
+        从今天开始，
+        你完成的每个小行动，
+        也会帮助小轻一起成长。
+      </view>
+      <view wx:if="{{introCard.welcomeBonusGivenNow}}" class="intro-bonus">
+        <text>🎁 欢迎能量 +50</text>
+      </view>
+      <view class="welcome-actions">
+        <view
+          class="btn-primary"
+          bindtap="onCloseIntroCard"
+          hover-class="btn-primary-hover"
+        ><text>继续出发</text></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- V12.1：升级弹层（统一视觉 · 显示成长后的角色图 & 旅程卡解锁提示） -->
+  <view wx:if="{{levelUpModal.visible}}" class="welcome-mask" catchtap="onCloseLevelUpModal">
+    <view class="welcome-card levelup-card v2" catchtap="stopPropagation">
+      <view class="levelup-confetti">✨ ✦ ✨</view>
+      <view class="welcome-title levelup-title">小轻长大了一点</view>
+
+      <!-- 升级后角色图（优先图；fallback emoji） -->
+      <view class="levelup-avatar">
+        <block wx:if="{{levelUpModal.assetAfter.useImage}}">
+          <image class="levelup-img" src="{{levelUpModal.assetAfter.src}}" mode="aspectFit"></image>
+        </block>
+        <block wx:else>
+          <text class="levelup-avatar-emoji">{{levelUpModal.assetAfter.emoji}}</text>
+        </block>
+      </view>
+
+      <view class="levelup-level">
+        <text class="lv-from">Lv.{{levelUpModal.from}}</text>
+        <text class="lv-arrow">→</text>
+        <text class="lv-to">Lv.{{levelUpModal.to}} · {{levelUpModal.levelName}}</text>
+      </view>
+      <view class="welcome-body">
+        {{levelUpModal.banner}}
+      </view>
+      <view wx:if="{{levelUpModal.titles.length > 0}}" class="levelup-titles">
+        <block wx:for="{{levelUpModal.titles}}" wx:for-item="t" wx:key="*this">
+          <text class="levelup-title-tag">解锁称号 · {{t}}</text>
+        </block>
+      </view>
+      <view wx:if="{{levelUpModal.journeyCardsUnlocked.length > 0}}" class="levelup-jc-hint">
+        <text class="jc-star">🎴</text>
+        <text class="jc-text">还获得了新的旅程卡</text>
+        <view class="jc-chips">
+          <block wx:for="{{levelUpModal.journeyCardsUnlocked}}" wx:for-item="jc" wx:key="id">
+            <text class="jc-chip">{{jc.emoji}} {{jc.shortTitle}}</text>
+          </block>
+        </view>
+      </view>
+      <view class="welcome-actions">
+        <view
+          class="btn-primary"
+          bindtap="onCloseLevelUpModal"
+          hover-class="btn-primary-hover"
+        ><text>继续出发</text></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 开发环境：测试数据入口（仅 develop env showDevSeedButton=true 才渲染） -->
+  <view wx:if="{{showDevSeedButton}}" class="dev-seed">
+    <view
+      class="btn-ghost"
+      bindtap="onClickDevSeed"
+      hover-class="btn-ghost-hover"
+    >
+      <text>开发 · 注入 7 天测试数据</text>
+    </view>
+    <view
+      class="btn-ghost"
+      bindtap="onClickDevOpenUsage"
+      hover-class="btn-ghost-hover"
+    >
+      <text>开发 · 查看使用统计</text>
+    </view>
+    <view
+      class="btn-ghost"
+      bindtap="onClickDevAdd20Energy"
+      hover-class="btn-ghost-hover"
+    >
+      <text>开发 · +20 能量</text>
+    </view>
+    <view
+      class="btn-ghost"
+      bindtap="onClickDevAdd100Energy"
+      hover-class="btn-ghost-hover"
+    >
+      <text>开发 · +100 能量</text>
+    </view>
+    <view
+      class="btn-ghost"
+      bindtap="onClickDevSimulateNextDay"
+      hover-class="btn-ghost-hover"
+    >
+      <text>开发 · 模拟下一天</text>
+    </view>
+    <view
+      class="btn-ghost warn"
+      bindtap="onClickDevResetCompanion"
+      hover-class="btn-ghost-hover-danger"
+    >
+      <text>开发 · 重置养成系统</text>
+    </view>
+    <view
+      class="btn-ghost"
+      bindtap="onClickDevUnlockJourneyDay28"
+      hover-class="btn-ghost-hover"
+    >
+      <text>开发 · 解锁旅程卡Day28</text>
+    </view>
+    <view
+      class="btn-ghost"
+      bindtap="onClickDevClearJourneyCards"
+      hover-class="btn-ghost-hover"
+    >
+      <text>开发 · 重置旅程卡解锁</text>
+    </view>
+    <view
+      class="btn-ghost danger"
+      bindtap="onClickDevClearAllData"
+      hover-class="btn-ghost-hover-danger"
+    >
+      <text>开发 · 清除全部测试数据</text>
+    </view>
+  </view>
+
+  <view class="bottom-space"></view>
+
+  <!-- V11：自定义运动输入弹窗（输入框默认空，直接输入不需要删除） -->
+  <view wx:if="{{showExerciseModal}}" class="modal-mask" catchtap="onExerciseModalCancel">
+    <view class="modal-card" catchtap="stopPropagation">
+      <view class="modal-title">今日运动</view>
+      <view class="modal-hint">
+        <text wx:if="{{exerciseModalCurrent > 0}}">当前 {{exerciseModalCurrent}} 分钟 · </text>
+        <text>目标 {{exerciseModalGoal}} 分钟</text>
+      </view>
+      <view class="modal-input-wrap">
+        <input
+          class="modal-input"
+          type="number"
+          placeholder="直接输入分钟数"
+          value="{{exerciseModalValue}}"
+          focus="{{showExerciseModal}}"
+          confirm-type="done"
+          bindinput="onExerciseModalInput"
+          bindconfirm="onExerciseModalSave"
+        />
+        <text class="modal-unit">分钟</text>
+      </view>
+      <view class="modal-actions">
+        <view class="modal-btn modal-btn-cancel" bindtap="onExerciseModalCancel">
+          <text>取消</text>
+        </view>
+        <view class="modal-btn modal-btn-confirm" bindtap="onExerciseModalSave">
+          <text>保存</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

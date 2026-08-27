@@ -1,0 +1,9 @@
+{
+  "name": "listFeedback",
+  "version": "1.0.0",
+  "description": "管理员反馈列表",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "^4.0.2"
+  }
+}

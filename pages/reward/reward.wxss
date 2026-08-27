@@ -1,0 +1,349 @@
+/* pages/reward/reward.wxss  V8 视觉 tokens 统一 */
+
+.page {
+  padding: 32rpx 32rpx 180rpx;
+  box-sizing: border-box;
+}
+
+/* ========= Hero 头部累计积分 ========= */
+.reward-hero {
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 55%, #FFC1A8 100%);
+  color: #FFFFFF;
+  box-shadow: 0 10rpx 28rpx rgba(255, 107, 107, 0.22);
+  margin-bottom: 24rpx;
+  border-radius: 24rpx;
+  padding: 32rpx 32rpx 36rpx;
+}
+
+.hero-top {
+  font-size: 34rpx;
+  font-weight: 600;
+  opacity: 0.95;
+  letter-spacing: 2rpx;
+}
+
+.hero-row {
+  margin-top: 24rpx;
+}
+
+.hero-label {
+  font-size: 28rpx;
+  opacity: 0.85;
+}
+
+.hero-points {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 8rpx;
+}
+
+.hero-points .points-emoji {
+  font-size: 56rpx;
+  margin-right: 12rpx;
+}
+
+.hero-points .points-num {
+  font-size: 96rpx;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 2rpx;
+}
+
+.hero-tip {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  opacity: 0.92;
+}
+
+/* ========= 新建按钮（统一 tokens：84rpx 高 + 999rpx 圆角） ========= */
+.new-reward-wrap {
+  margin-bottom: 24rpx;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #4ECDC4 0%, #FF6B6B 100%);
+  color: #FFFFFF;
+  height: 84rpx;
+  padding: 0 36rpx;
+  border-radius: 999rpx;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  box-shadow: 0 8rpx 22rpx rgba(255, 107, 107, 0.18);
+}
+
+.btn-primary.full {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-primary.small {
+  height: 72rpx;
+  padding: 0 28rpx;
+  font-size: 28rpx;
+}
+
+.btn-primary .btn-icon {
+  font-size: 36rpx;
+  margin-right: 10rpx;
+  line-height: 1;
+}
+
+.btn-primary-hover {
+  opacity: 0.9;
+  transform: scale(0.99);
+}
+
+.btn-disabled {
+  background: #D5DAE4 !important;
+  box-shadow: none !important;
+  color: #FFFFFF !important;
+  background-image: none !important;
+}
+
+.btn-ghost {
+  padding: 18rpx 26rpx;
+  border-radius: 18rpx;
+  background: #F2F4F8;
+  color: #374151;
+  font-size: 30rpx;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120rpx;
+}
+
+.btn-ghost.danger {
+  background: #FFF0F0;
+  color: #D04343;
+}
+
+.btn-ghost-hover {
+  opacity: 0.8;
+}
+
+/* ========= 区块标题 ========= */
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2C3245;
+  padding: 8rpx 4rpx 18rpx;
+}
+
+/* ========= 奖励卡片 ========= */
+.reward-card {
+  margin-bottom: 24rpx;
+  padding: 28rpx 28rpx 24rpx;
+  border-radius: 24rpx;
+  transition: all ease 0.2s;
+}
+
+.reward-unlocked {
+  background: #FFFFFF;
+  border: 2rpx solid #FFE0D8;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 107, 0.12);
+}
+
+.reward-pending {
+  background: #FFFFFF;
+  box-shadow: 0 2rpx 12rpx rgba(31, 41, 55, 0.05);
+}
+
+.reward-redeemed {
+  background: #F5F7FA;
+  box-shadow: none;
+  opacity: 0.92;
+}
+
+.reward-head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24rpx;
+}
+
+.reward-title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.reward-emoji {
+  font-size: 48rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.reward-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1F2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  font-size: 26rpx;
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-unlocked {
+  background: #FFF1E9;
+  color: #FF6B6B;
+}
+
+.status-pending {
+  background: #EEF1F6;
+  color: #6B7280;
+}
+
+.status-redeemed {
+  background: #E7F6EE;
+  color: #2FA965;
+}
+
+/* ========= meta row ========= */
+.reward-meta-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 24rpx;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-label {
+  font-size: 26rpx;
+  color: #8A93A5;
+  font-weight: 400;
+}
+
+.meta-label.muted {
+  color: #9AA3B2;
+}
+
+.meta-value {
+  margin-top: 4rpx;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.redeemed-time {
+  margin-top: 18rpx;
+}
+
+/* ========= 进度条 ========= */
+.reward-progress-area {
+  margin-top: 26rpx;
+}
+
+.progress-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.progress-text {
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+}
+
+.progress-remain {
+  font-size: 26rpx;
+  color: #8A93A5;
+}
+
+.progress-remain.achieved-text {
+  color: #FF6B6B;
+  font-weight: 500;
+}
+
+.progress-track {
+  width: 100%;
+  height: 14rpx;
+  background: #EDF0F5;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ECDC4 0%, #FF6B6B 100%);
+  border-radius: 999rpx;
+}
+
+/* ========= actions ========= */
+.reward-actions {
+  margin-top: 26rpx;
+  padding-top: 22rpx;
+  border-top: 2rpx solid #F1F3F8;
+  display: flex;
+  flex-direction: row;
+  gap: 16rpx;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.reward-actions .btn-primary {
+  padding: 18rpx 28rpx;
+  font-size: 30rpx;
+}
+
+/* ========= 空状态 ========= */
+.empty {
+  margin-top: 24rpx;
+  padding: 60rpx 36rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20rpx;
+}
+
+.empty-emoji {
+  font-size: 88rpx;
+  opacity: 0.9;
+}
+
+.empty-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.empty-desc {
+  font-size: 28rpx;
+  color: #8A93A5;
+  margin-bottom: 12rpx;
+}
+
+.empty .btn-primary {
+  margin-top: 20rpx;
+  min-width: 360rpx;
+}
+
+.bottom-space {
+  height: 80rpx;
+}

@@ -1,0 +1,74 @@
+<!-- pages/feedback/feedback.wxml -->
+<!-- V11：反馈提交到云端；失败暂存本机可重新提交 -->
+<view class="page">
+
+  <!-- V11：待重试入口（有 pending 时才显示，不自动请求） -->
+  <view wx:if="{{pendingVisible}}" class="pending-card">
+    <view class="pending-title">{{pendingHint}}</view>
+    <view
+      wx:for="{{pendingItems}}"
+      wx:key="id"
+      class="pending-item"
+    >
+      <view class="pending-item-head">
+        <text class="pending-tag">{{item.ratingLabel}}</text>
+        <text class="pending-time muted">{{item.createdAtShort}}</text>
+      </view>
+      <view wx:if="{{item.content}}" class="pending-content">{{item.content}}</view>
+      <view wx:else class="pending-content muted">（没有填写文字内容）</view>
+      <view class="pending-actions">
+        <view
+          class="btn-secondary {{isSubmitting ? 'btn-secondary-disabled' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onClickRetryPending"
+          hover-class="btn-secondary-hover"
+        >
+          <text>重新提交</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card hero-card">
+    <view class="hero-title">今天用起来怎么样？</view>
+    <view class="hero-desc muted">选一个最接近你感受的就可以。</view>
+    <view class="rating-row">
+      <view
+        wx:for="{{ratingOptions}}"
+        wx:key="key"
+        class="rating-item {{rating === item.key ? 'rating-item-selected' : ''}} {{isSubmitting ? 'rating-item-locked' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="onClickSelectRating"
+        hover-class="rating-item-hover"
+      >
+        <view class="rating-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="input-title">最想改进什么？</view>
+    <view class="input-hint muted">最多 {{contentMax}} 字，直接写真实感受就好。</view>
+    <textarea
+      class="feedback-area"
+      value="{{content}}"
+      bindinput="onInputContent"
+      placeholder="例如：记录午餐的步骤还是有点多。\n例如：奖励功能挺有意思。"
+      maxlength="{{contentMax}}"
+      auto-height
+      disabled="{{isSubmitting}}"
+    />
+    <view class="counter muted">{{contentCount}} / {{contentMax}}</view>
+  </view>
+
+  <view class="bottom-row">
+    <view
+      class="btn-primary full {{canSubmit ? '' : 'btn-primary-disabled'}} {{isSubmitting ? 'btn-primary-submitting' : ''}}"
+      bindtap="onClickSubmit"
+      hover-class="{{isSubmitting ? '' : 'btn-primary-hover'}}"
+    >
+      <text>{{submitBtnText}}</text>
+    </view>
+    <view class="foot-tip muted">你的反馈会发送给我们，帮助把记录这件事做得更简单。</view>
+  </view>
+</view>

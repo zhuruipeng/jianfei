@@ -1,0 +1,106 @@
+/* pages/onboarding/onboarding.wxss  V8 极简引导视觉（统一 tokens） */
+.obg {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFF0EE 0%, #F7F8FA 60%);
+  padding: 120rpx 48rpx 60rpx 48rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.hero { margin-bottom: 64rpx; }
+.brand {
+  font-size: 36rpx;
+  color: #FF6B6B;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+.title {
+  margin-top: 32rpx;
+  font-size: 52rpx;
+  line-height: 1.35;
+  color: #1F2937;
+  font-weight: 800;
+}
+.subtitle {
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  color: #8A93A5;
+  line-height: 1.7;
+}
+
+/* 选项卡 */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  flex: 1;
+}
+.opt {
+  background: #FFFFFF;
+  border: 2rpx solid #E7EAF1;
+  border-radius: 24rpx;
+  padding: 28rpx 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  transition: transform .1s, box-shadow .2s, border-color .2s;
+}
+.opt-hover { transform: scale(0.99); }
+.opt-on {
+  border-color: #FF6B6B;
+  box-shadow: 0 6rpx 20rpx rgba(255, 107, 107, 0.14);
+}
+.opt-check {
+  width: 56rpx; height: 56rpx;
+  border-radius: 50%;
+  background: #F7F8FA;
+  border: 2rpx solid #E7EAF1;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.opt-on .opt-check {
+  background: #FF6B6B;
+  border-color: #FF6B6B;
+}
+.opt-check .check {
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 30rpx;
+  line-height: 1;
+}
+.opt-check .circle {
+  width: 20rpx; height: 20rpx; border-radius: 50%;
+  background: transparent;
+}
+.opt-main { flex: 1; min-width: 0; }
+.opt-label {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1F2937;
+}
+.opt-on .opt-label { color: #FF6B6B; }
+.opt-sub {
+  margin-top: 6rpx;
+  font-size: 26rpx;
+}
+.muted { color: #8A93A5; }
+
+/* 底部主按钮 */
+.footer { margin-top: 60rpx; }
+.btn-primary {
+  height: 88rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #4ECDC4 0%, #FF6B6B 100%);
+  color: #FFFFFF;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.20);
+}
+.btn-primary-hover { opacity: .92; }
+.footer-tip {
+  text-align: center;
+  margin-top: 20rpx;
+  font-size: 24rpx;
+}

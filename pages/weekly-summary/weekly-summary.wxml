@@ -1,0 +1,100 @@
+<!--pages/weekly-summary/weekly-summary.wxml  V10 周总结页
+  - 入口参数：planId, weekNumber
+  - 数据来源：WeeklySummary（快照，由首页 ensureWeeklySummariesUpTo 生成）
+-->
+<view class="wsp" wx:if="{{loaded}}">
+  <!-- Hero -->
+  <view class="hero">
+    <view class="brand">轻步 🟟</view>
+    <view class="title">{{weekTitle}}</view>
+    <view class="subtitle muted">{{dateRangeText}}</view>
+  </view>
+
+  <!-- 主文案 -->
+  <view class="lead">
+    <view class="lead-main">{{meaningfulText}}</view>
+    <view class="lead-sub muted">{{oneLineSummary}}</view>
+  </view>
+
+  <!-- 指标列表 -->
+  <view class="section">
+    <view class="metric-row">
+      <view class="metric-label">饮食记录</view>
+      <view class="metric-value">{{summary.mealCount}} 餐</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">运动达标</view>
+      <view class="metric-value">{{summary.exerciseGoalDays}} 天</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">喝水达标</view>
+      <view class="metric-value">{{summary.waterGoalDays}} 天</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">获得积分</view>
+      <view class="metric-value">{{summary.pointsEarned}}</view>
+    </view>
+    <view class="metric-row">
+      <view class="metric-label">AI 分析</view>
+      <view class="metric-value">{{summary.aiAnalysisCount}} 次</view>
+    </view>
+  </view>
+
+  <!-- 体重变化 -->
+  <view class="section">
+    <view class="section-title">体重变化</view>
+    <block wx:if="{{weightHasTwo}}">
+      <view class="weight-flow">
+        <view class="weight-pill">
+          <view class="weight-num">{{weightStartText}}</view>
+          <view class="weight-tag muted">开始</view>
+        </view>
+        <view class="weight-arrow">↓</view>
+        <view class="weight-pill">
+          <view class="weight-num">{{weightEndText}}</view>
+          <view class="weight-tag muted">现在</view>
+        </view>
+      </view>
+      <view class="weight-change {{weightChangeNegative ? 'wc-down' : 'wc-up'}}">{{weightChangeText}}</view>
+      <view class="weight-tip muted">体重每天都会自然波动，\n关注长期趋势就好。</view>
+    </block>
+    <block wx:elif="{{weightHasOne}}">
+      <view class="weight-tip muted">这一周只记录了一次体重。</view>
+      <view class="weight-tip muted">没关系，多记几次就能看到变化。</view>
+    </block>
+    <block wx:else>
+      <view class="weight-tip muted">这一周没有体重记录。</view>
+      <view class="weight-tip muted">没关系，饮食和运动习惯本身也值得记录。</view>
+    </block>
+  </view>
+
+  <!-- 奖励提示 -->
+  <view wx:if="{{rewardText}}" class="reward-tip">{{rewardText}}</view>
+
+  <!-- 错误提示 -->
+  <view wx:if="{{errorMsg}}" class="err-msg">{{errorMsg}}</view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <view
+      class="btn-primary"
+      bindtap="onContinueNextWeek"
+      hover-class="btn-primary-hover"
+    >
+      <text>继续下一周</text>
+    </view>
+    <view class="footer-tip muted">这一周结束，下一周慢慢来。</view>
+  </view>
+</view>
+
+<!-- 加载中 / 出错兜底 -->
+<view class="wsp" wx:else>
+  <view class="hero">
+    <view class="title">{{errorMsg || '正在加载...'}}</view>
+  </view>
+  <view wx:if="{{errorMsg}}" class="footer">
+    <view class="btn-primary" bindtap="onGoHome" hover-class="btn-primary-hover">
+      <text>回首页</text>
+    </view>
+  </view>
+</view>

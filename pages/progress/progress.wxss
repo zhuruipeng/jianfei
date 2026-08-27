@@ -1,0 +1,447 @@
+/* pages/progress/progress.wxss  V8 视觉 tokens 统一 */
+
+.page {
+  padding: 32rpx 32rpx 180rpx;
+  box-sizing: border-box;
+}
+
+/* ===== Hero（空态 + 有数据） ===== */
+.hero {
+  background: linear-gradient(135deg, #4ECDC4 0%, #6EE7DF 55%, #A9F2E8 100%);
+  color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx 32rpx 36rpx;
+  box-shadow: 0 10rpx 28rpx rgba(78, 205, 196, 0.18);
+  margin-bottom: 24rpx;
+}
+
+.hero-top {
+  font-size: 34rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  opacity: 0.95;
+}
+
+.hero-label {
+  font-size: 26rpx;
+  opacity: 0.88;
+  margin-top: 24rpx;
+}
+
+.hero-current {
+  display: flex;
+  align-items: baseline;
+  margin-top: 6rpx;
+}
+
+.hero-num {
+  font-size: 72rpx;  /* V8 弱化体重数字 (首页已不放最大体重, 进展页也不做 96rpx 巨人) */
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 1rpx;
+}
+
+.hero-num.placeholder {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.hero-unit {
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-left: 10rpx;
+  opacity: 0.9;
+}
+
+.hero-tip {
+  margin-top: 18rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  opacity: 0.92;
+  white-space: pre-line;
+}
+
+/* ===== Hero 内嵌空态 ===== */
+.empty-hero {
+  padding: 36rpx 8rpx 8rpx !important;
+  gap: 16rpx;
+  color: #FFFFFF !important;
+}
+.empty-hero .empty-title { color: #FFFFFF !important; }
+.empty-hero .empty-desc  { color: rgba(255,255,255,0.92) !important; }
+.empty-hero .btn-primary { margin-top: 12rpx; }
+
+/* ===== Stats Grid ===== */
+.stats-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 28rpx 18rpx;
+  border-radius: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.stat-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 4rpx;
+  gap: 6rpx;
+}
+
+.stat-col-divider {
+  width: 2rpx;
+  background: #F1F3F8;
+  margin: 6rpx 0;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #8A93A5;
+}
+
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1.2;
+}
+
+.stat-unit {
+  font-size: 22rpx;
+  color: #8A93A5;
+  margin-top: -4rpx;
+}
+
+.stat-num.change-negative {
+  color: #2FA965;
+}
+
+.stat-num.change-positive {
+  color: #FF6B6B;
+}
+
+.stat-num.change-zero {
+  color: #8A93A5;
+}
+
+/* ===== 记录今日体重按钮（统一 tokens：84rpx 高 + 999rpx 圆角） ===== */
+.row-record {
+  margin-bottom: 24rpx;
+}
+
+.row-feedback {
+  margin-top: 32rpx;
+  margin-bottom: 24rpx;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88rpx;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  border-radius: 9999rpx;
+  background: #FFFFFF;
+  color: #4A4A4A;
+  font-size: 30rpx;
+  font-weight: 500;
+  border: 2rpx solid #E6E6EA;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  transition: background 0.15s ease;
+}
+.btn-secondary.full { width: 100%; }
+.btn-secondary .btn-icon { margin-right: 12rpx; }
+.btn-secondary-hover { background: #F3F3F5 !important; }
+.btn-secondary:active { background: #EAEAEE !important; }
+
+.btn-primary {
+  background: linear-gradient(90deg, #4ECDC4 0%, #FF6B6B 100%);
+  color: #FFFFFF;
+  height: 84rpx;
+  padding: 0 36rpx;
+  border-radius: 999rpx;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  box-shadow: 0 8rpx 22rpx rgba(255, 107, 107, 0.18);
+}
+
+.btn-primary.full {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-primary.small {
+  height: 72rpx;
+  padding: 0 28rpx;
+  font-size: 28rpx;
+}
+
+.btn-primary .btn-icon {
+  font-size: 36rpx;
+  margin-right: 10rpx;
+  line-height: 1;
+}
+
+.btn-primary-hover {
+  opacity: 0.9;
+  transform: scale(0.99);
+}
+
+/* ===== 通用 section ===== */
+.section {
+  margin-top: 24rpx;
+}
+
+.card {
+  background: #FFFFFF;
+  box-shadow: 0 2rpx 12rpx rgba(31, 41, 55, 0.05);
+  border-radius: 24rpx;
+}
+
+.trend-card {
+  padding: 28rpx;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20rpx;
+}
+
+.section-title-only {
+  padding: 4rpx 4rpx 18rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2C3245;
+}
+
+.section-desc {
+  font-size: 24rpx;
+}
+
+.muted {
+  color: #8A93A5;
+}
+
+/* ===== Canvas ===== */
+.canvas-wrap {
+  position: relative;
+  margin-top: 10rpx;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100rpx;
+  padding-right: 16rpx;
+  padding-top: 6rpx;
+  padding-bottom: 10rpx;
+  box-sizing: border-box;
+}
+
+.y-tick {
+  font-size: 22rpx;
+  color: #9AA3B2;
+  text-align: right;
+}
+
+.weight-canvas {
+  flex: 1;
+  background: #FAFBFD;
+  border-radius: 16rpx;
+  min-height: 320rpx;
+}
+
+.x-axis {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 100rpx;
+  padding-right: 4rpx;
+  margin-top: 12rpx;
+}
+
+.x-tick {
+  font-size: 22rpx;
+  color: #9AA3B2;
+}
+
+/* ===== Empty inner（趋势图内/最近记录为空） ===== */
+.empty-inner {
+  padding: 48rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14rpx;
+}
+
+.empty-inner.small {
+  padding: 30rpx 24rpx;
+  gap: 8rpx;
+}
+
+.empty-emoji {
+  font-size: 68rpx;
+  opacity: 0.9;
+}
+
+.empty-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.empty-title.small {
+  font-size: 28rpx;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: #8A93A5;
+  max-width: 80%;
+  line-height: 1.5;
+}
+
+/* ===== 最近记录 ===== */
+.record-list {
+  padding: 6rpx 24rpx;
+  border-radius: 24rpx;
+}
+
+.record-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 4rpx;
+}
+
+.record-row-border {
+  border-bottom: 2rpx solid #F1F3F8;
+}
+
+.record-row-hover {
+  opacity: 0.75;
+}
+
+.record-date {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #374151;
+}
+
+.record-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.record-weight {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.record-arrow {
+  font-size: 40rpx;
+  margin-left: 16rpx;
+  line-height: 1;
+}
+
+.bottom-space {
+  height: 80rpx;
+}
+
+/* ============ V11：自定义输入弹窗（复用运动弹窗样式） ============ */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.modal-card {
+  width: 560rpx;
+  background: #FFFFFF;
+  border-radius: 28rpx;
+  padding: 48rpx 40rpx 32rpx;
+}
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1F2937;
+  text-align: center;
+}
+.modal-hint {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #8A93A5;
+  text-align: center;
+}
+.modal-input-wrap {
+  margin-top: 32rpx;
+  display: flex;
+  align-items: center;
+  background: #F7F8FA;
+  border-radius: 20rpx;
+  padding: 0 28rpx;
+  height: 96rpx;
+}
+.modal-input {
+  flex: 1;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #1F2937;
+  height: 96rpx;
+}
+.modal-unit {
+  font-size: 28rpx;
+  color: #8A93A5;
+  margin-left: 16rpx;
+}
+.modal-actions {
+  margin-top: 32rpx;
+  display: flex;
+  gap: 24rpx;
+}
+.modal-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+.modal-btn-cancel {
+  background: #F7F8FA;
+  color: #8A93A5;
+}
+.modal-btn-confirm {
+  background: linear-gradient(90deg, #4ECDC4 0%, #44BFC9 100%);
+  color: #FFFFFF;
+}

@@ -1,0 +1,108 @@
+<!--pages/plan-settings/plan-settings.wxml  V10 计划设置页
+  - 查看/修改当前 active plan：运动目标、喝水目标（startDate 不可改）
+  - 结束当前计划（二次确认）
+  - 重新开始新计划（跳转 plan-setup）
+-->
+<view class="pst">
+  <!-- 无 plan 状态 -->
+  <block wx:if="{{!hasPlan}}">
+    <view class="empty-hero">
+      <view class="brand">轻步 🟟</view>
+      <view class="empty-title">还没有计划</view>
+      <view class="empty-sub muted">想给自己定一个小目标吗？</view>
+      <view
+        class="btn-primary"
+        bindtap="onGoSetup"
+        hover-class="btn-primary-hover"
+      >
+        <text>开始一个计划</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 有 plan 状态 -->
+  <block wx:else>
+    <view class="hero">
+      <view class="brand">轻步 🟟</view>
+      <view class="title">{{planTitle}}</view>
+      <view class="subtitle muted">{{planStartDateText}} · 第{{planDay}}天 / {{plan.durationDays}}天</view>
+    </view>
+
+    <!-- 修改运动目标 -->
+    <view class="section">
+      <view class="section-title">每日运动目标</view>
+      <view class="opt-row">
+        <block wx:for="{{exerciseOptions}}" wx:key="value">
+          <view
+            class="pill pill-sm {{item.selected ? 'pill-on' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="onSelectExercise"
+            hover-class="pill-hover"
+          >
+            <view class="pill-main">{{item.label}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 修改喝水目标 -->
+    <view class="section">
+      <view class="section-title">每日喝水目标</view>
+      <view class="opt-row">
+        <block wx:for="{{waterOptions}}" wx:key="value">
+          <view
+            class="pill pill-sm {{item.selected ? 'pill-on' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="onSelectWater"
+            hover-class="pill-hover"
+          >
+            <view class="pill-main">{{item.label}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="hint muted">修改目标只影响今天及以后，已经完成的历史记录不会变。</view>
+
+    <!-- 保存按钮 -->
+    <view wx:if="{{goalsChanged}}" class="save-bar">
+      <view
+        class="btn-primary"
+        bindtap="onSaveGoals"
+        hover-class="btn-primary-hover"
+      >
+        <text>保存目标</text>
+      </view>
+    </view>
+
+    <!-- 危险操作 -->
+    <view class="section danger-section">
+      <view class="section-title danger-title">其他</view>
+      <view
+        class="action-row"
+        bindtap="onStopPlan"
+        hover-class="action-row-hover"
+      >
+        <view class="action-main">
+          <view class="action-label">结束当前计划</view>
+          <view class="action-sub muted">已经记录的数据不会删除</view>
+        </view>
+        <view class="action-arrow">›</view>
+      </view>
+      <view
+        class="action-row"
+        bindtap="onStartNewPlan"
+        hover-class="action-row-hover"
+      >
+        <view class="action-main">
+          <view class="action-label">重新开始新计划</view>
+          <view class="action-sub muted">旧数据全部保留</view>
+        </view>
+        <view class="action-arrow">›</view>
+      </view>
+    </view>
+
+    <!-- 错误提示 -->
+    <view wx:if="{{errorMsg}}" class="err-msg">{{errorMsg}}</view>
+  </block>
+</view>

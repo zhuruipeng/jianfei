@@ -1,0 +1,9 @@
+{
+  "name": "analyzeMeal",
+  "version": "1.0.0",
+  "description": "轻一点 - AI 饮食分析入口（V6 占位，返回 not_implemented）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

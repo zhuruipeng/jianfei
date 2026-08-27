@@ -1,0 +1,40 @@
+<!--pages/onboarding/onboarding.wxml  V8 极简引导：只问坚持多久-->
+<view class="obg">
+  <view class="hero">
+    <view class="brand">轻一点 🟟</view>
+    <view class="title">你想先坚持多久？</view>
+    <view class="subtitle">先不用改变所有事情。</view>
+    <view class="subtitle">选一个小目标，我们就开始。</view>
+  </view>
+
+  <view class="options">
+    <block wx:for="{{options}}" wx:key="days">
+      <view
+        class="opt {{item.selected ? 'opt-on' : ''}}"
+        data-days="{{item.days}}"
+        bindtap="onClickOption"
+        hover-class="opt-hover"
+      >
+        <view class="opt-check">
+          <block wx:if="{{item.selected}}"><text class="check">✓</text></block>
+          <block wx:else><view class="circle"></view></block>
+        </view>
+        <view class="opt-main">
+          <view class="opt-label">{{item.label}}</view>
+          <view class="opt-sub muted">{{item.sub}}</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="footer">
+    <view
+      class="btn-primary"
+      bindtap="onClickStart"
+      hover-class="btn-primary-hover"
+    >
+      <text>开始</text>
+    </view>
+    <view class="footer-tip muted">只需要这一步，其它以后再说。</view>
+  </view>
+</view>
