@@ -1,0 +1,98 @@
+/* 小步轻 UI 2.0 semantic design tokens. Keep this file free of business state. */
+page,
+:host {
+  /* Surfaces and brand colors */
+  --ui-color-page: #f7f4ea;
+  --ui-color-card: #fffcf5;
+  --ui-color-surface: var(--ui-color-card);
+  --ui-color-green-soft: #e7f0db;
+  --ui-color-surface-soft: #f2f6e8;
+  --ui-color-green: #7fa36a;
+  --ui-color-green-deep: #49664e;
+  --ui-color-wood-light: #d9be96;
+  --ui-color-wood: #9e744b;
+  --ui-color-wood-deep: var(--ui-color-wood);
+  --ui-color-water: #82c5d6;
+  --ui-color-sun: #f1ce70;
+  --ui-color-pink: #efb7c2;
+
+  /* Content and state colors */
+  --ui-color-text: #35483b;
+  --ui-color-text-secondary: #778075;
+  --ui-color-text-weak: #a0a59b;
+  --ui-color-border: #e8e1d4;
+  --ui-color-success: #72a45f;
+  --ui-color-progress: #e4a239;
+  --ui-color-info: #6cafcb;
+  --ui-color-danger: #d98686;
+  --ui-color-on-strong: #fffcf5;
+
+  /* Typography */
+  --ui-font-size-caption: 20rpx;
+  --ui-font-size-label: 22rpx;
+  --ui-font-size-body: 24rpx;
+  --ui-font-size-subtitle: 28rpx;
+  --ui-font-size-title: 32rpx;
+  --ui-font-size-hero: 40rpx;
+  --ui-line-height-caption: 30rpx;
+  --ui-line-height-label: 32rpx;
+  --ui-line-height-body: 36rpx;
+  --ui-line-height-subtitle: 40rpx;
+  --ui-line-height-title: 44rpx;
+  --ui-line-height-hero: 54rpx;
+  --ui-font-weight-regular: 400;
+  --ui-font-weight-medium: 500;
+  --ui-font-weight-semibold: 600;
+  --ui-font-weight-bold: 700;
+
+  /* Spacing: 4rpx through 40rpx */
+  --ui-space-1: 4rpx;
+  --ui-space-2: 8rpx;
+  --ui-space-3: 12rpx;
+  --ui-space-4: 16rpx;
+  --ui-space-5: 20rpx;
+  --ui-space-6: 24rpx;
+  --ui-space-7: 28rpx;
+  --ui-space-8: 32rpx;
+  --ui-space-9: 36rpx;
+  --ui-space-10: 40rpx;
+
+  /* Shape */
+  --ui-radius-sm: 14rpx;
+  --ui-radius-md: 20rpx;
+  --ui-radius-lg: 28rpx;
+  --ui-radius-hero: 36rpx;
+  --ui-radius-pill: 999rpx;
+
+  /* Elevation */
+  --ui-shadow-soft: 0 8rpx 24rpx rgba(88, 96, 76, 0.08);
+  --ui-shadow-hero: 0 14rpx 40rpx rgba(88, 96, 76, 0.1);
+  --ui-shadow-float: 0 18rpx 48rpx rgba(70, 76, 64, 0.14);
+
+  /* Motion */
+  --ui-motion-fast: 160ms;
+  --ui-motion-normal: 260ms;
+  --ui-motion-grow: 520ms;
+  --ui-motion-complete: 900ms;
+  --ui-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Temporary aliases for the preserved UI 2.0 home styles. */
+  --qing-page-gutter: var(--ui-space-7);
+  --qing-card-padding: var(--ui-space-6);
+  --qing-section-gap: var(--ui-space-6);
+  --qing-radius-card: var(--ui-radius-lg);
+  --qing-radius-medium: var(--ui-radius-md);
+  --qing-bg-soft: var(--ui-color-surface-soft);
+  --qing-surface: var(--ui-color-card);
+  --qing-leaf-light: var(--ui-color-green-soft);
+  --qing-leaf: var(--ui-color-green);
+  --qing-leaf-deep: var(--ui-color-green-deep);
+  --qing-soil: var(--ui-color-wood-deep);
+  --qing-text: var(--ui-color-text);
+  --qing-text-muted: var(--ui-color-text-secondary);
+  --qing-line: var(--ui-color-border);
+  --qing-shadow-soft: var(--ui-shadow-soft);
+  --qing-motion-micro: var(--ui-motion-fast);
+  --qing-motion-transition: var(--ui-motion-normal);
+  --qing-ease: var(--ui-ease);
+}

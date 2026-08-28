@@ -1,0 +1,38 @@
+@import "../../../styles/ui-tokens.wxss";
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.track {
+  overflow: hidden;
+  width: 100%;
+  min-height: 2rpx;
+  box-sizing: border-box;
+  border-radius: var(--ui-radius-pill);
+  background: rgba(119, 128, 117, 0.13);
+}
+
+.fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ui-color-green);
+}
+
+.fill.is-animated {
+  transition: width var(--ui-motion-grow) var(--ui-ease);
+}
+
+.tone-yellow .fill {
+  background: var(--ui-color-progress);
+}
+
+.tone-blue .fill {
+  background: var(--ui-color-info);
+}
+
+.tone-wood .fill {
+  background: var(--ui-color-wood-deep);
+}

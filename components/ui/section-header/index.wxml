@@ -1,0 +1,18 @@
+<view class="section-header {{compact ? 'is-compact' : ''}}">
+  <view class="heading">
+    <text wx:if="{{icon}}" class="icon">{{icon}}</text>
+    <view class="copy">
+      <text class="title">{{title}}</text>
+      <text wx:if="{{subtitle}}" class="subtitle">{{subtitle}}</text>
+    </view>
+  </view>
+  <view
+    wx:if="{{actionText}}"
+    class="action"
+    bindtap="onAction"
+    hover-class="action-active"
+  >
+    <text>{{actionText}}</text>
+    <text class="arrow">›</text>
+  </view>
+</view>

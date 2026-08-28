@@ -1,0 +1,72 @@
+@import "../../../styles/ui-tokens.wxss";
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.soft-card {
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1rpx solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-card);
+  box-shadow: var(--ui-shadow-soft);
+  transition: opacity var(--ui-motion-fast) ease,
+    transform var(--ui-motion-fast) var(--ui-ease);
+}
+
+.padding-sm {
+  padding: 18rpx;
+}
+
+.padding-md {
+  padding: var(--ui-space-6);
+}
+
+.padding-lg {
+  padding: var(--ui-space-8);
+}
+
+.is-compact {
+  border-radius: var(--ui-radius-md);
+}
+
+.variant-green {
+  border-color: rgba(127, 163, 106, 0.16);
+  background: var(--ui-color-surface-soft);
+}
+
+.variant-blue {
+  border-color: rgba(108, 175, 203, 0.16);
+  background: #edf6f7;
+}
+
+.variant-yellow {
+  border-color: rgba(228, 162, 57, 0.16);
+  background: #fbf3dd;
+}
+
+.variant-paper {
+  border-color: rgba(217, 190, 150, 0.42);
+  background: linear-gradient(155deg, #fffdf7, #f8f0df);
+  box-shadow: 0 6rpx 20rpx rgba(128, 103, 72, 0.075);
+}
+
+.is-clickable {
+  cursor: pointer;
+}
+
+.is-disabled {
+  opacity: 0.48;
+}
+
+.soft-card-active {
+  opacity: 0.94;
+  transform: scale(0.985);
+}
+
+.slot-header,
+.slot-footer {
+  min-width: 0;
+}

@@ -1,0 +1,81 @@
+@import "../../../styles/ui-tokens.wxss";
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.section-header {
+  display: flex;
+  min-width: 0;
+  min-height: 56rpx;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-5);
+}
+
+.heading {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+
+.icon {
+  flex: none;
+  font-size: 30rpx;
+  line-height: 1;
+}
+
+.copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.title,
+.subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title {
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-subtitle);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-subtitle);
+}
+
+.subtitle {
+  margin-top: 2rpx;
+  color: var(--ui-color-text-secondary);
+  font-size: var(--ui-font-size-caption);
+  line-height: var(--ui-line-height-caption);
+}
+
+.action {
+  display: flex;
+  min-height: 56rpx;
+  flex: none;
+  align-items: center;
+  gap: 5rpx;
+  color: var(--ui-color-green-deep);
+  font-size: var(--ui-font-size-label);
+  white-space: nowrap;
+  transition: opacity var(--ui-motion-fast) ease;
+}
+
+.arrow {
+  font-size: 30rpx;
+  line-height: 1;
+}
+
+.action-active {
+  opacity: 0.6;
+}
+
+.is-compact .title {
+  font-size: 26rpx;
+  line-height: 36rpx;
+}

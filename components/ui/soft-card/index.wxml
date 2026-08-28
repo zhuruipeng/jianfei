@@ -1,0 +1,9 @@
+<view
+  class="soft-card variant-{{variant}} padding-{{padding}} {{compact ? 'is-compact' : ''}} {{clickable ? 'is-clickable' : ''}} {{disabled ? 'is-disabled' : ''}}"
+  bindtap="onTap"
+  hover-class="{{clickable && !disabled ? 'soft-card-active' : ''}}"
+>
+  <view class="slot-header"><slot name="header"></slot></view>
+  <slot></slot>
+  <view class="slot-footer"><slot name="footer"></slot></view>
+</view>

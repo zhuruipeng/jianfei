@@ -1,0 +1,92 @@
+@import "../../../styles/ui-tokens.wxss";
+
+:host {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.button {
+  display: inline-flex;
+  min-width: 128rpx;
+  height: 80rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 0 28rpx;
+  border-radius: var(--ui-radius-pill);
+  font-size: var(--ui-font-size-body);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-body);
+  transition: opacity var(--ui-motion-fast) ease,
+    transform var(--ui-motion-fast) var(--ui-ease);
+}
+
+.button-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.variant-primary {
+  color: var(--ui-color-on-strong);
+  background: var(--ui-color-green-deep);
+  box-shadow: 0 7rpx 18rpx rgba(73, 102, 78, 0.16);
+}
+
+.variant-secondary {
+  color: var(--ui-color-green-deep);
+  background: var(--ui-color-green-soft);
+}
+
+.variant-ghost {
+  color: var(--ui-color-green-deep);
+  background: transparent;
+}
+
+.variant-danger {
+  color: #ffffff;
+  background: var(--ui-color-danger);
+}
+
+.size-sm {
+  height: 64rpx;
+  padding: 0 22rpx;
+  font-size: var(--ui-font-size-label);
+}
+
+.size-lg {
+  height: 88rpx;
+  padding: 0 36rpx;
+  font-size: 26rpx;
+}
+
+.is-full {
+  width: 100%;
+}
+
+.is-disabled {
+  opacity: 0.45;
+}
+
+.button-active {
+  opacity: 0.9;
+  transform: scale(0.975);
+}
+
+.spinner {
+  width: 24rpx;
+  height: 24rpx;
+  flex: none;
+  box-sizing: border-box;
+  border: 3rpx solid rgba(255, 255, 255, 0.42);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

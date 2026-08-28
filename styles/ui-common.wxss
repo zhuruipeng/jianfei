@@ -1,0 +1,37 @@
+@import "./ui-tokens.wxss";
+
+.ui-page-title {
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-title);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-title);
+}
+
+.ui-section-title {
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-subtitle);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-subtitle);
+}
+
+.ui-body {
+  color: var(--ui-color-text-secondary);
+  font-size: var(--ui-font-size-body);
+  line-height: var(--ui-line-height-body);
+}
+
+.ui-caption {
+  color: var(--ui-color-text-weak);
+  font-size: var(--ui-font-size-caption);
+  line-height: var(--ui-line-height-caption);
+}
+
+.ui-pressable {
+  transition: opacity var(--ui-motion-fast) ease,
+    transform var(--ui-motion-fast) var(--ui-ease);
+}
+
+.ui-pressable-active {
+  opacity: 0.9;
+  transform: scale(0.985);
+}

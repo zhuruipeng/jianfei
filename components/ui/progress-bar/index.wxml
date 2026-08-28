@@ -1,0 +1,6 @@
+<view class="track tone-{{tone}}" style="height: {{height}}rpx;">
+  <view
+    class="fill {{animated ? 'is-animated' : ''}}"
+    style="width: {{percent}}%;"
+  ></view>
+</view>
