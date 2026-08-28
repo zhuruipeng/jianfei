@@ -1,0 +1,16 @@
+Component({
+  properties: {
+    eyebrow: { type: String, value: '' },
+    title: { type: String, value: '' },
+    description: { type: String, value: '' },
+    imageSrc: { type: String, value: '' },
+    actionText: { type: String, value: '' },
+    compact: { type: Boolean, value: false },
+  },
+
+  methods: {
+    onAction() {
+      this.triggerEvent('action');
+    },
+  },
+});

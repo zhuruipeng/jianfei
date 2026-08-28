@@ -1,0 +1,22 @@
+<view class="paper-note {{compact ? 'paper-note--compact' : ''}}">
+  <view class="paper-note__clip" />
+
+  <view class="paper-note__copy">
+    <text wx:if="{{eyebrow}}" class="paper-note__eyebrow">{{eyebrow}}</text>
+    <text class="paper-note__title">{{title}}</text>
+    <text wx:if="{{description}}" class="paper-note__description">{{description}}</text>
+    <view
+      wx:if="{{actionText}}"
+      class="paper-note__action"
+      bindtap="onAction"
+      hover-class="paper-note__action--pressed"
+      hover-stay-time="80"
+    >
+      <text>{{actionText}}</text>
+      <text class="paper-note__arrow">›</text>
+    </view>
+  </view>
+
+  <image wx:if="{{imageSrc}}" class="paper-note__image" src="{{imageSrc}}" mode="aspectFit" />
+  <view wx:else class="paper-note__leaf" aria-hidden="true">⌁</view>
+</view>

@@ -1,0 +1,105 @@
+@import "../../../styles/ui-tokens.wxss";
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.summary-banner {
+  display: flex;
+  min-height: 126rpx;
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-5);
+  border: 1rpx solid rgba(127, 163, 106, .18);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface-soft);
+  box-shadow: var(--ui-shadow-soft);
+  transition: transform var(--ui-motion-fast) var(--ui-ease), opacity var(--ui-motion-fast) ease;
+}
+
+.summary-banner--pressed {
+  transform: scale(.985);
+  opacity: .9;
+}
+
+.summary-banner--blue {
+  border-color: rgba(108, 175, 203, .2);
+  background: #EDF5F7;
+}
+
+.summary-banner--warm {
+  border-color: rgba(217, 190, 150, .24);
+  background: #FAF1DF;
+}
+
+.summary-banner__visual {
+  display: flex;
+  width: 68rpx;
+  height: 68rpx;
+  flex: 0 0 68rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ui-radius-md);
+  background: rgba(255, 255, 255, .62);
+}
+
+.summary-banner__image {
+  width: 58rpx;
+  height: 58rpx;
+}
+
+.summary-banner__emoji {
+  font-size: 38rpx;
+  line-height: 1;
+}
+
+.summary-banner__copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.summary-banner__title {
+  overflow: hidden;
+  color: var(--ui-color-text);
+  font-size: 25rpx;
+  font-weight: 600;
+  line-height: 36rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary-banner__subtitle {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: var(--ui-space-1);
+  color: var(--ui-color-text-secondary);
+  font-size: 20rpx;
+  line-height: 30rpx;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.summary-banner__action {
+  display: flex;
+  min-height: 88rpx;
+  align-items: center;
+  gap: var(--ui-space-1);
+  color: var(--ui-color-green-deep);
+  font-size: 20rpx;
+  white-space: nowrap;
+}
+
+.summary-banner__arrow {
+  font-size: 34rpx;
+  line-height: 1;
+}
+
+.summary-banner--compact {
+  min-height: 112rpx;
+  padding-top: var(--ui-space-4);
+  padding-bottom: var(--ui-space-4);
+}

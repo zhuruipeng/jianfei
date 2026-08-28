@@ -1,0 +1,4 @@
+<view wx:if="{{visible}}" class="feedback-toast feedback-toast--{{tone}}">
+  <text wx:if="{{icon}}" class="feedback-toast__icon">{{icon}}</text>
+  <text class="feedback-toast__text">{{text}}</text>
+</view>

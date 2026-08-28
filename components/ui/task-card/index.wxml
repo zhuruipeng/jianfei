@@ -1,0 +1,47 @@
+<view
+  class="task-card task-card--{{status}} {{disabled ? 'task-card--disabled' : ''}}"
+  bindtap="onTap"
+  hover-class="{{disabled ? 'none' : 'task-card--pressed'}}"
+  hover-stay-time="80"
+>
+  <view class="task-card__header">
+    <view wx:if="{{iconSrc || iconEmoji}}" class="task-card__icon-shell">
+      <image wx:if="{{iconSrc}}" class="task-card__icon-image" src="{{iconSrc}}" mode="aspectFit" />
+      <text wx:else class="task-card__icon-emoji">{{iconEmoji}}</text>
+    </view>
+
+    <view class="task-card__copy">
+      <text class="task-card__title">{{title}}</text>
+      <text wx:if="{{subtitle}}" class="task-card__subtitle">{{subtitle}}</text>
+    </view>
+  </view>
+
+  <view class="task-card__indicator">
+    <view wx:if="{{indicator === 'check'}}" class="task-card__check-row">
+      <view class="task-card__check-mark">
+        <text>{{status === 'completed' ? '✓' : '○'}}</text>
+      </view>
+      <text wx:if="{{progressText}}" class="task-card__indicator-text">{{progressText}}</text>
+    </view>
+
+    <view wx:elif="{{indicator === 'ring'}}" class="task-card__ring-row">
+      <view class="task-card__ring">
+        <text>{{status === 'completed' ? '✓' : ringPercent + '%'}}</text>
+      </view>
+      <text wx:if="{{progressText}}" class="task-card__indicator-text">{{progressText}}</text>
+    </view>
+
+    <view wx:else class="task-card__bar-row">
+      <ui-progress-bar
+        value="{{progress}}"
+        max="{{progressMax}}"
+        tone="{{status === 'completed' ? 'green' : 'yellow'}}"
+        height="10"
+        animated="{{true}}"
+      />
+      <text wx:if="{{progressText}}" class="task-card__indicator-text">{{progressText}}</text>
+    </view>
+  </view>
+
+  <text wx:if="{{footerText}}" class="task-card__footer">{{footerText}}</text>
+</view>

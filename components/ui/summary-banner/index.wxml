@@ -1,0 +1,21 @@
+<view
+  class="summary-banner summary-banner--{{tone}} {{compact ? 'summary-banner--compact' : ''}}"
+  bindtap="onTap"
+  hover-class="summary-banner--pressed"
+  hover-stay-time="80"
+>
+  <view wx:if="{{iconSrc || iconEmoji}}" class="summary-banner__visual">
+    <image wx:if="{{iconSrc}}" class="summary-banner__image" src="{{iconSrc}}" mode="aspectFit" />
+    <text wx:else class="summary-banner__emoji">{{iconEmoji}}</text>
+  </view>
+
+  <view class="summary-banner__copy">
+    <text class="summary-banner__title">{{title}}</text>
+    <text wx:if="{{subtitle}}" class="summary-banner__subtitle">{{subtitle}}</text>
+  </view>
+
+  <view class="summary-banner__action">
+    <text wx:if="{{actionText}}">{{actionText}}</text>
+    <text class="summary-banner__arrow">›</text>
+  </view>
+</view>
