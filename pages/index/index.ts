@@ -213,6 +213,66 @@ interface DailyTaskCardVM {
   energyAwarded: boolean; // 是否已领过能量
 }
 
+type HomeTaskStatus = 'pending' | 'active' | 'completed';
+type HomeTaskIndicator = 'check' | 'ring' | 'bar';
+
+interface HomeTaskViewModel {
+  taskId: string;
+  iconSrc?: string;
+  iconEmoji?: string;
+  title: string;
+  subtitle?: string;
+  status: HomeTaskStatus;
+  indicator: HomeTaskIndicator;
+  progress?: number;
+  progressMax?: number;
+  progressText?: string;
+  footerText?: string;
+  disabled?: boolean;
+}
+
+interface SummaryBannerViewModel {
+  id: 'plan' | 'weekly' | 'progress';
+  title: string;
+  subtitle?: string;
+  actionText?: string;
+  tone: 'green' | 'blue' | 'warm';
+}
+
+/** 纯展示模型：只整理 refreshAll 已从现有 Service 得到的数据。 */
+interface HomeUiViewModel {
+  journey: {
+    title: string;
+    dayText: string;
+    dateText: string;
+    atmosphereText: string;
+    completed: boolean;
+  };
+  world: {
+    state: WorldState;
+    assets: WorldAssetSet;
+    transition: WorldTransition;
+    discoveries: WorldDiscoveryView[];
+    discoveryCount: number;
+    companionStage: CompanionVisualStage;
+    companionMood: CompanionMood;
+    companionAsset: ResolvedCompanionAsset;
+    companionName: string;
+    companionMessage: string;
+    plantText: string;
+    pathText: string;
+    waterText: string;
+    energyValue: number;
+    energyMax: number;
+    nextUnlockVisible: boolean;
+    nextUnlockTitle: string;
+    nextUnlockDescription: string;
+    nextUnlockImage: string;
+  };
+  tasks: HomeTaskViewModel[];
+  summaryBanners: SummaryBannerViewModel[];
+}
+
 interface SpecialTaskCardVM {
   visible: boolean;       // 今日是否出现
   text: string;
@@ -327,6 +387,7 @@ interface IndexPageData {
   discoveryCount: number;
   discoveryNotice: DiscoveryNoticeVM;
   discoveryDetail: DiscoveryNoticeVM;
+  homeUi: HomeUiViewModel;
 }
 
 interface DiscoveryNoticeVM {
@@ -427,6 +488,30 @@ function emptyWorldState(): WorldState {
 
 function emptyWorldTransition(): WorldTransition {
   return { kind: '', sequence: 0, message: '', durationMs: 0 };
+}
+
+function emptyHomeUiViewModel(): HomeUiViewModel {
+  const companion = emptyCompanion();
+  return {
+    journey: { title: '我的小轻花园 · 第1天', dayText: '', dateText: '', atmosphereText: '', completed: false },
+    world: {
+      state: emptyWorldState(),
+      assets: getWorldAssetSet(0, 0, 0),
+      transition: emptyWorldTransition(),
+      discoveries: [],
+      discoveryCount: 0,
+      companionStage: companion.visualStageKey,
+      companionMood: companion.mood,
+      companionAsset: companion.asset,
+      companionName: companion.name,
+      companionMessage: companion.message,
+      plantText: '0/4', pathText: '0/4', waterText: '0/4',
+      energyValue: 0, energyMax: companion.nextRequiredEnergy,
+      nextUnlockVisible: false, nextUnlockTitle: '', nextUnlockDescription: '', nextUnlockImage: '',
+    },
+    tasks: [],
+    summaryBanners: [],
+  };
 }
 
 function emptyMealCards(): MealCardItem[] {
@@ -559,6 +644,7 @@ Page({
     discoveryCount: 0,
     discoveryNotice: EMPTY_DISCOVERY_NOTICE,
     discoveryDetail: EMPTY_DISCOVERY_NOTICE,
+    homeUi: emptyHomeUiViewModel(),
   } as IndexPageData,
 
   today: '' as string,
@@ -1016,6 +1102,91 @@ Page({
       }
     }
 
+    // UI 2.0 只把上面已经由真实 Service / 工具函数得到的结果整理成展示字段。
+    // 不在此处重新判断完成态，也不写入第二套状态。
+    const homeTasks: HomeTaskViewModel[] = taskRaw.map((task: DailyTaskVM) => {
+      const status: HomeTaskStatus = task.completed ? 'completed' : (task.current > 0 ? 'active' : 'pending');
+      const indicator: HomeTaskIndicator = task.key === 'meal_any' ? 'check' : (task.key === 'exercise_min' ? 'ring' : 'bar');
+      const title = task.key === 'water_goal' ? '喝水目标' : task.def.title;
+      const subtitle = task.key === 'meal_any'
+        ? '记录今天任意一餐'
+        : `目标 ${task.target}${task.unitText ? ` ${task.unitText}` : ''}`;
+      const progressText = task.completed
+        ? `已完成  ${task.current}/${task.target}${task.unitText ? ` ${task.unitText}` : ''}`
+        : `${task.current}/${task.target}${task.unitText ? ` ${task.unitText}` : ''}`;
+      return {
+        taskId: task.key,
+        iconEmoji: task.def.emoji,
+        title,
+        subtitle,
+        status,
+        indicator,
+        progress: task.current,
+        progressMax: task.target,
+        progressText,
+        footerText: task.energyAwarded ? `已获得 ${task.amount} 轻能量` : '',
+      };
+    });
+    const nextUnlock = worldState.nextUnlock;
+    const homeUi: HomeUiViewModel = {
+      journey: {
+        title: worldHeaderText,
+        dayText: planCompletedEntry.visible
+          ? '这一段旅程已经完整走过'
+          : (planProgressText || `第${planDay}天`),
+        dateText: formatDateCN(today),
+        atmosphereText: msg,
+        completed: planCompletedEntry.visible,
+      },
+      world: {
+        state: worldState,
+        assets: worldAssets,
+        transition: worldTransition,
+        discoveries: discoveryResult.all,
+        discoveryCount: discoveryResult.all.length,
+        companionStage: companionVM.visualStageKey,
+        companionMood: companionVM.transientActive ? companionVM.transientMood : companionVM.mood,
+        companionAsset: companionVM.asset,
+        companionName: companionVM.name,
+        companionMessage: companionVM.transientActive && companionVM.transientMessage
+          ? companionVM.transientMessage
+          : worldState.message,
+        plantText: `${worldState.plantLevel}/4`,
+        pathText: `${worldState.pathLevel}/4`,
+        waterText: `${worldState.waterLevel}/4`,
+        energyValue: companionVM.totalEnergy,
+        energyMax: companionVM.nextRequiredEnergy,
+        nextUnlockVisible: !!nextUnlock,
+        nextUnlockTitle: nextUnlock ? nextUnlock.text : '',
+        nextUnlockDescription: nextUnlock ? nextUnlock.description : '',
+        nextUnlockImage: '',
+      },
+      tasks: homeTasks,
+      summaryBanners: [
+        ...(planCompletedEntry.visible ? [{
+          id: 'plan' as const,
+          title: planCompletedEntry.text,
+          subtitle: '看看这段旅程发生了什么',
+          actionText: '查看总结',
+          tone: 'green' as const,
+        }] : []),
+        ...(weeklySummaryEntry.visible ? [{
+          id: 'weekly' as const,
+          title: weeklySummaryEntry.text,
+          subtitle: '看看这一周发生了什么',
+          actionText: '查看',
+          tone: 'warm' as const,
+        }] : []),
+        {
+          id: 'progress',
+          title: '查看进展',
+          subtitle: '看看这些天发生了什么',
+          actionText: '',
+          tone: 'blue',
+        },
+      ],
+    };
+
     this.setData({
       dateCN: formatDateCN(today),
       planDay,
@@ -1066,6 +1237,7 @@ Page({
       worldAssets,
       worldDiscoveries: discoveryResult.all,
       discoveryCount: discoveryResult.all.length,
+      homeUi,
     });
 
     // 严格顺序：单项世界反馈 → 3/3 → 小轻升级 → 新发现。
@@ -1487,7 +1659,7 @@ Page({
 
   // ---------------- V12 养成：点击每日任务（跳转对应真实记录入口） ----------------
   onClickDailyTask(e: any) {
-    const key: string | undefined = e?.currentTarget?.dataset?.key;
+    const key: string | undefined = e?.detail?.taskId || e?.currentTarget?.dataset?.key;
     if (!key) return;
     if (key === 'meal_any') {
       // 记录一餐：跳到"当下建议的餐"（早餐前早餐、中午午餐、晚餐时段晚餐）
@@ -1499,6 +1671,13 @@ Page({
     } else if (key === 'water_goal') {
       this.increaseWater();
     }
+  },
+
+  onHomeSummaryTap(e: any) {
+    const id: string | undefined = e?.currentTarget?.dataset?.id;
+    if (id === 'plan') this.onOpenPlanSummary();
+    else if (id === 'weekly') this.onOpenWeeklySummary();
+    else if (id === 'progress') this.onClickWeightEntry();
   },
 
   // ---------------- V12.1：点击首页小轻互动（scale pulse + cooldown 2s + tap 文案 transient） ----------------

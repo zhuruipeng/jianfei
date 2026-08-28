@@ -1,77 +1,59 @@
 <!-- pages/index/index.wxml 今日首页（V13 小轻世界版） -->
 <view class="page">
 
-  <!-- V13 第一屏：角色住进由真实行动驱动的花园场景 -->
+  <view class="brand-masthead">
+    <view class="brand-copy">
+      <text class="brand-title">小步轻</text>
+      <text class="brand-subtitle">轻一点，生活更轻盈</text>
+    </view>
+    <view class="brand-seal" aria-label="小步轻品牌标记"><text>小</text></view>
+  </view>
+
+  <!-- UI 2.0：WorldHeroCard 只接收首页展示模型，不读取 Storage / Service。 -->
   <view class="world-shell">
-    <companion-world
-      state="{{worldState}}"
-      assets="{{worldAssets}}"
-      transition="{{worldTransition}}"
-      companion-stage="{{companion.visualStageKey}}"
-      companion-mood="{{companion.transientActive ? companion.transientMood : companion.mood}}"
-      companion-asset="{{companion.asset}}"
-      companion-name="{{companion.name}}"
-      message="{{companion.transientActive && companion.transientMessage ? companion.transientMessage : worldState.message}}"
-      header-text="{{worldHeaderText}}"
-      subtitle-text="{{worldSubtitleText}}"
-      energy-text="{{companion.energyBandText}} 轻能量"
+    <world-hero-card
+      journey-title="{{homeUi.journey.title}}"
+      journey-day-text="{{homeUi.journey.dayText}}"
+      date-text="{{homeUi.journey.dateText}}"
+      atmosphere-text="{{homeUi.journey.atmosphereText}}"
+      world-state="{{homeUi.world.state}}"
+      world-assets="{{homeUi.world.assets}}"
+      world-transition="{{homeUi.world.transition}}"
+      companion-stage="{{homeUi.world.companionStage}}"
+      companion-mood="{{homeUi.world.companionMood}}"
+      companion-asset="{{homeUi.world.companionAsset}}"
+      companion-name="{{homeUi.world.companionName}}"
+      companion-message="{{homeUi.world.companionMessage}}"
+      plant-text="{{homeUi.world.plantText}}"
+      path-text="{{homeUi.world.pathText}}"
+      water-text="{{homeUi.world.waterText}}"
+      energy-value="{{homeUi.world.energyValue}}"
+      energy-max="{{homeUi.world.energyMax}}"
+      next-unlock-visible="{{homeUi.world.nextUnlockVisible}}"
+      next-unlock-title="{{homeUi.world.nextUnlockTitle}}"
+      next-unlock-description="{{homeUi.world.nextUnlockDescription}}"
+      next-unlock-image="{{homeUi.world.nextUnlockImage}}"
+      journey-entry-title="查看{{planDurationDays || 28}}天旅程"
+      journey-entry-enabled="{{true}}"
       settings-visible="{{showPlanSettingsEntry}}"
-      discoveries="{{worldDiscoveries}}"
-      discovery-count="{{discoveryCount}}"
+      discoveries="{{homeUi.world.discoveries}}"
+      discovery-count="{{homeUi.world.discoveryCount}}"
       bind:companiontap="onClickCompanion"
       bind:journeytap="onOpenJourney"
       bind:settingtap="onOpenPlanSettings"
       bind:discoverytap="onWorldDiscoveryTap"
       bind:discoveriesentry="onOpenDiscoveries"
       bind:nextunlocktap="onNextUnlockTap"
-    />
+    ></world-hero-card>
   </view>
 
-  <!-- V12：每日 3 任务（核心动作） -->
-  <view class="section daily-tasks">
-    <view class="section-header">
-      <text class="section-title">今天的3件小事</text>
-      <text class="daily-count">{{companion.completedCount}} / 3</text>
-    </view>
-    <view wx:if="{{worldState.todayAllCompleted}}" class="tasks-complete-compact">
-      <block wx:for="{{dailyTasks}}" wx:for-item="task" wx:key="key">
-        <view class="compact-task"><text>{{task.emoji}}</text><text>{{task.title}}</text><text class="compact-check">✓</text></view>
+  <view class="daily-tasks">
+    <ui-section-header title="今天的 3 件小事" icon="🌼" subtitle="完成一点，花园就会长大一点" />
+    <view class="task-grid">
+      <block wx:for="{{homeUi.tasks}}" wx:for-item="task" wx:key="taskId">
+        <ui-task-card data-key="{{task.taskId}}" task-id="{{task.taskId}}" icon-src="{{task.iconSrc}}" icon-emoji="{{task.iconEmoji}}" title="{{task.title}}" subtitle="{{task.subtitle}}" status="{{task.status}}" indicator="{{task.indicator}}" progress="{{task.progress}}" progress-max="{{task.progressMax}}" progress-text="{{task.progressText}}" footer-text="{{task.footerText}}" disabled="{{task.disabled}}" bind:tap="onClickDailyTask" />
       </block>
     </view>
-    <block wx:else>
-    <block wx:for="{{dailyTasks}}" wx:for-item="task" wx:key="key">
-      <view
-        class="task-row {{task.completed ? 'task-done' : 'task-todo'}}"
-        data-key="{{task.key}}"
-        bindtap="onClickDailyTask"
-        hover-class="row-hover"
-      >
-        <text class="task-icon">{{task.emoji}}</text>
-        <view class="task-main">
-          <view class="task-title">{{task.title}}</view>
-          <view class="task-sub {{task.completed ? '' : 'muted'}}">
-            <block wx:if="{{task.completed}}">
-              ✓ 已完成
-            </block>
-            <block wx:else>
-              {{task.progressText}}
-            </block>
-          </view>
-        </view>
-        <view class="task-right">
-          <block wx:if="{{task.completed && task.energyAwarded}}">
-            <text class="task-energy-tag awarded">+{{task.amount}}能量</text>
-          </block>
-          <block wx:elif="{{task.completed}}">
-            <text class="task-energy-tag pending">能量稍后到</text>
-          </block>
-          <block wx:else>
-            <text class="task-energy-tag todo">+{{task.amount}}能量</text>
-          </block>
-        </view>
-      </view>
-    </block>
-    </block>
     <view wx:if="{{allDailyCompleteBonusAwarded}}" class="bonus-row">
       <text class="bonus-icon">✨</text>
       <text class="bonus-text">今天的三件小事都完成了，额外 +20 能量</text>
@@ -79,38 +61,22 @@
   </view>
 
   <!-- 计划/总结信息位于任务之后，避免与世界争夺第一屏。 -->
-  <view wx:if="{{joinPlanPrompt.visible}}" class="section join-plan-card">
+  <ui-soft-card wx:if="{{joinPlanPrompt.visible}}" variant="paper" padding="md" compact="{{true}}" class="join-plan-card">
     <view class="jp-title">要不要把接下来的记录加入一个28天计划？</view>
     <view class="jp-sub muted">每天完成一点点就够了。</view>
     <view class="jp-actions">
-      <view class="btn-primary btn-sm" bindtap="onStartJoinPlan" hover-class="btn-primary-hover"><text>开始计划</text></view>
+      <ui-soft-button text="开始计划" variant="primary" size="sm" bind:tap="onStartJoinPlan" />
       <view class="btn-link" bindtap="onDismissJoinPlan"><text>暂时不要</text></view>
     </view>
+  </ui-soft-card>
+
+  <view class="summary-grid">
+    <block wx:for="{{homeUi.summaryBanners}}" wx:for-item="banner" wx:key="id">
+      <ui-summary-banner data-id="{{banner.id}}" icon-emoji="{{banner.id === 'plan' ? '🎁' : (banner.id === 'weekly' ? '🌿' : '🪟')}}" title="{{banner.title}}" subtitle="{{banner.subtitle}}" action-text="{{banner.actionText}}" tone="{{banner.tone}}" compact="{{true}}" bind:tap="onHomeSummaryTap" />
+    </block>
   </view>
 
-  <view wx:if="{{planCompletedEntry.visible}}" class="section completed-journey-compact">
-    <view class="completed-summary" bindtap="onOpenPlanSummary" hover-class="entry-card-hover">
-      <text class="completed-summary-title">{{planCompletedEntry.text}}</text>
-      <text class="completed-summary-link">查看{{planDurationDays}}天总结 ›</text>
-    </view>
-    <view class="new-journey-link" bindtap="onStartNewJourney">开始新的旅程 ›</view>
-  </view>
-
-  <view wx:if="{{weeklySummaryEntry.visible}}" class="section entry-card weekly-card" bindtap="onOpenWeeklySummary" hover-class="entry-card-hover">
-    <view class="entry-text">{{weeklySummaryEntry.text}}</view>
-    <view class="entry-sub muted">点击查看</view>
-    <view class="entry-arrow">›</view>
-  </view>
-
-  <!-- 现实奖励保留为一行，不与世界争夺首屏 -->
-  <view class="section reward-compact" bindtap="jumpToRewardTab" hover-class="reward-compact-hover">
-    <text class="reward-compact-icon">{{nextReward.hasNext ? nextReward.emoji : '🎁'}}</text>
-    <view class="reward-compact-main">
-      <text class="reward-compact-label">下一个现实奖励</text>
-      <text class="reward-compact-title">{{nextReward.hasNext ? nextReward.title : '给自己设置一个小期待'}}</text>
-    </view>
-    <text class="reward-compact-remain">{{nextReward.hasNext ? nextReward.remainText : '去设置'}} ›</text>
-  </view>
+  <view wx:if="{{planCompletedEntry.visible}}" class="new-journey-link" bindtap="onStartNewJourney">开始新的旅程 ›</view>
 
   <!-- 旧功能全部保留，但首页默认折叠，形成第三个弱化区域 -->
   <view class="section home-more-toggle" bindtap="onToggleMoreHomeDetails" hover-class="home-more-toggle-hover">
