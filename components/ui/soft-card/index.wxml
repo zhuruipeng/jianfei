@@ -1,0 +1,1 @@
+<view class="card variant-{{variant}} padding-{{padding}} {{compact?'compact':''}} {{disabled?'disabled':''}}" bindtap="onTap" hover-class="{{clickable&&!disabled?'active':''}}"><slot name="header"></slot><slot></slot><slot name="footer"></slot></view>

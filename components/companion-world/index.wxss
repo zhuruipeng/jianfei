@@ -1,3 +1,5 @@
+@import "../../styles/ui-tokens.wxss";
+
 :host {
   display: block;
 }
@@ -239,3 +241,7 @@
 @keyframes sparkleRise { 0% { opacity: 0; transform: translateY(24rpx) scale(.5); } 35% { opacity: 1; } 100% { opacity: 0; transform: translateY(-42rpx) scale(1.2); } }
 @keyframes butterflyFloat { 0%,100% { transform: translate(0,0) rotate(-5deg); } 50% { transform: translate(12rpx,-13rpx) rotate(8deg); } }
 @keyframes fireflyGlow { 0%,100% { opacity: .45; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.15); } }
+
+.world-card.is-embedded{overflow:hidden;border:0;border-radius:30rpx;background:var(--ui-color-surface);box-shadow:none}.is-embedded .world-scene{height:600rpx;background:radial-gradient(circle at 24% 18%,rgba(255,252,224,.96),rgba(255,252,224,0) 210rpx),linear-gradient(180deg,#DCEBED 0%,#EDF4DD 55%,#C7DAA5 56%,#96BB78 100%)}
+.journey-landmark{min-height:74rpx;box-sizing:border-box;border:1rpx solid rgba(255,255,255,.85);background:rgba(255,252,245,.9);box-shadow:var(--ui-shadow-soft)}.world-discovery,.companion-home{transition-duration:var(--ui-motion-fast);transition-timing-function:var(--ui-ease)}
+.transition-plant .plant-layer,.transition-plant-level .plant-layer,.transition-path .path-layer,.transition-path-level .path-layer,.transition-water .pond,.transition-water-level .pond{animation-duration:var(--ui-motion-grow);animation-timing-function:var(--ui-ease)}.transition-all .companion-home{animation:companionCelebrate var(--ui-motion-complete) var(--ui-ease) 1}.transition-plant .companion-home,.transition-path .companion-home,.transition-water .companion-home{animation-duration:var(--ui-motion-grow);animation-timing-function:var(--ui-ease)}.sparkle{animation-duration:var(--ui-motion-complete)}

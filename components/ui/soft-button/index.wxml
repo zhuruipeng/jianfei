@@ -1,0 +1,1 @@
+<view class="button variant-{{variant}} size-{{size}} {{fullWidth?'full':''}} {{disabled||loading?'disabled':''}}" bindtap="onTap" hover-class="{{disabled||loading?'':'pressed'}}"><view wx:if="{{loading}}" class="spinner"></view><text>{{loading?'请稍候':text}}</text></view>

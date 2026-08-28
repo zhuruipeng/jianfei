@@ -1,8 +1,15 @@
 {
-  "navigationBarTitleText": "轻一点",
-  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTitleText": "小步轻",
+  "navigationBarBackgroundColor": "#F7F4EA",
   "navigationBarTextStyle": "black",
+  "navigationStyle": "custom",
   "usingComponents": {
-    "companion-world": "/components/companion-world/index"
+    "world-hero-card": "/components/home/world-hero-card/index",
+    "ui-section-header": "/components/ui/section-header/index",
+    "ui-task-card": "/components/ui/task-card/index",
+    "ui-summary-banner": "/components/ui/summary-banner/index",
+    "ui-soft-card": "/components/ui/soft-card/index",
+    "ui-soft-button": "/components/ui/soft-button/index",
+    "ui-feedback-toast": "/components/ui/feedback-toast/index"
   }
 }

@@ -1,0 +1,1 @@
+<view class="pill tone-{{tone}} {{active?'active':''}}"><text wx:if="{{icon}}" class="icon">{{icon}}</text><text>{{label}}</text><text class="value">{{value}}</text></view>

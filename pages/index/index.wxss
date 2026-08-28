@@ -1,3 +1,5 @@
+@import "../../styles/ui-tokens.wxss";
+
 /* pages/index/index.wxss 今日首页（V13 小轻世界）
  *  Design tokens：
  *    - 圆角：卡片 24rpx / 行内 20rpx / 胶囊按钮 999rpx
@@ -1112,3 +1114,26 @@
 .discovery-detail-card { text-align: center; }
 .discovery-detail-image { display: block; width: 180rpx; height: 180rpx; margin: 0 auto; }
 .discovery-detail-date { margin-top: 10rpx; color: #9b8a6e; font-size: 21rpx; }
+
+/* ==================== UI 2.0 首页 ==================== */
+.page{
+  min-height:100vh;
+  box-sizing:border-box;
+  padding:0 24rpx calc(env(safe-area-inset-bottom) + 48rpx);
+  background:radial-gradient(circle at 88% 2%,rgba(241,206,112,.18),rgba(241,206,112,0) 320rpx),linear-gradient(180deg,#F4F0E5 0,#F7F4EA 820rpx,#F7F4EA 100%);
+}
+.brand-masthead{position:relative;display:flex;height:138rpx;box-sizing:content-box;align-items:center;padding-top:calc(env(safe-area-inset-top) + 12rpx)}
+.brand-copy{position:absolute;left:50%;display:flex;align-items:center;flex-direction:column;transform:translateX(-50%);white-space:nowrap}
+.brand-title{color:var(--ui-color-text);font-size:42rpx;font-weight:600;line-height:50rpx;letter-spacing:5rpx}.brand-subtitle{margin-top:3rpx;color:#8A9A78;font-size:20rpx;line-height:30rpx;letter-spacing:2rpx}
+.brand-seal{display:flex;width:68rpx;height:68rpx;align-items:center;justify-content:center;border:2rpx solid rgba(127,163,106,.18);border-radius:24rpx 24rpx 24rpx 9rpx;color:#FFFCF5;font-size:28rpx;font-weight:600;background:linear-gradient(145deg,#A8C98F,#7FA36A);box-shadow:var(--ui-shadow-soft)}
+.world-shell{padding-top:0}
+.daily-tasks{margin-top:28rpx}.daily-tasks ui-section-header{margin:0 6rpx 18rpx}.task-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12rpx}
+.bonus-row{margin-top:16rpx;border:1rpx solid rgba(241,206,112,.2);border-radius:20rpx;background:linear-gradient(100deg,rgba(241,206,112,.2),rgba(239,183,194,.1))}.bonus-text{color:var(--ui-color-text-secondary)}
+.join-plan-card{display:block;margin-top:20rpx}.jp-title{color:var(--ui-color-text)}.jp-sub,.muted{color:var(--ui-color-text-secondary)}.jp-actions{margin-top:18rpx}.btn-link{color:var(--ui-color-green-deep)}
+.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14rpx;margin-top:20rpx}.new-journey-link{margin-top:12rpx;color:var(--ui-color-wood);font-size:20rpx;text-align:right}
+.section{margin-top:20rpx;padding:24rpx;border:1rpx solid rgba(255,255,255,.9);border-radius:24rpx;background:var(--ui-color-surface);box-shadow:var(--ui-shadow-soft)}
+.home-more-toggle{border-color:var(--ui-color-border);background:rgba(255,252,245,.74);box-shadow:none}.home-more-title{color:var(--ui-color-text)}.home-more-sub{color:var(--ui-color-text-secondary)}.home-more-arrow{color:var(--ui-color-green-deep)}
+.row,.special-task,.entry-card{border-radius:var(--ui-radius-md);background:#F5F3EA}.row-done{background:rgba(231,240,219,.75)}.row-title,.entry-text{color:var(--ui-color-text)}.row-sub,.row-sub.muted,.entry-sub{color:var(--ui-color-text-secondary)}
+.progress-fill{background:var(--ui-color-green);transition:width var(--ui-motion-grow) var(--ui-ease)}.btn-primary{background:var(--ui-color-green-deep);box-shadow:0 8rpx 20rpx rgba(73,102,78,.15);transition:transform var(--ui-motion-fast) var(--ui-ease)}.modal-btn-confirm{background:var(--ui-color-green-deep)}
+.welcome-card,.modal-card{border-radius:var(--ui-radius-lg);background:var(--ui-color-surface);box-shadow:var(--ui-shadow-float)}.welcome-mask,.modal-mask{background:rgba(53,72,59,.38)}
+@media(max-width:390px){.page{padding-left:20rpx;padding-right:20rpx}.task-grid{gap:8rpx}.summary-grid{gap:10rpx}}

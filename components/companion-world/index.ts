@@ -20,6 +20,7 @@ Component({
     settingsVisible: { type: Boolean, value: false },
     discoveries: { type: Array, value: [] },
     discoveryCount: { type: Number, value: 0 },
+    embedded: { type: Boolean, value: false },
   },
 
   methods: {

@@ -1,0 +1,5 @@
+@import "./ui-tokens.wxss";
+.ui-page-title { color: var(--ui-color-text); font-size: 32rpx; font-weight: 600; line-height: 44rpx; }
+.ui-section-title { color: var(--ui-color-text); font-size: 28rpx; font-weight: 600; line-height: 40rpx; }
+.ui-body { color: var(--ui-color-text-secondary); font-size: 24rpx; line-height: 36rpx; }
+.ui-caption { color: var(--ui-color-text-weak); font-size: 20rpx; line-height: 30rpx; }

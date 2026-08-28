@@ -1,0 +1,5 @@
+<view class="task status-{{status}} tone-{{tone}} {{disabled?'disabled':''}}" bindtap="onTap" hover-class="{{disabled?'':'pressed'}}">
+  <view class="head"><view class="icon-shell"><image wx:if="{{iconSrc}}" class="icon-image" src="{{iconSrc}}" mode="aspectFit"></image><text wx:else class="icon-emoji">{{iconEmoji}}</text></view><view class="copy"><text class="title">{{title}}</text><text wx:if="{{subtitle}}" class="subtitle">{{subtitle}}</text></view></view>
+  <view class="indicator"><view wx:if="{{indicator==='check'}}" class="check"><text class="mark">{{status==='completed'?'✓':'○'}}</text><text class="indicator-text">{{progressText}}</text></view><view wx:elif="{{indicator==='ring'}}" class="ring-row"><view class="ring"><text>{{status==='completed'?'✓':ringPercent}}</text></view><text class="indicator-text">{{progressText}}</text></view><view wx:else class="bar-row"><ui-progress-bar value="{{progress}}" max="{{progressMax}}" tone="{{tone}}" height="10"></ui-progress-bar><text class="indicator-text">{{progressText}}</text></view></view>
+  <text wx:if="{{footerText}}" class="footer">{{footerText}}</text>
+</view>

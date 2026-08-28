@@ -1,3 +1,5 @@
+@import "./styles/ui-tokens.wxss";
+
 /* 全局样式 */
 page {
   background: #F7F8FA;
