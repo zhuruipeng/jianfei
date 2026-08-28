@@ -3,7 +3,7 @@
 }
 
 .world-card {
-  overflow: hidden;
+  overflow: visible;
   border-radius: 36rpx;
   background: linear-gradient(180deg, #fffdf5 0%, #f4f8e9 100%);
   box-shadow: 0 18rpx 52rpx rgba(70, 91, 50, 0.13);
@@ -45,7 +45,8 @@
 .world-scene {
   position: relative;
   height: 540rpx;
-  overflow: hidden;
+  overflow: visible;
+  border-radius: 30rpx;
   background: linear-gradient(180deg, #cfe8ed 0%, #eaf3d7 59%, #c8dca4 60%, #9fc17f 100%);
 }
 
@@ -55,7 +56,7 @@
   width: 100%;
   height: 100%;
 }
-.background-image { z-index: 1; }
+.background-image { z-index: 1; border-radius: inherit; }
 .ground-image { z-index: 2; }
 .path-image { z-index: 3; }
 .water-image { z-index: 4; }
@@ -152,7 +153,7 @@
 .decor-stone { right: 18rpx; bottom: 30rpx; width: 55rpx; height: 55rpx; }
 .decor-grass { left: 20rpx; bottom: 20rpx; width: 70rpx; height: 70rpx; }
 
-.world-discovery { position: absolute; z-index: 10; filter: drop-shadow(0 5rpx 5rpx rgba(47,70,37,.18)); transition: transform .2s ease; }
+.world-discovery { position: absolute; z-index: 15; filter: drop-shadow(0 5rpx 5rpx rgba(47,70,37,.18)); transition: transform .2s ease; }
 .world-discovery-image { display: block; width: 100%; height: 100%; }
 .world-discovery-hover { transform: scale(1.14); }
 .discovery-near-plants { left: 196rpx; bottom: 252rpx; width: 58rpx; height: 58rpx; }
@@ -172,7 +173,7 @@
 .landmark-title { color: #3f4b38; font-size: 21rpx; font-weight: 700; white-space: nowrap; }
 .landmark-hint { color: #768169; font-size: 18rpx; }
 
-.companion-home { position: absolute; z-index: 11; left: 50%; bottom: 68rpx; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); transition: transform .25s ease; }
+.companion-home { position: absolute; z-index: 13; left: 50%; bottom: 68rpx; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); transition: transform .25s ease; }
 .companion-home-hover { transform: translateX(-50%) scale(1.05); }
 .companion-shadow { position: absolute; bottom: 37rpx; width: 118rpx; height: 30rpx; border-radius: 50%; background: rgba(53,76,42,.2); filter: blur(4rpx); }
 .companion-image { position: relative; width: 180rpx; height: 196rpx; }

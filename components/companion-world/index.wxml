@@ -1,5 +1,5 @@
 <view class="world-card transition-{{transition.kind}} mood-{{companionMood}} stage-{{companionStage}}">
-  <view class="world-header">
+  <view wx:if="{{headerText || subtitleText || settingsVisible}}" class="world-header">
     <view>
       <view class="world-title">{{headerText}}</view>
       <view wx:if="{{subtitleText}}" class="world-subtitle">{{subtitleText}}</view>
@@ -110,9 +110,9 @@
     </view>
   </view>
 
-  <view class="world-message {{transition.kind ? 'is-live' : ''}}">{{message}}</view>
+  <view wx:if="{{headerText && message}}" class="world-message {{transition.kind ? 'is-live' : ''}}">{{message}}</view>
 
-  <view class="world-status-row">
+  <view wx:if="{{headerText}}" class="world-status-row">
     <view class="status-pill {{state.todayMealCompleted ? 'is-done' : ''}}">
       <text>🌱</text><text>植物 {{state.plantLevel}}/4</text>
     </view>
@@ -124,7 +124,7 @@
     </view>
   </view>
 
-  <view wx:if="{{state.nextUnlock}}" class="next-unlock" bindtap="onNextUnlockTap" hover-class="next-unlock-hover">
+  <view wx:if="{{headerText && state.nextUnlock}}" class="next-unlock" bindtap="onNextUnlockTap" hover-class="next-unlock-hover">
     <view class="next-unlock-preview preview-{{state.nextUnlock.type}}">{{state.nextUnlock.type === 'journey' ? '◇' : state.nextUnlock.type === 'plant' ? '♧' : state.nextUnlock.type === 'path' ? '⌁' : '◌'}}</view>
     <view class="next-unlock-copy">
       <text class="next-unlock-label">下一次变化</text>
@@ -133,7 +133,7 @@
     </view>
   </view>
 
-  <view class="world-footer">
+  <view wx:if="{{headerText}}" class="world-footer">
     <text class="energy-text">✨ {{energyText}}</text>
     <view class="world-footer-links">
       <view class="discovery-link" bindtap="onDiscoveriesEntryTap" hover-class="journey-link-hover">发现 {{discoveryCount}}/6 ›</view>

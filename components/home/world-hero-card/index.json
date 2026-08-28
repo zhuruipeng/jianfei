@@ -1,0 +1,10 @@
+{
+  "component": true,
+  "styleIsolation": "isolated",
+  "usingComponents": {
+    "companion-world": "/components/companion-world/index",
+    "ui-status-pill": "/components/ui/status-pill/index",
+    "ui-progress-bar": "/components/ui/progress-bar/index",
+    "ui-paper-note": "/components/ui/paper-note/index"
+  }
+}

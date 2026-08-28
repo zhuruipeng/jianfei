@@ -1,0 +1,115 @@
+<view class="hero-card">
+  <view class="hero-header">
+    <view class="journey-copy">
+      <text class="journey-title">{{journeyTitle}}</text>
+      <text wx:if="{{journeyDayText}}" class="journey-day">{{journeyDayText}}</text>
+      <view class="journey-meta">
+        <text wx:if="{{dateText}}">{{dateText}}</text>
+        <text wx:if="{{dateText && atmosphereText}}" class="meta-divider">·</text>
+        <text wx:if="{{atmosphereText}}">{{atmosphereText}}</text>
+      </view>
+    </view>
+    <view class="discovery-count" aria-label="已发现 {{discoveryCount}} 个世界发现">
+      <text class="discovery-mark">✦</text>
+      <text>发现 {{discoveryCount}}</text>
+    </view>
+  </view>
+
+  <view class="scene-shell">
+    <companion-world
+      state="{{worldState}}"
+      assets="{{worldAssets}}"
+      transition="{{worldTransition}}"
+      companion-stage="{{companionStage}}"
+      companion-mood="{{companionMood}}"
+      companion-asset="{{companionAsset}}"
+      companion-name="{{companionName}}"
+      message=""
+      header-text=""
+      subtitle-text=""
+      energy-text=""
+      settings-visible="{{false}}"
+      discoveries="{{discoveries}}"
+      discovery-count="{{discoveryCount}}"
+      bind:companiontap="onCompanionTap"
+      bind:journeytap="onJourneyTap"
+      bind:discoverytap="onDiscoveryTap"
+    />
+  </view>
+
+  <view class="status-row">
+    <ui-status-pill
+      icon="🌱"
+      label="植物"
+      value="{{plantText}}"
+      tone="green"
+      active="{{worldState.todayMealCompleted}}"
+    />
+    <ui-status-pill
+      icon="🛤️"
+      label="小路"
+      value="{{pathText}}"
+      tone="wood"
+      active="{{worldState.todayExerciseCompleted}}"
+    />
+    <ui-status-pill
+      icon="💧"
+      label="水池"
+      value="{{waterText}}"
+      tone="water"
+      active="{{worldState.todayWaterCompleted}}"
+    />
+  </view>
+
+  <view class="companion-panel">
+    <view class="companion-copy">
+      <text class="companion-name">{{companionName}}</text>
+      <text class="companion-message">{{companionMessage}}</text>
+    </view>
+    <view class="energy-chip">
+      <text class="energy-icon">✦</text>
+      <text class="energy-number">{{energyValue}}</text>
+      <text class="energy-unit"> / {{energyMax}}</text>
+    </view>
+  </view>
+
+  <view class="energy-progress">
+    <view class="energy-caption">
+      <text>今日轻能量</text>
+      <text>一点一点，也在向前</text>
+    </view>
+    <ui-progress-bar
+      value="{{energyValue}}"
+      max="{{energyMax}}"
+      tone="yellow"
+      height="10"
+      animated="{{true}}"
+    />
+  </view>
+
+  <view wx:if="{{nextUnlockVisible}}" class="next-unlock-wrap">
+    <ui-paper-note
+      eyebrow="下一次变化"
+      title="{{nextUnlockTitle}}"
+      description="{{nextUnlockDescription}}"
+      image-src="{{nextUnlockImage}}"
+      action-text="去看看"
+      compact="{{true}}"
+      bind:action="onNextUnlockTap"
+    />
+  </view>
+
+  <view class="hero-footer">
+    <text class="world-footnote">小世界会跟着你的每一步生长</text>
+    <view
+      class="journey-entry {{journeyEntryEnabled ? '' : 'is-disabled'}}"
+      aria-role="button"
+      aria-label="{{journeyEntryTitle}}"
+      bindtap="onJourneyTap"
+      hover-class="journey-entry-active"
+    >
+      <text>{{journeyEntryTitle}}</text>
+      <text class="journey-arrow">›</text>
+    </view>
+  </view>
+</view>
