@@ -1,8 +1,15 @@
 import { WORLD_DECOR_ASSETS } from '../../config/worldDiscoveryConfig';
+import { UI2_GARDEN_ASSETS } from '../../config/worldGrowthConfig';
 
 Component({
   data: {
     decorAssets: WORLD_DECOR_ASSETS,
+    gardenAssets: UI2_GARDEN_ASSETS,
+    gardenAssetReady: {
+      base: true,
+      foreground: true,
+      light: true,
+    },
   },
 
   properties: {
@@ -23,6 +30,12 @@ Component({
   },
 
   methods: {
+    onGardenAssetError(e: any) {
+      const layer = e?.currentTarget?.dataset?.layer;
+      if (layer === 'base' || layer === 'foreground' || layer === 'light') {
+        this.setData({ [`gardenAssetReady.${layer}`]: false });
+      }
+    },
     onCompanionTap() {
       this.triggerEvent('companiontap');
     },

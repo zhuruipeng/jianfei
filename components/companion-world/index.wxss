@@ -44,10 +44,37 @@
 
 .world-scene {
   position: relative;
-  height: 540rpx;
-  overflow: visible;
+  height: 590rpx;
+  overflow: hidden;
   border-radius: 30rpx;
   background: linear-gradient(180deg, #cfe8ed 0%, #eaf3d7 59%, #c8dca4 60%, #9fc17f 100%);
+}
+
+.garden-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.garden-base {
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.garden-foreground {
+  z-index: 11;
+}
+
+.garden-light {
+  z-index: 12;
+  opacity: .28;
+  transition: opacity .9s ease;
+}
+
+.world-scene.is-complete .garden-light {
+  opacity: .78;
 }
 
 .image-layer {
@@ -58,11 +85,11 @@
 }
 .background-image { z-index: 1; border-radius: inherit; }
 .ground-image { z-index: 2; }
-.path-image { z-index: 3; }
-.water-image { z-index: 4; }
-.plant-image { z-index: 5; }
-.sunlight-image, .flowers-image { z-index: 6; }
-.sparkle-image { z-index: 10; }
+.path-image { z-index: 4; }
+.water-image { z-index: 5; }
+.plant-image { z-index: 6; }
+.feedback-layer { z-index: 14; pointer-events: none; }
+.sparkle-image { z-index: 15; }
 
 .sky-glow {
   position: absolute;
@@ -110,70 +137,73 @@
 .ground { position: absolute; z-index: 3; left: -8%; bottom: -120rpx; width: 116%; height: 330rpx; border-radius: 50% 50% 0 0; background: linear-gradient(180deg,#a9c989,#85ad6c); }
 
 .path-layer { position: absolute; z-index: 4; inset: 0; transform-origin: 50% 100%; }
-.path-main, .path-extension, .path-far { position: absolute; border-radius: 50%; background: linear-gradient(90deg,#d9c7a0,#eee1c3); box-shadow: inset 0 3rpx 8rpx rgba(115,88,55,.12); transition: all .8s ease; }
-.path-main { left: 292rpx; bottom: -58rpx; width: 145rpx; height: 285rpx; transform: rotate(4deg); clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); opacity: .16; }
-.path-extension { left: 362rpx; bottom: 196rpx; width: 150rpx; height: 52rpx; transform: rotate(-19deg); opacity: 0; }
-.path-far { left: 474rpx; bottom: 234rpx; width: 112rpx; height: 36rpx; transform: rotate(-10deg); opacity: 0; }
-.path-level-1 .path-main { opacity: .48; height: 170rpx; }
-.path-level-2 .path-main { opacity: .75; height: 260rpx; }
-.path-level-2 .path-extension, .path-level-3 .path-extension, .path-level-4 .path-extension { opacity: .72; }
-.path-level-3 .path-main { height: 285rpx; opacity: .78; }
-.path-level-4 .path-main { height: 325rpx; opacity: .9; }
-.path-level-3 .path-far, .path-level-4 .path-far { opacity: .68; }
-.path-level-4 .path-far { width: 150rpx; opacity: .9; }
-.footprints { position: absolute; left: 354rpx; bottom: 158rpx; font-size: 39rpx; transform: rotate(-20deg); animation: footprintsMove 1.25s ease both; }
+.path-main, .path-extension, .path-far { position: absolute; border-radius: 50%; background: linear-gradient(90deg,rgba(255,246,204,0),rgba(255,246,204,.78),rgba(255,246,204,.12)); box-shadow: inset 0 2rpx 5rpx rgba(255,255,255,.5); transition: opacity .8s ease, filter .8s ease; }
+.path-main { left: 43%; bottom: -5%; width: 22%; height: 47%; transform: rotate(-7deg); clip-path: polygon(43% 0, 58% 0, 100% 100%, 0 100%); opacity: .06; }
+.path-extension { left: 54%; bottom: 38%; width: 22%; height: 7%; transform: rotate(-20deg); opacity: 0; }
+.path-far { left: 69%; bottom: 49%; width: 15%; height: 5%; transform: rotate(-12deg); opacity: 0; }
+.path-level-1 .path-main { opacity: .18; }
+.path-level-2 .path-main { opacity: .28; filter: brightness(1.04); }
+.path-level-2 .path-extension, .path-level-3 .path-extension, .path-level-4 .path-extension { opacity: .22; }
+.path-level-3 .path-main { opacity: .38; filter: brightness(1.08); }
+.path-level-4 .path-main { opacity: .5; filter: brightness(1.12); }
+.path-level-3 .path-far, .path-level-4 .path-far { opacity: .22; }
+.path-level-4 .path-extension, .path-level-4 .path-far { opacity: .36; }
+.footprints { position: absolute; left: 50%; bottom: 31%; font-size: 34rpx; transform: rotate(-20deg); animation: footprintsMove 1.25s ease both; }
 
-.water-layer { position: absolute; z-index: 5; right: 34rpx; bottom: 42rpx; width: 225rpx; height: 132rpx; transition: transform .8s ease, opacity .8s ease; }
-.pond-shadow { position: absolute; inset: 28rpx 6rpx 0; border-radius: 50%; background: rgba(67,86,53,.17); }
-.pond { position: absolute; inset: 12rpx 12rpx 10rpx; overflow: hidden; border-radius: 50%; background: linear-gradient(180deg,#acc4bf,#8ca9aa); border: 7rpx solid rgba(112,126,85,.42); transform: scale(.72); opacity: .28; transition: all .8s ease; }
+.water-layer { position: absolute; z-index: 5; right: 4%; bottom: 7%; width: 36%; height: 24%; transition: transform .8s ease, opacity .8s ease; }
+.pond-shadow { position: absolute; inset: 18% 3% 2%; border-radius: 50%; background: rgba(67,86,53,.1); filter: blur(5rpx); }
+.pond { position: absolute; inset: 3% 4% 4%; overflow: hidden; border-radius: 50%; background: linear-gradient(180deg,rgba(172,216,217,.72),rgba(102,174,190,.78)); border: 2rpx solid rgba(211,241,235,.58); transform: scale(.72); opacity: .25; transition: all .8s ease; }
 .water-level-1 .pond { transform: scale(.78); opacity: .48; background: #9bbec4; }
 .water-level-2 .pond { transform: scale(.88); opacity: .72; background: #80b9c5; }
 .water-level-3 .pond { transform: scale(.96); opacity: .9; background: linear-gradient(180deg,#8ed1d5,#5dafbd); }
-.water-level-4 .pond { transform: scale(1); opacity: 1; background: linear-gradient(180deg,#a7e2dd,#55b6c5); box-shadow: 0 0 30rpx rgba(131,220,221,.35); }
+.water-level-4 .pond { transform: scale(1); opacity: .9; background: linear-gradient(180deg,rgba(167,226,221,.92),rgba(85,182,197,.94)); box-shadow: 0 0 26rpx rgba(131,220,221,.28); }
 .water-ripple { position: absolute; left: 50%; top: 50%; border: 3rpx solid rgba(255,255,255,.5); border-radius: 50%; transform: translate(-50%,-50%); opacity: 0; }
 .water-level-2 .ripple-a, .water-level-3 .ripple-a, .water-level-4 .ripple-a { width: 90rpx; height: 30rpx; opacity: .55; }
 .water-level-3 .ripple-b, .water-level-4 .ripple-b { width: 145rpx; height: 54rpx; opacity: .35; }
-.water-reed { position: absolute; right: -4rpx; top: -5rpx; font-size: 52rpx; }
-.water-lily { position: absolute; left: 42rpx; top: 40rpx; font-size: 38rpx; }
-.water-drop { position: absolute; z-index: 3; left: 96rpx; top: -54rpx; font-size: 38rpx; animation: waterDrop .8s ease-in both; }
+.water-reed { position: absolute; right: 1%; top: -4%; font-size: 46rpx; }
+.water-lily { position: absolute; left: 20%; top: 31%; font-size: 34rpx; }
+.water-drop { position: absolute; z-index: 3; left: 43%; top: -38%; font-size: 36rpx; animation: waterDrop .8s ease-in both; }
 
 .plant-layer { position: absolute; z-index: 7; inset: 0; }
-.plant-layer::before { content: ''; position: absolute; left: 32rpx; bottom: 44rpx; width: 300rpx; height: 260rpx; border-radius: 50%; background: radial-gradient(circle,rgba(181,232,126,.55),rgba(181,232,126,0) 68%); opacity: 0; pointer-events: none; }
+.plant-layer::before { content: ''; position: absolute; left: 35%; bottom: 5%; width: 36%; height: 43%; border-radius: 50%; background: radial-gradient(circle,rgba(181,232,126,.5),rgba(181,232,126,0) 68%); opacity: 0; pointer-events: none; }
 .plant { position: absolute; transform-origin: 50% 100%; filter: drop-shadow(0 5rpx 5rpx rgba(55,85,35,.13)); }
-.plant-a { left: 70rpx; bottom: 96rpx; font-size: 78rpx; }
-.plant-b { left: 145rpx; bottom: 136rpx; font-size: 102rpx; }
-.plant-c { left: 238rpx; bottom: 82rpx; font-size: 68rpx; }
-.plant-d { left: 64rpx; bottom: 188rpx; font-size: 61rpx; }
-.plant-e { left: 210rpx; bottom: 178rpx; font-size: 58rpx; }
-.plant-tree { left: 94rpx; bottom: 175rpx; font-size: 158rpx; }
-.plant-f { left: 246rpx; bottom: 110rpx; font-size: 68rpx; }
+.plant-a { left: 42%; bottom: 13%; font-size: 72rpx; }
+.plant-b { left: 47%; bottom: 16%; font-size: 92rpx; }
+.plant-c { left: 55%; bottom: 10%; font-size: 62rpx; }
+.plant-d { left: 39%; bottom: 24%; font-size: 55rpx; }
+.plant-e { left: 53%; bottom: 25%; font-size: 53rpx; }
+.plant-tree { left: 43%; bottom: 19%; font-size: 132rpx; }
+.plant-f { left: 57%; bottom: 15%; font-size: 61rpx; }
 
-.world-decor { position: absolute; z-index: 6; pointer-events: none; }
-.decor-flower { left: 300rpx; bottom: 58rpx; width: 40rpx; height: 40rpx; }
-.decor-stone { right: 18rpx; bottom: 30rpx; width: 55rpx; height: 55rpx; }
-.decor-grass { left: 20rpx; bottom: 20rpx; width: 70rpx; height: 70rpx; }
+.world-decor { position: absolute; z-index: 7; pointer-events: none; }
+.decor-flower { left: 57%; bottom: 8%; width: 40rpx; height: 40rpx; }
+.decor-stone { right: 3%; bottom: 5%; width: 52rpx; height: 52rpx; }
+.decor-grass { left: 3%; bottom: 4%; width: 66rpx; height: 66rpx; }
 
-.world-discovery { position: absolute; z-index: 15; filter: drop-shadow(0 5rpx 5rpx rgba(47,70,37,.18)); transition: transform .2s ease; }
+.world-discovery { position: absolute; filter: drop-shadow(0 5rpx 5rpx rgba(47,70,37,.18)); transition: transform .2s ease; }
+.world-discovery-sky { z-index: 2; }
+.world-discovery-ground { z-index: 8; }
+.world-discovery-air { z-index: 10; }
 .world-discovery-image { display: block; width: 100%; height: 100%; }
 .world-discovery-hover { transform: scale(1.14); }
-.discovery-near-plants { left: 196rpx; bottom: 252rpx; width: 58rpx; height: 58rpx; }
+.discovery-near-plants { left: 45%; top: 27%; width: 58rpx; height: 58rpx; }
 .discovery-near-plants .world-discovery-image { animation: butterflyFloat 3.2s ease-in-out infinite; }
-.discovery-grass-edge { left: 28rpx; bottom: 50rpx; width: 76rpx; height: 76rpx; }
-.discovery-far-path { right: 118rpx; top: 135rpx; width: 62rpx; height: 62rpx; }
-.discovery-by-road { left: 410rpx; bottom: 108rpx; width: 116rpx; height: 116rpx; }
-.discovery-night-air { right: 46rpx; top: 210rpx; width: 50rpx; height: 50rpx; }
+.discovery-grass-edge { left: 5%; bottom: 8%; width: 72rpx; height: 72rpx; }
+.discovery-far-path { right: 11%; top: 41%; width: 60rpx; height: 60rpx; }
+.discovery-by-road { left: 57%; bottom: 18%; width: 104rpx; height: 104rpx; }
+.discovery-night-air { right: 16%; top: 37%; width: 48rpx; height: 48rpx; }
 .discovery-night-air .world-discovery-image { animation: fireflyGlow 2.4s ease-in-out infinite; }
-.discovery-in-sky { left: 50%; top: 28rpx; width: 148rpx; height: 148rpx; transform: translateX(-50%); opacity: .86; }
+.discovery-in-sky { left: 48%; top: 3%; width: 142rpx; height: 142rpx; transform: translateX(-50%); opacity: .78; }
 .discovery-in-sky.world-discovery-hover { transform: translateX(-50%) scale(1.08); }
 
-.journey-landmark { position: absolute; z-index: 12; right: 30rpx; top: 28rpx; display: flex; align-items: center; gap: 9rpx; max-width: 218rpx; padding: 10rpx 14rpx 10rpx 10rpx; border-radius: 26rpx; background: rgba(255,255,255,.75); box-shadow: 0 8rpx 22rpx rgba(54,72,43,.12); }
+.journey-landmark { position: absolute; z-index: 16; right: 4%; top: 6%; display: flex; min-height: 70rpx; box-sizing: border-box; align-items: center; gap: 9rpx; max-width: 218rpx; padding: 10rpx 16rpx 10rpx 11rpx; border: 1rpx solid rgba(127,163,106,.24); border-radius: 30rpx; background: rgba(255,252,245,.9); box-shadow: 0 8rpx 22rpx rgba(73,102,78,.12); }
 .journey-landmark-hover { transform: scale(.97); }
 .landmark-emoji { font-size: 38rpx; }
 .landmark-copy { display: flex; flex-direction: column; min-width: 0; }
 .landmark-title { color: #3f4b38; font-size: 21rpx; font-weight: 700; white-space: nowrap; }
 .landmark-hint { color: #768169; font-size: 18rpx; }
 
-.companion-home { position: absolute; z-index: 13; left: 50%; bottom: 68rpx; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); transition: transform .25s ease; }
+.companion-home { position: absolute; z-index: 9; left: 31%; bottom: 7%; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); transition: transform .25s ease; }
 .companion-home-hover { transform: translateX(-50%) scale(1.05); }
 .companion-shadow { position: absolute; bottom: 37rpx; width: 118rpx; height: 30rpx; border-radius: 50%; background: rgba(53,76,42,.2); filter: blur(4rpx); }
 .companion-image { position: relative; width: 180rpx; height: 196rpx; }
@@ -186,12 +216,12 @@
 .stage-grown .companion-placeholder { transform: scale(1.14); }
 .companion-name { position: relative; margin-top: 2rpx; padding: 3rpx 14rpx; border-radius: 20rpx; color: #4f5c46; font-size: 19rpx; background: rgba(255,255,255,.7); }
 
-.complete-effects { position: absolute; z-index: 8; inset: 0; pointer-events: none; }
+.complete-effects { position: absolute; z-index: 14; inset: 0; pointer-events: none; }
 .sun { position: absolute; left: 55rpx; top: 22rpx; font-size: 76rpx; filter: drop-shadow(0 0 20rpx rgba(255,223,92,.65)); }
 .flower { position: absolute; font-size: 43rpx; }
 .flower-a { left: 29rpx; bottom: 63rpx; }
 .flower-b { right: 248rpx; bottom: 54rpx; }
-.sparkles { position: absolute; z-index: 14; inset: 0; pointer-events: none; }
+.sparkles { position: absolute; z-index: 15; inset: 0; pointer-events: none; }
 .sparkle { position: absolute; opacity: 0; animation: sparkleRise 1.5s ease both; }
 .sparkle-a { left: 25%; top: 27%; font-size: 48rpx; }
 .sparkle-b { right: 18%; top: 36%; font-size: 40rpx; animation-delay: .15s; }
@@ -225,6 +255,7 @@
 .transition-path .path-layer, .transition-path-level .path-layer { animation: pathGrow .95s ease both; }
 .transition-water .pond, .transition-water-level .pond { animation: waterFill 1.05s ease both; }
 .transition-water .water-ripple, .transition-water-level .water-ripple { animation: ripplePulse 1.25s ease .3s both; }
+.transition-all .garden-light { animation: gardenLightCelebrate 1.6s ease both; }
 .transition-all .companion-home { animation: companionCelebrate 1s ease 2; }
 .transition-plant .companion-home, .transition-path .companion-home, .transition-water .companion-home { animation: companionHappy .85s ease both; }
 
@@ -240,3 +271,11 @@
 @keyframes sparkleRise { 0% { opacity: 0; transform: translateY(24rpx) scale(.5); } 35% { opacity: 1; } 100% { opacity: 0; transform: translateY(-42rpx) scale(1.2); } }
 @keyframes butterflyFloat { 0%,100% { transform: translate(0,0) rotate(-5deg); } 50% { transform: translate(12rpx,-13rpx) rotate(8deg); } }
 @keyframes fireflyGlow { 0%,100% { opacity: .45; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.15); } }
+@keyframes gardenLightCelebrate { 0% { opacity: .18; } 45% { opacity: 1; } 100% { opacity: .78; } }
+
+@media (max-width: 390px) {
+  .world-scene { height: 580rpx; }
+  .garden-light { opacity: .24; }
+  .journey-landmark { right: 3%; max-width: 204rpx; }
+  .companion-image { width: 168rpx; height: 184rpx; }
+}

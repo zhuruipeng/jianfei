@@ -7,34 +7,64 @@
     <view wx:if="{{settingsVisible}}" class="world-settings" bindtap="onSettingsTap" hover-class="world-settings-hover">···</view>
   </view>
 
-  <view class="world-scene">
-    <!-- 美术就位后直接切换成同一套分层图片；占位阶段不请求不存在的资源。 -->
-    <block wx:if="{{assets.useImages}}">
-      <image class="image-layer background-image" src="{{assets.background}}" mode="aspectFill"></image>
-      <image class="image-layer ground-image" src="{{assets.ground}}" mode="aspectFit"></image>
-      <image class="image-layer path-image" src="{{assets.path}}" mode="aspectFit"></image>
-      <image class="image-layer water-image" src="{{assets.water}}" mode="aspectFit"></image>
-      <image class="image-layer plant-image" src="{{assets.plant}}" mode="aspectFit"></image>
-      <image wx:if="{{state.todayAllCompleted}}" class="image-layer sunlight-image" src="{{assets.sunlight}}" mode="aspectFit"></image>
-      <image wx:if="{{state.todayAllCompleted}}" class="image-layer flowers-image" src="{{assets.flowers}}" mode="aspectFit"></image>
-      <image wx:if="{{transition.kind === 'all'}}" class="image-layer sparkle-image" src="{{assets.sparkle}}" mode="aspectFit"></image>
+  <view class="world-scene {{state.todayAllCompleted ? 'is-complete' : ''}}">
+    <!-- 固定环境美术只负责空间氛围；所有成长和完成态仍由下方动态层驱动。 -->
+    <image
+      wx:if="{{gardenAssetReady.base}}"
+      class="garden-layer garden-base"
+      src="{{gardenAssets.base}}"
+      mode="aspectFill"
+      data-layer="base"
+      binderror="onGardenAssetError"
+    />
+
+    <!-- 新底图加载失败时回退到原有完整背景或 CSS 花园，世界区域不会空白。 -->
+    <block wx:if="{{!gardenAssetReady.base}}">
+      <block wx:if="{{assets.useImages}}">
+        <image class="image-layer background-image" src="{{assets.background}}" mode="aspectFill" />
+        <image class="image-layer ground-image" src="{{assets.ground}}" mode="aspectFit" />
+      </block>
+      <block wx:else>
+        <view class="sky-glow {{state.todayAllCompleted ? 'is-on' : ''}}"></view>
+        <view class="cloud cloud-a"></view>
+        <view class="cloud cloud-b"></view>
+        <view class="hill hill-back"></view>
+        <view class="hill hill-front"></view>
+        <view class="ground"></view>
+      </block>
     </block>
 
-    <block wx:else>
-      <view class="sky-glow {{state.todayAllCompleted ? 'is-on' : ''}}"></view>
-      <view class="cloud cloud-a"></view>
-      <view class="cloud cloud-b"></view>
-      <view class="hill hill-back"></view>
-      <view class="hill hill-front"></view>
-      <view class="ground"></view>
+    <!-- 彩虹属于远景天空，位于底图之后、成长元素之前。 -->
+    <block wx:for="{{discoveries}}" wx:for-item="discovery" wx:key="id">
+      <view
+        wx:if="{{discovery.state.discoveryId === 'rainbow'}}"
+        class="world-discovery world-discovery-sky discovery-{{discovery.config.sceneClass}}"
+        data-id="{{discovery.state.discoveryId}}"
+        bindtap="onDiscoveryTap"
+        hover-class="world-discovery-hover"
+      >
+        <image class="world-discovery-image" src="{{discovery.asset}}" mode="aspectFit" />
+      </view>
+    </block>
 
+    <!-- 动态道路：在正式底图石径上增加纹理、高光、脚印和延伸感。 -->
+    <block wx:if="{{assets.useImages}}">
+      <image class="image-layer path-image" src="{{assets.path}}" mode="aspectFit" />
+    </block>
+    <block wx:else>
       <view class="path-layer path-level-{{state.pathLevel}}">
         <view class="path-main"></view>
         <view wx:if="{{state.pathLevel >= 2}}" class="path-extension"></view>
         <view wx:if="{{state.pathLevel >= 3}}" class="path-far"></view>
         <view wx:if="{{transition.kind === 'path' || transition.kind === 'path-level'}}" class="footprints">👣</view>
       </view>
+    </block>
 
+    <!-- 动态水面继续承担水位、颜色、波纹和喝水反馈。 -->
+    <block wx:if="{{assets.useImages}}">
+      <image class="image-layer water-image" src="{{assets.water}}" mode="aspectFit" />
+    </block>
+    <block wx:else>
       <view class="water-layer water-level-{{state.waterLevel}}">
         <view class="pond-shadow"></view>
         <view class="pond">
@@ -45,7 +75,13 @@
         <text wx:if="{{state.waterLevel >= 4}}" class="water-lily">🪷</text>
         <text wx:if="{{transition.kind === 'water'}}" class="water-drop">💧</text>
       </view>
+    </block>
 
+    <!-- 动态植物保留 plantLevel 0～4，不把成长状态烘焙进底图。 -->
+    <block wx:if="{{assets.useImages}}">
+      <image class="image-layer plant-image" src="{{assets.plant}}" mode="aspectFit" />
+    </block>
+    <block wx:else>
       <view class="plant-layer plant-level-{{state.plantLevel}}">
         <text wx:if="{{state.plantLevel >= 1}}" class="plant plant-a">🌱</text>
         <text wx:if="{{state.plantLevel >= 2}}" class="plant plant-b">🌿</text>
@@ -55,7 +91,74 @@
         <text wx:if="{{state.plantLevel >= 4}}" class="plant plant-tree">🌳</text>
         <text wx:if="{{state.plantLevel >= 4}}" class="plant plant-f">🌻</text>
       </view>
+    </block>
 
+    <!-- 固定地面装饰和发现物位于植物之后、小轻之前。 -->
+    <image class="world-decor decor-flower" src="{{decorAssets.flower}}" mode="aspectFit"></image>
+    <image class="world-decor decor-stone" src="{{decorAssets.stone}}" mode="aspectFit"></image>
+    <image class="world-decor decor-grass" src="{{decorAssets.grass}}" mode="aspectFit"></image>
+
+    <block wx:for="{{discoveries}}" wx:for-item="discovery" wx:key="id">
+      <view
+        wx:if="{{discovery.state.discoveryId === 'mushroom' || discovery.state.discoveryId === 'bench'}}"
+        class="world-discovery world-discovery-ground discovery-{{discovery.config.sceneClass}}"
+        data-id="{{discovery.state.discoveryId}}"
+        bindtap="onDiscoveryTap"
+        hover-class="world-discovery-hover"
+      >
+        <image class="world-discovery-image" src="{{discovery.asset}}" mode="aspectFit"></image>
+      </view>
+    </block>
+
+    <!-- 小轻位于地面层和空中发现物之间。 -->
+    <view class="companion-home" bindtap="onCompanionTap" hover-class="companion-home-hover">
+      <view class="companion-shadow"></view>
+      <image wx:if="{{companionAsset.useImage}}" class="companion-image" src="{{companionAsset.src}}" mode="aspectFit"></image>
+      <view wx:else class="companion-placeholder">
+        <text class="companion-leaf">{{companionAsset.emoji}}</text>
+        <view class="companion-body">
+          <text class="companion-face">{{companionMood === 'happy' ? '˶ᵔ ᵕ ᵔ˶' : '•ᴗ•'}}</text>
+        </view>
+      </view>
+      <text class="companion-name">{{companionName}}</text>
+    </view>
+
+    <block wx:for="{{discoveries}}" wx:for-item="discovery" wx:key="id">
+      <view
+        wx:if="{{discovery.state.discoveryId === 'butterfly' || discovery.state.discoveryId === 'bird' || discovery.state.discoveryId === 'firefly'}}"
+        class="world-discovery world-discovery-air discovery-{{discovery.config.sceneClass}}"
+        data-id="{{discovery.state.discoveryId}}"
+        bindtap="onDiscoveryTap"
+        hover-class="world-discovery-hover"
+      >
+        <image class="world-discovery-image" src="{{discovery.asset}}" mode="aspectFit" />
+      </view>
+    </block>
+
+    <image
+      wx:if="{{gardenAssetReady.foreground}}"
+      class="garden-layer garden-foreground"
+      src="{{gardenAssets.foreground}}"
+      mode="aspectFill"
+      data-layer="foreground"
+      binderror="onGardenAssetError"
+    />
+    <image
+      wx:if="{{gardenAssetReady.light}}"
+      class="garden-layer garden-light"
+      src="{{gardenAssets.light}}"
+      mode="aspectFill"
+      data-layer="light"
+      binderror="onGardenAssetError"
+    />
+
+    <!-- 正式环境层之后再播放任务完成反馈，避免动画被前景遮住。 -->
+    <block wx:if="{{assets.useImages}}">
+      <image wx:if="{{state.todayAllCompleted}}" class="image-layer feedback-layer sunlight-image" src="{{assets.sunlight}}" mode="aspectFit" />
+      <image wx:if="{{state.todayAllCompleted}}" class="image-layer feedback-layer flowers-image" src="{{assets.flowers}}" mode="aspectFit" />
+      <image wx:if="{{transition.kind === 'all'}}" class="image-layer feedback-layer sparkle-image" src="{{assets.sparkle}}" mode="aspectFit" />
+    </block>
+    <block wx:else>
       <view wx:if="{{state.todayAllCompleted}}" class="complete-effects">
         <text class="sun">☀️</text>
         <text class="flower flower-a">🌼</text>
@@ -66,21 +169,6 @@
         <text class="sparkle sparkle-b">✨</text>
         <text class="sparkle sparkle-c">✦</text>
         <text class="sparkle sparkle-d">✨</text>
-      </view>
-    </block>
-
-    <image class="world-decor decor-flower" src="{{decorAssets.flower}}" mode="aspectFit"></image>
-    <image class="world-decor decor-stone" src="{{decorAssets.stone}}" mode="aspectFit"></image>
-    <image class="world-decor decor-grass" src="{{decorAssets.grass}}" mode="aspectFit"></image>
-
-    <block wx:for="{{discoveries}}" wx:for-item="discovery" wx:key="id">
-      <view
-        class="world-discovery discovery-{{discovery.config.sceneClass}}"
-        data-id="{{discovery.state.discoveryId}}"
-        bindtap="onDiscoveryTap"
-        hover-class="world-discovery-hover"
-      >
-        <image class="world-discovery-image" src="{{discovery.asset}}" mode="aspectFit"></image>
       </view>
     </block>
 
@@ -95,18 +183,6 @@
         <text class="landmark-title">{{state.journeyLandmark.title}}</text>
         <text class="landmark-hint">{{state.journeyLandmark.hint}} ›</text>
       </view>
-    </view>
-
-    <view class="companion-home" bindtap="onCompanionTap" hover-class="companion-home-hover">
-      <view class="companion-shadow"></view>
-      <image wx:if="{{companionAsset.useImage}}" class="companion-image" src="{{companionAsset.src}}" mode="aspectFit"></image>
-      <view wx:else class="companion-placeholder">
-        <text class="companion-leaf">{{companionAsset.emoji}}</text>
-        <view class="companion-body">
-          <text class="companion-face">{{companionMood === 'happy' ? '˶ᵔ ᵕ ᵔ˶' : '•ᴗ•'}}</text>
-        </view>
-      </view>
-      <text class="companion-name">{{companionName}}</text>
     </view>
   </view>
 

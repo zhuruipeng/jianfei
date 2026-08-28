@@ -72,10 +72,15 @@
       <text class="companion-name">{{companionName}}</text>
       <text class="companion-message">{{companionMessage}}</text>
     </view>
-    <view class="energy-chip">
-      <text class="energy-icon">✦</text>
-      <text class="energy-number">{{energyValue}}</text>
-      <text class="energy-unit"> / {{energyMax}}</text>
+    <view class="energy-badge" aria-label="轻能量 {{energyValue}} / {{energyMax}}">
+      <view class="energy-badge__leaf"></view>
+      <view class="energy-badge__core">
+        <view class="energy-badge__value-row">
+          <text class="energy-number">{{energyValue}}</text>
+          <text class="energy-unit"> / {{energyMax}}</text>
+        </view>
+        <text class="energy-label">轻能量</text>
+      </view>
     </view>
   </view>
 

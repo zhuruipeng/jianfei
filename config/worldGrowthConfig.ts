@@ -40,6 +40,13 @@ export const WORLD_JOURNEY_LANDMARKS: WorldJourneyLandmark[] = [
 
 export const WORLD_ASSET_DIR = '/assets/world';
 
+/** UI 2.0 花园固定环境层。动态道路、水面、植物和发现物仍由组件按真实状态绘制。 */
+export const UI2_GARDEN_ASSETS = {
+  base: `${WORLD_ASSET_DIR}/ui2/garden_base.webp`,
+  foreground: `${WORLD_ASSET_DIR}/ui2/garden_foreground.webp`,
+  light: `${WORLD_ASSET_DIR}/ui2/garden_light.webp`,
+} as const;
+
 /** 美术素材到齐后切成 true；业务开发期间使用组件内的 CSS / Emoji 分层占位。 */
 export const WORLD_HAS_ASSETS = false;
 
