@@ -103,8 +103,8 @@
 
 文件：`components/home/world-hero-card/**`；线程 C。
 
-- Properties：`journeyTitle: string`，`journeyDayText: string`，`dateText: string`，`atmosphereText?: string`，`worldState: object`，`worldAssets?: object`，`worldTransition?: object`，`discoveries?: array`，`discoveryCount?: number`，`companionStage: string`，`companionMood: string`，`companionAsset: object`，`companionName: string`，`companionMessage: string`，`plantText: string`，`pathText: string`，`waterText: string`，`energyValue: number`，`energyMax: number`，`nextUnlockTitle: string`，`nextUnlockDescription: string`，`nextUnlockImage?: string`，`nextUnlockVisible?: boolean`，`journeyEntryTitle: string`，`journeyEntryEnabled: boolean`。
-- Events：`companiontap`、`journeytap`、`discoverytap`（透传 `{ discoveryId }`）、`nextunlocktap`。
+- Properties：`journeyTitle: string`，`journeyDayText: string`，`dateText: string`，`atmosphereText?: string`，`worldState: object`，`worldAssets?: object`，`worldTransition?: object`，`discoveries?: array`，`discoveryCount?: number`，`companionStage: string`，`companionMood: string`，`companionAsset: object`，`companionName: string`，`companionMessage: string`，`plantText: string`，`pathText: string`，`waterText: string`，`energyValue: number`，`energyMax: number`，`nextUnlockTitle: string`，`nextUnlockDescription: string`，`nextUnlockImage?: string`，`nextUnlockVisible?: boolean`，`journeyEntryTitle: string`，`journeyEntryEnabled: boolean`，`settingsVisible?: boolean`。
+- Events：`companiontap`、`journeytap`、`discoverytap`（透传 `{ discoveryId }`）、`nextunlocktap`；为保留现有首页入口，兼容转发 `settingtap` 与 `discoveriesentry`。
 - Slots：无。内部组合现有 `companion-world`、三个 `StatusPill`、`ProgressBar` 和 `PaperNote`。
 - 真实业务字段：世界场景来自 `buildWorldState`、`getWorldAssetSet`、`syncWorldUiState`；伙伴来自现有 `CompanionState`、`EnergyLedger` 与 companion 工具；发现来自 `syncWorldDiscoveries`。组件不得读取 Storage 或调用 Service。
 

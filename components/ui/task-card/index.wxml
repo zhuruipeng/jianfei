@@ -1,5 +1,5 @@
 <view
-  class="task-card task-card--{{status}} {{disabled ? 'task-card--disabled' : ''}}"
+  class="task-card task-card--{{status}} task-card--{{indicator}} {{disabled ? 'task-card--disabled' : ''}}"
   bindtap="onTap"
   hover-class="{{disabled ? 'none' : 'task-card--pressed'}}"
   hover-stay-time="80"
@@ -35,7 +35,7 @@
       <ui-progress-bar
         value="{{progress}}"
         max="{{progressMax}}"
-        tone="{{status === 'completed' ? 'green' : 'yellow'}}"
+        tone="{{status === 'completed' ? 'green' : 'blue'}}"
         height="10"
         animated="{{true}}"
       />

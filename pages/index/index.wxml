@@ -9,6 +9,8 @@
     <view class="brand-seal" aria-label="小步轻品牌标记"><text>小</text></view>
   </view>
 
+  <ui-feedback-toast visible="{{feedbackToast.visible}}" icon="{{feedbackToast.icon}}" text="{{feedbackToast.text}}" tone="{{feedbackToast.tone}}" bind:closed="onFeedbackToastClosed" />
+
   <!-- UI 2.0：WorldHeroCard 只接收首页展示模型，不读取 Storage / Service。 -->
   <view class="world-shell">
     <world-hero-card
@@ -18,12 +20,12 @@
       atmosphere-text="{{homeUi.journey.atmosphereText}}"
       world-state="{{homeUi.world.state}}"
       world-assets="{{homeUi.world.assets}}"
-      world-transition="{{homeUi.world.transition}}"
+      world-transition="{{worldTransition}}"
       companion-stage="{{homeUi.world.companionStage}}"
-      companion-mood="{{homeUi.world.companionMood}}"
+      companion-mood="{{companion.transientActive ? companion.transientMood : companion.mood}}"
       companion-asset="{{homeUi.world.companionAsset}}"
       companion-name="{{homeUi.world.companionName}}"
-      companion-message="{{homeUi.world.companionMessage}}"
+      companion-message="{{companion.transientActive && companion.transientMessage ? companion.transientMessage : worldState.message}}"
       plant-text="{{homeUi.world.plantText}}"
       path-text="{{homeUi.world.pathText}}"
       water-text="{{homeUi.world.waterText}}"
@@ -33,7 +35,7 @@
       next-unlock-title="{{homeUi.world.nextUnlockTitle}}"
       next-unlock-description="{{homeUi.world.nextUnlockDescription}}"
       next-unlock-image="{{homeUi.world.nextUnlockImage}}"
-      journey-entry-title="查看{{planDurationDays || 28}}天旅程"
+      journey-entry-title="查看旅程"
       journey-entry-enabled="{{true}}"
       settings-visible="{{showPlanSettingsEntry}}"
       discoveries="{{homeUi.world.discoveries}}"
@@ -51,7 +53,7 @@
     <ui-section-header title="今天的 3 件小事" icon="🌼" subtitle="完成一点，花园就会长大一点" />
     <view class="task-grid">
       <block wx:for="{{homeUi.tasks}}" wx:for-item="task" wx:key="taskId">
-        <ui-task-card data-key="{{task.taskId}}" task-id="{{task.taskId}}" icon-src="{{task.iconSrc}}" icon-emoji="{{task.iconEmoji}}" title="{{task.title}}" subtitle="{{task.subtitle}}" status="{{task.status}}" indicator="{{task.indicator}}" progress="{{task.progress}}" progress-max="{{task.progressMax}}" progress-text="{{task.progressText}}" footer-text="{{task.footerText}}" disabled="{{task.disabled}}" bind:tap="onClickDailyTask" />
+        <ui-task-card data-key="{{task.taskId}}" task-id="{{task.taskId}}" icon-src="{{task.iconSrc || ''}}" icon-emoji="{{task.iconEmoji || ''}}" title="{{task.title}}" subtitle="{{task.subtitle || ''}}" status="{{task.status}}" indicator="{{task.indicator}}" progress="{{task.progress}}" progress-max="{{task.progressMax}}" progress-text="{{task.progressText || ''}}" footer-text="{{task.footerText || ''}}" disabled="{{task.disabled}}" bind:tap="onClickDailyTask" />
       </block>
     </view>
     <view wx:if="{{allDailyCompleteBonusAwarded}}" class="bonus-row">
@@ -75,6 +77,8 @@
       <ui-summary-banner data-id="{{banner.id}}" icon-emoji="{{banner.id === 'plan' ? '🎁' : (banner.id === 'weekly' ? '🌿' : '🪟')}}" title="{{banner.title}}" subtitle="{{banner.subtitle}}" action-text="{{banner.actionText}}" tone="{{banner.tone}}" compact="{{true}}" bind:tap="onHomeSummaryTap" />
     </block>
   </view>
+
+  <ui-summary-banner class="reward-summary" icon-emoji="{{nextReward.hasNext ? nextReward.emoji : '🎁'}}" title="{{nextReward.hasNext ? nextReward.title : '给自己设置一个小期待'}}" subtitle="{{nextReward.hasNext ? nextReward.remainText : '去奖励页准备一份现实中的小礼物'}}" action-text="查看" tone="warm" compact="{{true}}" bind:tap="jumpToRewardTab" />
 
   <view wx:if="{{planCompletedEntry.visible}}" class="new-journey-link" bindtap="onStartNewJourney">开始新的旅程 ›</view>
 

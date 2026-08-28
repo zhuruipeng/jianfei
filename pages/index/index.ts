@@ -387,6 +387,7 @@ interface IndexPageData {
   discoveryCount: number;
   discoveryNotice: DiscoveryNoticeVM;
   discoveryDetail: DiscoveryNoticeVM;
+  feedbackToast: HomeFeedbackToastVM;
   homeUi: HomeUiViewModel;
 }
 
@@ -398,6 +399,13 @@ interface DiscoveryNoticeVM {
   description: string;
   companionMessage: string;
   unlockedAtText: string;
+}
+
+interface HomeFeedbackToastVM {
+  visible: boolean;
+  icon: string;
+  text: string;
+  tone: 'green' | 'water' | 'warm';
 }
 
 const EMPTY_NEXT_REWARD: NextRewardCard = {
@@ -644,6 +652,7 @@ Page({
     discoveryCount: 0,
     discoveryNotice: EMPTY_DISCOVERY_NOTICE,
     discoveryDetail: EMPTY_DISCOVERY_NOTICE,
+    feedbackToast: { visible: false, icon: '', text: '', tone: 'green' },
     homeUi: emptyHomeUiViewModel(),
   } as IndexPageData,
 
@@ -702,6 +711,17 @@ Page({
   onToggleMoreHomeDetails() {
     const current = !!(this.data as IndexPageData).showMoreHomeDetails;
     this.setData({ showMoreHomeDetails: !current });
+  },
+
+  _showFeedbackToast(text: string, tone: HomeFeedbackToastVM['tone'] = 'green', icon = '✓') {
+    // 先切回隐藏态，确保连续反馈也会重新启动组件内部定时器。
+    this.setData({ 'feedbackToast.visible': false }, () => {
+      this.setData({ feedbackToast: { visible: true, icon, text, tone } });
+    });
+  },
+
+  onFeedbackToastClosed() {
+    this.setData({ 'feedbackToast.visible': false });
   },
 
   // ---------------- 刷新（唯一真实入口） ----------------
@@ -1465,11 +1485,11 @@ Page({
     const afterPoints = calculateDailyPoints(that.today);
     const delta = afterPoints - beforePoints;
     if (delta > 0) {
-      wx.showToast({ title: `达标啦，获得 ${delta} 积分`, icon: 'success' });
+      this._showFeedbackToast(`达标啦，获得 ${delta} 积分`);
     } else if (num >= goal) {
-      wx.showToast({ title: `已记录 ${num} 分钟，继续加油`, icon: 'success' });
+      this._showFeedbackToast(`已记录 ${num} 分钟，继续加油`);
     } else {
-      wx.showToast({ title: `已记录 ${num} 分钟，继续加油`, icon: 'none' });
+      this._showFeedbackToast(`已记录 ${num} 分钟，继续加油`, 'warm', '◌');
     }
   },
 
@@ -1497,7 +1517,7 @@ Page({
     const afterPoints = calculateDailyPoints(this.today);
     const delta = afterPoints - beforePoints;
     if (delta > 0) {
-      wx.showToast({ title: `喝水达标，获得 ${delta} 积分`, icon: 'success' });
+      this._showFeedbackToast(`喝水达标，获得 ${delta} 积分`, 'water', '💧');
     }
   },
 
@@ -1733,11 +1753,11 @@ Page({
     try {
       const r = companionService.completeSpecialTask(this.today);
       if (!r.awarded && r.existed) {
-        wx.showToast({ title: '今天的小挑战能量已领取', icon: 'none' });
+        this._showFeedbackToast('今天的小挑战能量已领取', 'warm', '✨');
       } else if (!r.awarded) {
-        wx.showToast({ title: '暂时无法领取，稍后再试', icon: 'none' });
+        this._showFeedbackToast('暂时无法领取，稍后再试', 'warm', '◌');
       } else {
-        wx.showToast({ title: `+${r.amount} 轻能量 ✨`, icon: 'none' });
+        this._showFeedbackToast(`+${r.amount} 轻能量`, 'green', '✨');
         // 特别任务完成：角色短暂 happy + 文案 "小挑战也完成啦 ✨"
         const today = this.today || getTodayString();
         const doneMsg = pickSpecialTaskDoneMessage(today);

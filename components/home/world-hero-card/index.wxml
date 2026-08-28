@@ -9,9 +9,12 @@
         <text wx:if="{{atmosphereText}}">{{atmosphereText}}</text>
       </view>
     </view>
-    <view class="discovery-count" aria-label="已发现 {{discoveryCount}} 个世界发现">
-      <text class="discovery-mark">✦</text>
-      <text>发现 {{discoveryCount}}</text>
+    <view class="hero-header-actions">
+      <view wx:if="{{settingsVisible}}" class="settings-entry" aria-role="button" aria-label="计划设置" bindtap="onSettingsTap" hover-class="header-entry-active">···</view>
+      <view class="discovery-count" aria-role="button" aria-label="已发现 {{discoveryCount}} 个世界发现，查看我的发现" bindtap="onDiscoveriesEntryTap" hover-class="header-entry-active">
+        <text class="discovery-mark">✦</text>
+        <text>发现 {{discoveryCount}}</text>
+      </view>
     </view>
   </view>
 
@@ -39,6 +42,7 @@
 
   <view class="status-row">
     <ui-status-pill
+      class="status-pill"
       icon="🌱"
       label="植物"
       value="{{plantText}}"
@@ -46,6 +50,7 @@
       active="{{worldState.todayMealCompleted}}"
     />
     <ui-status-pill
+      class="status-pill"
       icon="🛤️"
       label="小路"
       value="{{pathText}}"
@@ -53,6 +58,7 @@
       active="{{worldState.todayExerciseCompleted}}"
     />
     <ui-status-pill
+      class="status-pill"
       icon="💧"
       label="水池"
       value="{{waterText}}"
@@ -75,7 +81,7 @@
 
   <view class="energy-progress">
     <view class="energy-caption">
-      <text>今日轻能量</text>
+      <text class="energy-caption__label">今日轻能量</text>
       <text>一点一点，也在向前</text>
     </view>
     <ui-progress-bar

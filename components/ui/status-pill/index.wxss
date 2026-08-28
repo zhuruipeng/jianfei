@@ -1,5 +1,3 @@
-@import "../../../styles/ui-tokens.wxss";
-
 :host {
   display: inline-flex;
   min-width: 0;

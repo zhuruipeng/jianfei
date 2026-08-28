@@ -1,5 +1,3 @@
-@import "../../../styles/ui-tokens.wxss";
-
 :host {
   display: block;
   min-width: 0;
@@ -143,6 +141,11 @@
 .task-card--active {
   border-color: rgba(241, 206, 112, .36);
   background: linear-gradient(145deg, var(--ui-color-surface), #FFF8E7);
+}
+
+.task-card--active.task-card--bar {
+  border-color: rgba(130, 197, 214, .36);
+  background: linear-gradient(145deg, var(--ui-color-surface), #EDF7F9);
 }
 
 .task-card--completed {

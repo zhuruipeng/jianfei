@@ -1,7 +1,9 @@
+@import "./styles/ui-tokens.wxss";
+
 /* 全局样式 */
 page {
-  background: #F7F8FA;
-  color: #1F2937;
+  background: var(--ui-color-page);
+  color: var(--ui-color-text);
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
   font-size: 32rpx;

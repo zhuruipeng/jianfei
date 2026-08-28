@@ -1,5 +1,3 @@
-@import "../../../styles/ui-tokens.wxss";
-
 :host {
   pointer-events: none;
 }

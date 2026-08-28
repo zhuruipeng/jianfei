@@ -25,6 +25,7 @@ Component({
     nextUnlockVisible: { type: Boolean, value: false },
     journeyEntryTitle: { type: String, value: '查看旅程' },
     journeyEntryEnabled: { type: Boolean, value: true },
+    settingsVisible: { type: Boolean, value: false },
   },
 
   methods: {
@@ -45,6 +46,14 @@ Component({
 
     onNextUnlockTap() {
       this.triggerEvent('nextunlocktap');
+    },
+
+    onSettingsTap() {
+      this.triggerEvent('settingtap');
+    },
+
+    onDiscoveriesEntryTap() {
+      this.triggerEvent('discoveriesentry');
     },
   },
 });
