@@ -1,14 +1,31 @@
 import { WORLD_DECOR_ASSETS } from '../../config/worldDiscoveryConfig';
-import { UI2_GARDEN_ASSETS } from '../../config/worldGrowthConfig';
+import {
+  UI2_GARDEN_ASSETS,
+  UI2_PLANT_ASSETS,
+} from '../../config/worldGrowthConfig';
 
 Component({
   data: {
     decorAssets: WORLD_DECOR_ASSETS,
     gardenAssets: UI2_GARDEN_ASSETS,
+    plantStageAsset: UI2_PLANT_ASSETS[0],
+    plantAssetReady: true,
     gardenAssetReady: {
       base: true,
       foreground: true,
       light: true,
+    },
+  },
+
+  observers: {
+    'state.plantLevel': function onPlantLevelChange(plantLevel: number) {
+      const level = Number.isInteger(plantLevel) && plantLevel >= 0 && plantLevel <= 4
+        ? plantLevel
+        : 0;
+      this.setData({
+        plantStageAsset: UI2_PLANT_ASSETS[level],
+        plantAssetReady: true,
+      });
     },
   },
 
@@ -35,6 +52,9 @@ Component({
       if (layer === 'base' || layer === 'foreground' || layer === 'light') {
         this.setData({ [`gardenAssetReady.${layer}`]: false });
       }
+    },
+    onPlantAssetError() {
+      this.setData({ plantAssetReady: false });
     },
     onCompanionTap() {
       this.triggerEvent('companiontap');

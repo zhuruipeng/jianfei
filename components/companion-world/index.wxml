@@ -77,21 +77,17 @@
       </view>
     </block>
 
-    <!-- 动态植物保留 plantLevel 0～4，不把成长状态烘焙进底图。 -->
-    <block wx:if="{{assets.useImages}}">
-      <image class="image-layer plant-image" src="{{assets.plant}}" mode="aspectFit" />
-    </block>
-    <block wx:else>
-      <view class="plant-layer plant-level-{{state.plantLevel}}">
-        <text wx:if="{{state.plantLevel >= 1}}" class="plant plant-a">🌱</text>
-        <text wx:if="{{state.plantLevel >= 2}}" class="plant plant-b">🌿</text>
-        <text wx:if="{{state.plantLevel >= 2}}" class="plant plant-c">🌱</text>
-        <text wx:if="{{state.plantLevel >= 3}}" class="plant plant-d">🌼</text>
-        <text wx:if="{{state.plantLevel >= 3}}" class="plant plant-e">🌷</text>
-        <text wx:if="{{state.plantLevel >= 4}}" class="plant plant-tree">🌳</text>
-        <text wx:if="{{state.plantLevel >= 4}}" class="plant plant-f">🌻</text>
-      </view>
-    </block>
+    <!-- 正式植物图片仅消费现有 plantLevel 0～4，不参与成长计算。 -->
+    <view class="plant-layer plant-level-{{state.plantLevel}}">
+      <image
+        wx:if="{{plantAssetReady}}"
+        class="plant-stage-image plant-stage-{{state.plantLevel}}"
+        src="{{plantStageAsset}}"
+        mode="aspectFit"
+        binderror="onPlantAssetError"
+      />
+      <text wx:else class="plant-fallback" aria-hidden="true">🌱</text>
+    </view>
 
     <!-- 固定地面装饰和发现物位于植物之后、小轻之前。 -->
     <image class="world-decor decor-flower" src="{{decorAssets.flower}}" mode="aspectFit"></image>
