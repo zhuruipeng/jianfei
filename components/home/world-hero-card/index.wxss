@@ -31,7 +31,6 @@
 .scene-shell,
 .status-row,
 .companion-panel,
-.energy-progress,
 .next-unlock-wrap,
 .hero-footer {
   position: relative;
@@ -143,7 +142,7 @@
   min-width: 0;
   justify-content: center;
   gap: 8rpx;
-  margin: -34rpx 8rpx 0;
+  margin: -30rpx 12rpx 0;
 }
 
 .status-pill {
@@ -156,7 +155,7 @@
   min-width: 0;
   align-items: center;
   gap: 18rpx;
-  padding: 28rpx 10rpx 18rpx;
+  padding: 24rpx 10rpx 10rpx;
 }
 
 .companion-copy {
@@ -241,31 +240,8 @@
   line-height: 24rpx;
 }
 
-.energy-progress {
-  margin: 0 10rpx;
-  padding: 17rpx 20rpx 20rpx;
-  border-radius: var(--ui-radius-md);
-  background: rgba(247, 240, 218, .62);
-}
-
-.energy-caption {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
-  margin-bottom: 11rpx;
-  color: var(--ui-color-text-secondary);
-  font-size: 18rpx;
-  line-height: 28rpx;
-}
-
-.energy-caption__label {
-  color: var(--ui-color-wood);
-  font-weight: 600;
-}
-
 .next-unlock-wrap {
-  margin-top: 22rpx;
+  margin-top: 14rpx;
 }
 
 .hero-footer {

@@ -65,16 +65,18 @@
 
 .garden-foreground {
   z-index: 11;
+  /* 只保留前景花草，裁掉素材右下角自带的第二块蓝色池面。 */
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 86% 72%, 86% 83%, 64% 83%, 64% 100%, 0 100%);
 }
 
 .garden-light {
   z-index: 12;
-  opacity: .28;
+  opacity: .2;
   transition: opacity .9s ease;
 }
 
 .world-scene.is-complete .garden-light {
-  opacity: .78;
+  opacity: .58;
 }
 
 .image-layer {
@@ -150,18 +152,18 @@
 .path-level-4 .path-extension, .path-level-4 .path-far { opacity: .36; }
 .footprints { position: absolute; left: 50%; bottom: 31%; font-size: 34rpx; transform: rotate(-20deg); animation: footprintsMove 1.25s ease both; }
 
-.water-layer { position: absolute; z-index: 5; right: 4%; bottom: 7%; width: 36%; height: 24%; transition: transform .8s ease, opacity .8s ease; }
-.pond-shadow { position: absolute; inset: 18% 3% 2%; border-radius: 50%; background: rgba(67,86,53,.1); filter: blur(5rpx); }
-.pond { position: absolute; inset: 3% 4% 4%; overflow: hidden; border-radius: 50%; background: linear-gradient(180deg,rgba(172,216,217,.72),rgba(102,174,190,.78)); border: 2rpx solid rgba(211,241,235,.58); transform: scale(.72); opacity: .25; transition: all .8s ease; }
+.water-layer { position: absolute; z-index: 5; right: 1.5%; bottom: 8.5%; width: 39%; height: 24%; overflow: hidden; border-radius: 50%; transition: transform .8s ease, opacity .8s ease; }
+.pond-shadow { display: none; }
+.pond { position: absolute; inset: 14% 5% 7%; overflow: hidden; border: 0; border-radius: 50%; background: linear-gradient(180deg,rgba(172,216,217,.62),rgba(102,174,190,.68)); transform: scale(.72); opacity: .2; transition: all .8s ease; }
 .water-level-1 .pond { transform: scale(.78); opacity: .48; background: #9bbec4; }
 .water-level-2 .pond { transform: scale(.88); opacity: .72; background: #80b9c5; }
 .water-level-3 .pond { transform: scale(.96); opacity: .9; background: linear-gradient(180deg,#8ed1d5,#5dafbd); }
-.water-level-4 .pond { transform: scale(1); opacity: .9; background: linear-gradient(180deg,rgba(167,226,221,.92),rgba(85,182,197,.94)); box-shadow: 0 0 26rpx rgba(131,220,221,.28); }
+.water-level-4 .pond { transform: scale(1); opacity: .86; background: linear-gradient(180deg,rgba(167,226,221,.88),rgba(85,182,197,.9)); box-shadow: inset 0 5rpx 12rpx rgba(255,255,255,.22); }
 .water-ripple { position: absolute; left: 50%; top: 50%; border: 3rpx solid rgba(255,255,255,.5); border-radius: 50%; transform: translate(-50%,-50%); opacity: 0; }
 .water-level-2 .ripple-a, .water-level-3 .ripple-a, .water-level-4 .ripple-a { width: 90rpx; height: 30rpx; opacity: .55; }
 .water-level-3 .ripple-b, .water-level-4 .ripple-b { width: 145rpx; height: 54rpx; opacity: .35; }
-.water-reed { position: absolute; right: 1%; top: -4%; font-size: 46rpx; }
-.water-lily { position: absolute; left: 20%; top: 31%; font-size: 34rpx; }
+.water-reed { position: absolute; right: 2%; top: 7%; font-size: 42rpx; }
+.water-lily { position: absolute; left: 22%; top: 36%; font-size: 32rpx; }
 .water-drop { position: absolute; z-index: 3; left: 43%; top: -38%; font-size: 36rpx; animation: waterDrop .8s ease-in both; }
 
 .plant-layer { position: absolute; z-index: 7; inset: 0; }
@@ -203,11 +205,11 @@
 .landmark-title { color: #3f4b38; font-size: 21rpx; font-weight: 700; white-space: nowrap; }
 .landmark-hint { color: #768169; font-size: 18rpx; }
 
-.companion-home { position: absolute; z-index: 9; left: 31%; bottom: 7%; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); transition: transform .25s ease; }
+.companion-home { position: absolute; z-index: 9; left: 30%; bottom: 9%; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); transition: transform .25s ease; }
 .companion-home-hover { transform: translateX(-50%) scale(1.05); }
-.companion-shadow { position: absolute; bottom: 37rpx; width: 118rpx; height: 30rpx; border-radius: 50%; background: rgba(53,76,42,.2); filter: blur(4rpx); }
-.companion-image { position: relative; width: 180rpx; height: 196rpx; }
-.companion-placeholder { position: relative; display: flex; width: 126rpx; height: 154rpx; align-items: center; justify-content: flex-end; flex-direction: column; filter: drop-shadow(0 9rpx 7rpx rgba(63,85,46,.16)); }
+.companion-shadow { position: absolute; bottom: 37rpx; width: 164rpx; height: 34rpx; border-radius: 50%; background: rgba(53,76,42,.18); filter: blur(5rpx); }
+.companion-image { position: relative; width: 286rpx; height: 306rpx; }
+.companion-placeholder { position: relative; display: flex; width: 202rpx; height: 246rpx; align-items: center; justify-content: flex-end; flex-direction: column; filter: drop-shadow(0 9rpx 7rpx rgba(63,85,46,.16)); }
 .companion-leaf { position: absolute; z-index: 2; top: -8rpx; font-size: 60rpx; transform: rotate(-8deg); }
 .companion-body { position: relative; display: flex; width: 105rpx; height: 112rpx; align-items: center; justify-content: center; border: 5rpx solid rgba(108,142,78,.32); border-radius: 55% 55% 48% 48%; background: linear-gradient(155deg,#fffced,#dcebbf); box-shadow: inset -8rpx -9rpx 15rpx rgba(111,143,80,.12); }
 .companion-face { margin-top: 15rpx; color: #4f6545; font-size: 22rpx; font-weight: 700; white-space: nowrap; }
@@ -275,7 +277,7 @@
 
 @media (max-width: 390px) {
   .world-scene { height: 580rpx; }
-  .garden-light { opacity: .24; }
+  .garden-light { opacity: .18; }
   .journey-landmark { right: 3%; max-width: 204rpx; }
-  .companion-image { width: 168rpx; height: 184rpx; }
+  .companion-image { width: 268rpx; height: 288rpx; }
 }

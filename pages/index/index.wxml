@@ -1,14 +1,6 @@
 <!-- pages/index/index.wxml 今日首页（V13 小轻世界版） -->
 <view class="page">
 
-  <view class="brand-masthead">
-    <view class="brand-copy">
-      <text class="brand-title">小步轻</text>
-      <text class="brand-subtitle">轻一点，生活更轻盈</text>
-    </view>
-    <view class="brand-seal" aria-label="小步轻品牌标记"><text>小</text></view>
-  </view>
-
   <ui-feedback-toast visible="{{feedbackToast.visible}}" icon="{{feedbackToast.icon}}" text="{{feedbackToast.text}}" tone="{{feedbackToast.tone}}" bind:closed="onFeedbackToastClosed" />
 
   <!-- UI 2.0：WorldHeroCard 只接收首页展示模型，不读取 Storage / Service。 -->

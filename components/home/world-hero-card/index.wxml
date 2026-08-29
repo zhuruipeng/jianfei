@@ -84,25 +84,10 @@
     </view>
   </view>
 
-  <view class="energy-progress">
-    <view class="energy-caption">
-      <text class="energy-caption__label">今日轻能量</text>
-      <text>一点一点，也在向前</text>
-    </view>
-    <ui-progress-bar
-      value="{{energyValue}}"
-      max="{{energyMax}}"
-      tone="yellow"
-      height="10"
-      animated="{{true}}"
-    />
-  </view>
-
   <view wx:if="{{nextUnlockVisible}}" class="next-unlock-wrap">
     <ui-paper-note
-      eyebrow="下一次变化"
-      title="{{nextUnlockTitle}}"
-      description="{{nextUnlockDescription}}"
+      title="下一次变化"
+      description="{{nextUnlockTitle}}"
       image-src="{{nextUnlockImage}}"
       action-text="去看看"
       compact="{{true}}"
