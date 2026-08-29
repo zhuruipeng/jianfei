@@ -27,7 +27,12 @@
         "value": "tsconfig.json"
       }
     ],
-    "include": []
+    "include": [
+      {
+        "type": "folder",
+        "value": "assets/world"
+      }
+    ]
   },
   "setting": {
     "bundle": false,
@@ -44,6 +49,7 @@
     "autoAudits": false,
     "newFeature": false,
     "uglifyFileName": false,
+    "ignoreUploadUnusedFiles": false,
     "uploadWithSourceMap": true,
     "useIsolateContext": true,
     "nodeModules": false,

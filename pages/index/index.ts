@@ -1432,10 +1432,18 @@ Page({
   onClickWelcomeRecordFirst() {
     markWelcomeShown();
     const mt = this.data.welcomeRecommendMeal || 'lunch';
+    this.setData({ showWelcomeCard: false });
     try {
-      wx.navigateTo({ url: `/pages/meal/meal?meal=${mt}&date=${this.today}` });
+      wx.navigateTo({
+        url: `/pages/meal/meal?meal=${mt}&date=${this.today}`,
+        fail: (err) => {
+          console.error('[index] welcome navigateTo meal failed', err);
+          wx.showToast({ title: '暂时无法打开记录页，请重试', icon: 'none' });
+        },
+      });
     } catch (err) {
       console.error('[index] welcome navigateTo meal failed', err);
+      wx.showToast({ title: '暂时无法打开记录页，请重试', icon: 'none' });
     }
   },
 

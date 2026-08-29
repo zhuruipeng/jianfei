@@ -424,11 +424,24 @@
   letter-spacing: 1rpx;
 }
 .btn-primary-hover { opacity: 0.90; }
+.welcome-primary-button,
+.welcome-close-button {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  line-height: normal;
+}
+.welcome-primary-button::after,
+.welcome-close-button::after {
+  border: 0;
+}
 .welcome-close {
   text-align: center;
   color: #8A93A5;
   font-size: 26rpx;
   padding: 10rpx 0;
+  background: transparent;
 }
 
 .btn-ghost {

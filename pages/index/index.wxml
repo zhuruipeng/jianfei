@@ -243,8 +243,8 @@
   </view>
 
   <!-- 首次欢迎卡（显示一次，不与养成欢迎冲突） -->
-  <view wx:if="{{showWelcomeCard && !introCard.visible}}" class="welcome-mask">
-    <view class="welcome-card">
+  <view wx:if="{{showWelcomeCard && !introCard.visible}}" class="welcome-mask" catchtouchmove="stopPropagation">
+    <view class="welcome-card" catchtap="stopPropagation">
       <view class="welcome-title">欢迎来到轻一点 🟟</view>
       <view class="welcome-body">
         不用一下改变所有事情。
@@ -252,12 +252,12 @@
         记录你的第一餐。
       </view>
       <view class="welcome-actions">
-        <view
-          class="btn-primary"
+        <button
+          class="btn-primary welcome-primary-button"
           bindtap="onClickWelcomeRecordFirst"
           hover-class="btn-primary-hover"
-        ><text>记录第一餐</text></view>
-        <view class="welcome-close" bindtap="onClickWelcomeClose"><text>先跳过</text></view>
+        >记录第一餐</button>
+        <button class="welcome-close welcome-close-button" bindtap="onClickWelcomeClose">先跳过</button>
       </view>
     </view>
   </view>
