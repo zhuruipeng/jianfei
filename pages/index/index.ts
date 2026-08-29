@@ -586,6 +586,31 @@ function markWelcomeShown(): void {
   try { wx.setStorageSync(STORAGE_KEY_HOME_WELCOME_SHOWN, 1); } catch { /* ignore */ }
 }
 
+/** 开发环境本地诊断：只写控制台，不持久化、不上报。 */
+function logUi2GardenWindowInfo(): void {
+  if (!isDevEnv()) return;
+  try {
+    const wxApi = wx as any;
+    const windowInfo = typeof wxApi.getWindowInfo === 'function'
+      ? wxApi.getWindowInfo()
+      : {};
+    const systemInfo = typeof wxApi.getSystemInfoSync === 'function'
+      ? wxApi.getSystemInfoSync()
+      : {};
+    console.info('[ui2-garden][device-info]', {
+      windowWidth: windowInfo.windowWidth ?? systemInfo.windowWidth,
+      windowHeight: windowInfo.windowHeight ?? systemInfo.windowHeight,
+      pixelRatio: windowInfo.pixelRatio ?? systemInfo.pixelRatio,
+      safeArea: windowInfo.safeArea ?? systemInfo.safeArea,
+      statusBarHeight: windowInfo.statusBarHeight ?? systemInfo.statusBarHeight,
+      SDKVersion: systemInfo.SDKVersion,
+      platform: systemInfo.platform,
+    });
+  } catch (error) {
+    console.warn('[ui2-garden][device-info] unavailable', error);
+  }
+}
+
 Page({
   data: {
     dateCN: '',
@@ -659,6 +684,7 @@ Page({
   today: '' as string,
 
   onLoad() {
+    logUi2GardenWindowInfo();
     // 首次进入：迁移旧 DailyRecord.xxxCompleted 到 MealRecord（防止积分丢失）
     try { migrateAllLegacyDailyRecords(); } catch { /* ignore */ }
 

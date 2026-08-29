@@ -3,11 +3,13 @@ import {
   UI2_GARDEN_ASSETS,
   UI2_PLANT_ASSETS,
 } from '../../config/worldGrowthConfig';
+import { UI2_WORLD_SCENE_STYLE } from '../../config/worldSceneLayout';
 
 Component({
   data: {
     decorAssets: WORLD_DECOR_ASSETS,
     gardenAssets: UI2_GARDEN_ASSETS,
+    sceneCoordinateStyle: UI2_WORLD_SCENE_STYLE,
     plantStageAsset: UI2_PLANT_ASSETS[0],
     plantAssetReady: true,
     gardenAssetReady: {

@@ -7,7 +7,11 @@
     <view wx:if="{{settingsVisible}}" class="world-settings" bindtap="onSettingsTap" hover-class="world-settings-hover">···</view>
   </view>
 
-  <view class="world-scene {{state.todayAllCompleted ? 'is-complete' : ''}}">
+  <view class="world-scene-frame">
+  <view
+    class="world-scene {{state.todayAllCompleted ? 'is-complete' : ''}}"
+    style="{{sceneCoordinateStyle}}"
+  >
     <!-- 固定环境美术只负责空间氛围；所有成长和完成态仍由下方动态层驱动。 -->
     <image
       wx:if="{{gardenAssetReady.base}}"
@@ -168,18 +172,21 @@
       </view>
     </block>
 
-    <view
-      wx:if="{{state.journeyLandmark.visible}}"
-      class="journey-landmark"
-      bindtap="onJourneyTap"
-      hover-class="journey-landmark-hover"
-    >
-      <text class="landmark-emoji">{{state.journeyLandmark.emoji}}</text>
-      <view class="landmark-copy">
-        <text class="landmark-title">{{state.journeyLandmark.title}}</text>
-        <text class="landmark-hint">{{state.journeyLandmark.hint}} ›</text>
-      </view>
+  </view>
+
+  <!-- 森林入口是独立 UI overlay，不占用世界坐标，也不随动态元素漂移。 -->
+  <view
+    wx:if="{{state.journeyLandmark.visible}}"
+    class="journey-landmark"
+    bindtap="onJourneyTap"
+    hover-class="journey-landmark-hover"
+  >
+    <text class="landmark-emoji">{{state.journeyLandmark.emoji}}</text>
+    <view class="landmark-copy">
+      <text class="landmark-title">{{state.journeyLandmark.title}}</text>
+      <text class="landmark-hint">{{state.journeyLandmark.hint}} ›</text>
     </view>
+  </view>
   </view>
 
   <view wx:if="{{headerText && message}}" class="world-message {{transition.kind ? 'is-live' : ''}}">{{message}}</view>
