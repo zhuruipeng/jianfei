@@ -1,184 +1,70 @@
-<!-- pages/progress/progress.wxml 进展页 -->
 <view class="page">
-
-  <!-- 头部：无体重时空态 + 有体重时温和展示（不作为首页最大数字） -->
-  <view class="hero card">
-    <block wx:if="{{stats.currentWeight === null}}">
-      <view class="hero-top">我的进展</view>
-      <view class="empty-inner empty-hero">
-        <view class="empty-emoji">⚖️</view>
-        <view class="empty-title">还没有体重记录</view>
-        <view class="empty-desc">第一次记录以后，这里会慢慢出现你的变化趋势。</view>
-        <view
-          class="btn-primary small"
-          bindtap="onClickRecordToday"
-          hover-class="btn-primary-hover"
-        >
-          <text class="btn-icon">⚖</text>
-          <text>记录体重</text>
-        </view>
+  <view class="journey-hero">
+    <view class="hero-decor hero-leaf">❧</view><view class="hero-decor hero-path">···</view>
+    <view class="eyebrow">本周轻旅 · 第 {{weekReview.weekNumber}} 周</view>
+    <view class="hero-title">这一周，我们走了这些路</view>
+    <view class="hero-period" wx:if="{{weekReview.periodText}}">{{weekReview.periodText}}</view>
+    <block wx:if="{{weekReview.hasData}}">
+      <view class="hero-focus">
+        <view><text class="focus-label">认真记录</text><view class="focus-value"><text>{{weekReview.meaningfulDays}}</text><text class="focus-total"> / 7 天</text></view></view>
+        <view class="week-dots"><view class="week-dot {{index < weekReview.meaningfulDays ? 'is-filled' : ''}}" wx:for="{{[0,1,2,3,4,5,6]}}" wx:key="*this"></view></view>
       </view>
+      <view class="hero-message"><text class="companion-name">小轻：</text>{{weekReview.summaryText}}</view>
     </block>
+    <view class="week-empty" wx:else>
+      <view class="empty-sprout">🌱</view><view class="empty-title">这一周还刚刚开始</view>
+      <view class="empty-desc">完成一些小记录以后，<br/>这里会出现属于你的轻旅回顾。</view>
+    </view>
+  </view>
 
-    <block wx:else>
-      <view class="hero-top">我的进展</view>
-      <view class="hero-label">当前体重</view>
-      <view class="hero-current">
-        <text class="hero-num">{{stats.currentWeight}}</text>
-        <text class="hero-unit">kg</text>
+  <view class="section" wx:if="{{weekReview.hasData}}">
+    <view class="section-heading"><view><view class="section-title">这周的成长</view><view class="section-subtitle">每一件小事，都算数。</view></view><text class="section-mark">✦</text></view>
+    <view class="growth-grid">
+      <view class="growth-card tone-{{item.tone}}" wx:for="{{weekReview.growthItems}}" wx:key="id">
+        <view class="growth-icon">{{item.icon}}</view><view class="growth-copy"><text class="growth-label">{{item.label}}</text><text class="growth-value">{{item.value}}</text></view>
       </view>
-      <view class="hero-tip">{{gentleMessage}}</view>
-    </block>
-  </view>
-
-  <!-- 关键数据卡 -->
-  <view class="stats-grid card">
-    <view class="stat-col">
-      <text class="stat-label">初始体重</text>
-      <text class="stat-num">{{stats.initialWeight === null ? '--' : stats.initialWeight}}</text>
-      <text class="stat-unit" wx:if="{{stats.initialWeight !== null}}">kg</text>
-    </view>
-    <view class="stat-col-divider"></view>
-    <view class="stat-col">
-      <text class="stat-label">当前体重</text>
-      <text class="stat-num">{{stats.currentWeight === null ? '--' : stats.currentWeight}}</text>
-      <text class="stat-unit" wx:if="{{stats.currentWeight !== null}}">kg</text>
-    </view>
-    <view class="stat-col-divider"></view>
-    <view class="stat-col">
-      <text class="stat-label">已变化</text>
-      <text class="stat-num change-{{changeClass}}">{{stats.changeText || '--'}}</text>
     </view>
   </view>
 
-  <!-- 记录按钮（没数据/鼓励每天继续） -->
-  <view class="row-record">
-    <view class="btn-primary full" bindtap="onClickRecordToday" hover-class="btn-primary-hover">
-      <text class="btn-icon">⚖</text>
-      <text>记录今天的体重</text>
+  <view class="section body-card">
+    <view class="section-heading compact"><view><view class="section-title">身体变化</view><view class="section-subtitle">体重每天都会自然波动，看长期趋势就好。</view></view></view>
+    <view class="weight-stats" wx:if="{{stats.currentWeight !== null}}">
+      <view class="weight-stat"><text class="weight-label">开始</text><text class="weight-value">{{stats.initialWeight}}<text class="weight-unit">kg</text></text></view><view class="weight-divider"></view>
+      <view class="weight-stat"><text class="weight-label">现在</text><text class="weight-value">{{stats.currentWeight}}<text class="weight-unit">kg</text></text></view><view class="weight-divider"></view>
+      <view class="weight-stat"><text class="weight-label">变化</text><text class="weight-value change-value">{{stats.changeText || '0.0kg'}}</text></view>
     </view>
+    <view class="weight-empty" wx:else><view class="weight-empty-icon">⚖️</view><view><view class="weight-empty-title">还没有体重记录</view><view class="weight-empty-desc">第一次记录以后，这里会慢慢出现你的变化趋势。</view></view></view>
+    <button class="weight-button" bindtap="onClickRecordToday" hover-class="weight-button-hover"><text class="button-icon">⚖</text>记录今天的体重</button>
   </view>
 
-  <!-- 趋势图 -->
-  <view class="section card trend-card">
-    <view class="section-head">
-      <text class="section-title">最近 30 天体重趋势</text>
-      <text class="section-desc muted">共 {{trendPoints.length}} 条记录</text>
-    </view>
-
+  <view class="section trend-card">
+    <view class="section-heading compact"><view><view class="section-title">30 天体重趋势</view><view class="section-subtitle">{{trendPoints.length ? '共 ' + trendPoints.length + ' 条记录' : '记录会在这里连成趋势'}}</view></view><text class="trend-leaf">⌁</text></view>
     <block wx:if="{{trendPoints.length > 0}}">
-      <!-- 左侧刻度（3 行） -->
-      <view class="canvas-wrap">
-        <view class="y-axis">
-          <text class="y-tick">{{yTicks.max}} kg</text>
-          <text class="y-tick">{{yTicks.mid}} kg</text>
-          <text class="y-tick">{{yTicks.min}} kg</text>
-        </view>
-        <canvas
-          canvas-id="weightTrend"
-          class="weight-canvas"
-          style="{{'width:' + canvasWidth + 'px; height:' + canvasHeight + 'px'}}"
-          disable-scroll="true"
-        ></canvas>
-      </view>
-      <!-- X 轴两端日期 -->
-      <view class="x-axis">
-        <text class="x-tick">{{xTicks.first}}</text>
-        <text class="x-tick">{{xTicks.last}}</text>
-      </view>
+      <view class="canvas-wrap"><view class="y-axis"><text>{{yTicks.max}}</text><text>{{yTicks.mid}}</text><text>{{yTicks.min}}</text></view><canvas canvas-id="weightTrend" class="weight-canvas" style="{{'width:' + canvasWidth + 'px; height:' + canvasHeight + 'px'}}" disable-scroll="true"></canvas></view>
+      <view class="x-axis"><text>{{xTicks.first}}</text><text>{{xTicks.last}}</text></view>
+      <view class="trend-note"><text class="trend-note-dot"></text>{{trendMessage}}</view>
     </block>
-
-    <block wx:else>
-      <view class="empty-inner">
-        <view class="empty-emoji">⚖️</view>
-        <view class="empty-title">还没有体重记录</view>
-        <view class="empty-desc">第一次记录以后，这里会慢慢出现你的变化趋势。</view>
-        <view
-          class="btn-primary small"
-          bindtap="onClickRecordToday"
-          hover-class="btn-primary-hover"
-        >
-          <text>记录体重</text>
-        </view>
-      </view>
-    </block>
+    <view class="trend-empty" wx:else><view class="empty-curve">⌁</view><view class="empty-title small">还没有体重记录</view><view class="empty-desc">第一次记录以后，<br/>这里会慢慢出现你的变化趋势。</view></view>
   </view>
 
-  <!-- 最近记录列表 -->
-  <view class="section">
-    <view class="section-title-only">
-      <text class="section-title">最近记录</text>
+  <view class="section records-section">
+    <view class="section-heading"><view><view class="section-title">最近记录</view><view class="section-subtitle">点开一条记录可以删除。</view></view></view>
+    <view class="record-card" wx:if="{{recentRecords.length > 0}}">
+      <view class="record-row {{index < recentRecords.length - 1 ? 'with-line' : ''}}" wx:for="{{recentRecords}}" wx:key="id" data-id="{{item.id}}" data-datecn="{{item.dateCN}}" data-weight="{{item.weight}}" bindtap="onClickRecordRow" hover-class="record-row-hover">
+        <view class="record-date"><text class="timeline-dot"></text>{{item.dateCN}}</view><view class="record-right"><text class="record-weight">{{item.weight}} kg</text><text class="record-arrow">›</text></view>
+      </view>
     </view>
-
-    <block wx:if="{{recentRecords.length > 0}}">
-      <view class="card record-list">
-        <view
-          class="record-row {{index !== recentRecords.length - 1 ? 'record-row-border' : ''}}"
-          wx:for="{{recentRecords}}"
-          wx:key="id"
-          data-id="{{item.id}}"
-          data-datecn="{{item.dateCN}}"
-          data-weight="{{item.weight}}"
-          bindtap="onClickRecordRow"
-          hover-class="record-row-hover"
-        >
-          <text class="record-date">{{item.dateCN}}</text>
-          <view class="record-right">
-            <text class="record-weight">{{item.weight}} kg</text>
-            <text class="record-arrow muted">›</text>
-          </view>
-        </view>
-      </view>
-    </block>
-
-    <block wx:else>
-      <view class="card empty-inner small">
-        <view class="empty-emoji small">🟟</view>
-        <view class="empty-title small">暂无最近记录</view>
-        <view class="empty-desc small">记录一次体重以后，这里会按时间倒序显示最近的记录。</view>
-      </view>
-    </block>
+    <view class="record-empty" wx:else><text class="record-empty-icon">○</text><text>记录一次体重以后，最近的变化会出现在这里。</text></view>
   </view>
 
-  <!-- 反馈入口（所有环境都显示，不局限 develop） -->
-  <view class="row-feedback card">
-    <view class="btn-secondary full" bindtap="onClickOpenFeedback" hover-class="btn-secondary-hover">
-      <text class="btn-icon">🟟</text>
-      <text>给轻一点提个建议</text>
-    </view>
-  </view>
+  <button class="feedback-link" bindtap="onClickOpenFeedback" hover-class="feedback-link-hover">给小步轻提个建议 ›</button>
 
   <view class="bottom-space"></view>
-
-  <!-- V11：自定义体重输入弹窗 -->
   <view wx:if="{{showWeightModal}}" class="modal-mask" catchtap="onWeightModalCancel">
     <view class="modal-card" catchtap="stopPropagation">
-      <view class="modal-title">记录今天的体重</view>
-      <view class="modal-hint">
-        <text wx:if="{{weightModalCurrent !== null}}">当前 {{weightModalCurrent}} kg · </text>
-        <text>直接输入新值即可</text>
-      </view>
-      <view class="modal-input-wrap">
-        <input
-          class="modal-input"
-          type="digit"
-          placeholder="如 72.6"
-          value="{{weightModalValue}}"
-          focus="{{showWeightModal}}"
-          confirm-type="done"
-          bindinput="onWeightModalInput"
-          bindconfirm="onWeightModalSave"
-        />
-        <text class="modal-unit">kg</text>
-      </view>
-      <view class="modal-actions">
-        <view class="modal-btn modal-btn-cancel" bindtap="onWeightModalCancel">
-          <text>取消</text>
-        </view>
-        <view class="modal-btn modal-btn-confirm" bindtap="onWeightModalSave">
-          <text>保存</text>
-        </view>
-      </view>
+      <view class="modal-title">记录今天的体重</view><view class="modal-hint"><text wx:if="{{weightModalCurrent !== null}}">当前 {{weightModalCurrent}} kg · </text><text>直接输入新值即可</text></view>
+      <view class="modal-input-wrap"><input class="modal-input" type="digit" placeholder="如 72.6" value="{{weightModalValue}}" focus="{{showWeightModal}}" confirm-type="done" bindinput="onWeightModalInput" bindconfirm="onWeightModalSave"/><text class="modal-unit">kg</text></view>
+      <view class="modal-actions"><button class="modal-btn modal-cancel" bindtap="onWeightModalCancel">取消</button><button class="modal-btn modal-confirm" bindtap="onWeightModalSave">保存</button></view>
     </view>
   </view>
 </view>
