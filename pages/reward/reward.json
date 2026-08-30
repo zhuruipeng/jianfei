@@ -1,6 +1,11 @@
 {
   "navigationBarTitleText": "我的奖励",
-  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarBackgroundColor": "#F7F4EA",
   "navigationBarTextStyle": "black",
-  "usingComponents": {}
+  "usingComponents": {
+    "ui-section-header": "/components/ui/section-header/index",
+    "ui-soft-card": "/components/ui/soft-card/index",
+    "ui-progress-bar": "/components/ui/progress-bar/index",
+    "ui-soft-button": "/components/ui/soft-button/index"
+  }
 }

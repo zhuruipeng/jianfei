@@ -23,6 +23,7 @@ import {
   redeemReward,
   validateRewardInput,
   sortRewardsForDisplay,
+  pickNextReward,
   calcRewardProgress,
   type RewardProgress
 } from '../../utils/reward';
@@ -33,12 +34,25 @@ interface RewardDisplayItem {
   reward: Reward;
   achieved: boolean;
   progress: RewardProgress;
+  stateText: string;
+}
+
+interface NextExpectation {
+  id: string;
+  reward: Reward;
+  achieved: boolean;
+  progress: RewardProgress;
+  stateText: string;
+  helperText: string;
 }
 
 interface RewardPageData {
   totalPoints: number;
   heroTip: string;
   displayRewards: RewardDisplayItem[];
+  nextExpectation: NextExpectation | null;
+  redeemFeedbackVisible: boolean;
+  redeemFeedbackTitle: string;
 
   // 常量暴露给 modal 校验提示
   REWARD_REQUIRED_POINTS_MIN: number;
@@ -51,6 +65,9 @@ Page({
     totalPoints: 0,
     heroTip: '今天又完成了一点。距离自己的奖励又近了一步。',
     displayRewards: [] as RewardDisplayItem[],
+    nextExpectation: null as NextExpectation | null,
+    redeemFeedbackVisible: false,
+    redeemFeedbackTitle: '',
 
     REWARD_REQUIRED_POINTS_MIN,
     REWARD_REQUIRED_POINTS_MAX,
@@ -78,10 +95,12 @@ Page({
     this.rewardsCache = rewards;
     const display = this.buildDisplayItems(rewards, totalPoints);
     const heroTip = this.computeHeroTip(rewards, totalPoints);
+    const nextExpectation = this.buildNextExpectation(rewards, totalPoints);
     this.setData({
       totalPoints,
       heroTip,
-      displayRewards: display
+      displayRewards: display,
+      nextExpectation
     });
     // V9-fix2：奖励解锁埋点——在刷新时检查所有未领取但已达标奖励，补记 reward_unlocked（每个 rewardId 只记一次）
     try {
@@ -101,9 +120,28 @@ Page({
         id: r.id,
         reward: r,
         achieved: r.redeemed ? true : progress.achieved,
-        progress
+        progress,
+        stateText: r.redeemed
+          ? '已经领取'
+          : (progress.achieved ? '已经准备好了' : '还在慢慢靠近')
       };
     });
+  },
+
+  buildNextExpectation(rewards: Reward[], totalPoints: number): NextExpectation | null {
+    const next = pickNextReward(rewards, totalPoints);
+    if (!next) return null;
+
+    return {
+      id: next.reward.id,
+      reward: next.reward,
+      achieved: next.progress.achieved,
+      progress: next.progress,
+      stateText: next.progress.achieved ? '已经准备好了' : '下一个期待',
+      helperText: next.progress.achieved
+        ? '这是你一步一步为自己准备好的。'
+        : `还差 ${next.progress.remain} 点努力值`
+    };
   },
 
   computeHeroTip(rewards: Reward[], totalPoints: number): string {
@@ -117,16 +155,16 @@ Page({
     }
     const unlocked = unredeemed.find((r: Reward) => totalPoints >= r.requiredPoints);
     if (unlocked) {
-      return `「${unlocked.title}」已经解锁，记得对自己好一点～`;
+      return `「${unlocked.title}」已经准备好了，记得对自己好一点～`;
     }
     // 下一个最近的还差多少（温和语气，不喊加油）
     const sorted = [...unredeemed].sort((a, b) => a.requiredPoints - b.requiredPoints);
     const next = sorted[0];
     const remain = Math.max(0, next.requiredPoints - totalPoints);
     if (remain === 0) {
-      return `再往前走一点点，就能解锁「${next.title}」啦。`;
+      return `「${next.title}」已经准备好了。`;
     }
-    return `还差 ${remain} 积分就能解锁「${next.title}」。`;
+    return `还差 ${remain} 点努力值，就能准备好「${next.title}」。`;
   },
 
   // ================================================================
@@ -138,6 +176,10 @@ Page({
 
   onClickEditReward(e: any) {
     const id = e && e.currentTarget && e.currentTarget.dataset.id;
+    this.openEditReward(id);
+  },
+
+  openEditReward(id: unknown) {
     if (!id || typeof id !== 'string') return;
     const target = this.rewardsCache.find((r: Reward) => r.id === id);
     if (!target) return;
@@ -146,6 +188,28 @@ Page({
       return;
     }
     this.openRewardForm({ mode: 'edit', reward: target });
+  },
+
+  onClickRewardMore(e: any) {
+    const id = e && e.currentTarget && e.currentTarget.dataset.id;
+    if (!id || typeof id !== 'string') return;
+    const target = this.rewardsCache.find((r: Reward) => r.id === id);
+    if (!target) return;
+
+    const itemList = target.redeemed
+      ? ['删除领取记录']
+      : ['编辑奖励', '删除奖励'];
+
+    (wx as any).showActionSheet({
+      itemList,
+      success: (result: { tapIndex: number }) => {
+        if (!target.redeemed && result.tapIndex === 0) {
+          this.openEditReward(target.id);
+          return;
+        }
+        this.confirmDeleteReward(target.id);
+      }
+    });
   },
 
   /**
@@ -209,7 +273,7 @@ Page({
 
     function askPoints() {
       wx.showModal({
-        title: isEdit ? '修改所需积分' : `3 / 3 需要积分（${REWARD_REQUIRED_POINTS_MIN}~${REWARD_REQUIRED_POINTS_MAX}）`,
+        title: isEdit ? '修改所需努力值' : `3 / 3 需要的努力值（${REWARD_REQUIRED_POINTS_MIN}~${REWARD_REQUIRED_POINTS_MAX}）`,
         content: '',
         editable: true,
         placeholderText: '例如：300（正整数）',
@@ -256,13 +320,17 @@ Page({
   // ================================================================
   onClickDeleteReward(e: any) {
     const id = e && e.currentTarget && e.currentTarget.dataset.id;
+    this.confirmDeleteReward(id);
+  },
+
+  confirmDeleteReward(id: unknown) {
     if (!id || typeof id !== 'string') return;
     const target = this.rewardsCache.find((r: Reward) => r.id === id);
     if (!target) return;
     const page = this;
     wx.showModal({
       title: target.redeemed ? '删除领取记录？' : '删除这个奖励？',
-      content: `${target.emoji} ${target.title}（需要 ${target.requiredPoints} 积分）`,
+      content: `${target.emoji} ${target.title}（需要 ${target.requiredPoints} 点努力值）`,
       confirmText: '删除',
       confirmColor: '#D04343',
       cancelText: '再想想',
@@ -293,7 +361,7 @@ Page({
     }
     const totalPoints = calculateTotalPoints();
     if (totalPoints < target.requiredPoints) {
-      wx.showToast({ title: `还差 ${target.requiredPoints - totalPoints} 积分`, icon: 'none' });
+      wx.showToast({ title: `还差 ${target.requiredPoints - totalPoints} 点努力值`, icon: 'none' });
       return;
     }
     const page = this;
@@ -320,9 +388,23 @@ Page({
         try {
           trackRewardRedeemed(target.requiredPoints);
         } catch { /* ignore */ }
-        wx.showToast({ title: '✓ 已领取', icon: 'none', duration: 900 });
         page.refreshAll();
+        page.setData({
+          redeemFeedbackVisible: true,
+          redeemFeedbackTitle: target.title
+        });
       }
     });
+  },
+
+  onCloseRedeemFeedback() {
+    this.setData({
+      redeemFeedbackVisible: false,
+      redeemFeedbackTitle: ''
+    });
+  },
+
+  preventOverlayTap() {
+    // 阻止弹层内容区域的点击冒泡到遮罩。
   }
 });
