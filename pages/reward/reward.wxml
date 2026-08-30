@@ -1,143 +1,169 @@
-<!-- pages/reward/reward.wxml 奖励页 -->
+<!-- pages/reward/reward.wxml 奖励页 UI 2.0 -->
 <view class="page">
-
-  <!-- 头部：累计积分 -->
-  <view class="reward-hero card">
-    <view class="hero-top">我的奖励</view>
-    <view class="hero-row">
-      <text class="hero-label">累计积分</text>
-    </view>
-    <view class="hero-points">
-      <text class="points-emoji">🟟</text>
-      <text class="points-num">{{totalPoints}}</text>
-    </view>
-    <view class="hero-tip">{{heroTip}}</view>
-  </view>
-
-  <!-- 新建按钮 -->
-  <view class="new-reward-wrap">
-    <view class="btn-primary full" bindtap="onClickNewReward" hover-class="btn-primary-hover">
-      <text class="btn-icon">+</text>
-      <text>新建奖励</text>
+  <view class="gift-hero">
+    <view class="hero-decoration hero-decoration-left">🌿</view>
+    <view class="hero-decoration hero-decoration-right">✦</view>
+    <view class="hero-kicker">给一直在坚持的自己一点期待</view>
+    <view class="hero-title">给自己的小礼物 <text class="hero-gift">🎁</text></view>
+    <view class="hero-copy">这些不是任务，<br />是给坚持下来的自己一点期待。</view>
+    <view class="effort-block">
+      <text class="effort-label">累计努力</text>
+      <view class="effort-value-row">
+        <text class="effort-value">{{totalPoints}}</text>
+        <text class="effort-unit">点</text>
+      </view>
+      <text class="effort-tip">{{heroTip}}</text>
     </view>
   </view>
 
-  <!-- 奖励列表（有数据时） -->
+  <view wx:if="{{nextExpectation}}" class="next-section">
+    <ui-section-header
+      title="下一个期待"
+      subtitle="离你最近的那份小礼物"
+      icon="🌱"
+    />
+    <ui-soft-card variant="paper" padding="lg">
+      <view class="next-reward-head">
+        <view class="reward-identity">
+          <view class="reward-icon reward-icon-warm">{{nextExpectation.reward.emoji}}</view>
+          <view class="reward-copy">
+            <text class="next-reward-title">{{nextExpectation.reward.title}}</text>
+            <text class="next-state {{nextExpectation.achieved ? 'is-ready' : ''}}">{{nextExpectation.stateText}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="next-progress-copy">
+        <text class="progress-numbers">{{nextExpectation.progress.current}} / {{nextExpectation.progress.required}}</text>
+        <text class="progress-helper">{{nextExpectation.helperText}}</text>
+      </view>
+      <ui-progress-bar
+        value="{{nextExpectation.progress.current}}"
+        max="{{nextExpectation.progress.required}}"
+        tone="wood"
+        height="12"
+      />
+    </ui-soft-card>
+  </view>
+
+  <view wx:if="{{displayRewards.length > 0}}" class="create-reward">
+    <ui-soft-button
+      text="＋ 给自己准备一个奖励"
+      variant="secondary"
+      size="lg"
+      full-width
+      bind:tap="onClickNewReward"
+    />
+  </view>
+
   <block wx:if="{{displayRewards.length > 0}}">
-    <view class="section-title">
-      <text>我的奖励</text>
+    <view class="list-header">
+      <ui-section-header
+        title="我为自己准备的奖励"
+        subtitle="每一份期待，都来自真实的坚持"
+        icon="🎀"
+      />
     </view>
 
     <view
-      class="reward-card card {{item.reward.redeemed ? 'reward-redeemed' : (item.achieved ? 'reward-unlocked' : 'reward-pending')}}"
+      class="reward-card {{item.reward.redeemed ? 'is-redeemed' : (item.achieved ? 'is-unlocked' : '')}}"
       wx:for="{{displayRewards}}"
       wx:key="id"
     >
-      <!-- 头部：emoji + 标题 + 状态 -->
-      <view class="reward-head">
-        <view class="reward-title-row">
-          <text class="reward-emoji">{{item.reward.emoji}}</text>
-          <text class="reward-title">{{item.reward.title}}</text>
-        </view>
-        <view class="reward-status">
-          <block wx:if="{{item.reward.redeemed}}">
-            <text class="status status-redeemed">✓ 已领取</text>
-          </block>
-          <block wx:else>
-            <block wx:if="{{item.achieved}}">
-              <text class="status status-unlocked">🟟 奖励解锁</text>
-            </block>
-            <block wx:else>
-              <text class="status status-pending">未达成</text>
-            </block>
-          </block>
-        </view>
-      </view>
-
-      <!-- 所需积分 -->
-      <view class="reward-meta-row">
-        <view class="meta-item">
-          <text class="meta-label">需要积分</text>
-          <text class="meta-value">{{item.reward.requiredPoints}}</text>
-        </view>
-      </view>
-
-      <!-- 进度 / 说明 -->
-      <block wx:if="{{!item.reward.redeemed}}">
-        <view class="reward-progress-area">
-          <view class="progress-info">
-            <text class="progress-text">
-              当前 {{item.progress.current}} / {{item.progress.required}}
+      <view class="reward-card-head">
+        <view class="reward-identity">
+          <view class="reward-icon">{{item.reward.emoji}}</view>
+          <view class="reward-copy">
+            <text class="reward-title">{{item.reward.title}}</text>
+            <text class="reward-state {{item.achieved && !item.reward.redeemed ? 'is-ready' : ''}}">
+              {{item.reward.redeemed ? '✓ ' : ''}}{{item.stateText}}
             </text>
-            <block wx:if="{{!item.achieved}}">
-              <text class="progress-remain">还差 {{item.progress.remain}} 积分</text>
-            </block>
-            <block wx:else>
-              <text class="progress-remain achieved-text">🟟 已经达成，可以领取</text>
-            </block>
           </view>
-          <view class="progress-track">
-            <view class="progress-fill" style="{{'width:' + item.progress.percent + '%'}}"></view>
-          </view>
+        </view>
+        <view
+          class="more-button"
+          data-id="{{item.reward.id}}"
+          catchtap="onClickRewardMore"
+          hover-class="more-button-active"
+          aria-role="button"
+          aria-label="管理奖励"
+        >•••</view>
+      </view>
+
+      <block wx:if="{{!item.reward.redeemed}}">
+        <view class="card-progress-copy">
+          <text class="progress-numbers">{{item.progress.current}} / {{item.progress.required}}</text>
+          <text class="progress-helper">
+            {{item.achieved ? '已经准备好了 🎉' : '还差 ' + item.progress.remain + ' 点'}}
+          </text>
+        </view>
+        <ui-progress-bar
+          value="{{item.progress.current}}"
+          max="{{item.progress.required}}"
+          tone="green"
+          height="10"
+        />
+
+        <view wx:if="{{item.achieved}}" class="card-primary-action">
+          <ui-soft-button
+            text="领取小礼物"
+            variant="primary"
+            size="md"
+            full-width
+            data-id="{{item.reward.id}}"
+            bind:tap="onClickRedeemReward"
+          />
         </view>
       </block>
 
-      <block wx:else>
-        <view class="reward-meta-row redeemed-time">
-          <text class="meta-label muted">领取时间：{{item.reward.redeemedAt}}</text>
+      <view wx:else class="redeemed-note">
+        <text class="redeemed-leaf">🌿</text>
+        <view class="redeemed-copy">
+          <text>这是你走过的路留下的小礼物。</text>
+          <text wx:if="{{item.reward.redeemedAt}}" class="redeemed-time">领取于 {{item.reward.redeemedAt}}</text>
         </view>
-      </block>
-
-      <!-- 操作按钮 -->
-      <view class="reward-actions">
-        <!-- 未领取 -->
-        <block wx:if="{{!item.reward.redeemed}}">
-          <view
-            class="btn-ghost"
-            data-id="{{item.reward.id}}"
-            catchtap="onClickEditReward"
-            hover-class="btn-ghost-hover"
-          >编辑</view>
-          <view
-            class="btn-ghost danger"
-            data-id="{{item.reward.id}}"
-            catchtap="onClickDeleteReward"
-            hover-class="btn-ghost-hover"
-          >删除</view>
-          <view
-            class="{{item.achieved ? 'btn-primary' : 'btn-primary btn-disabled'}}"
-            data-id="{{item.reward.id}}"
-            catchtap="onClickRedeemReward"
-            hover-class="btn-primary-hover"
-          >
-            领取奖励
-          </view>
-        </block>
-        <!-- 已领取：仍允许删除，但不能编辑标题改积分（留个小入口，避免数据锁死） -->
-        <block wx:else>
-          <view
-            class="btn-ghost danger"
-            data-id="{{item.reward.id}}"
-            catchtap="onClickDeleteReward"
-            hover-class="btn-ghost-hover"
-          >删除记录</view>
-        </block>
       </view>
     </view>
   </block>
 
-  <!-- 空状态（用户把默认奖励也删了） -->
-  <block wx:else>
-    <view class="empty card">
-      <view class="empty-emoji">🟟</view>
-      <view class="empty-title">还没有给自己设置奖励</view>
-      <view class="empty-desc">给坚持这件事一点期待。</view>
-      <view class="btn-primary full" bindtap="onClickNewReward" hover-class="btn-primary-hover">
-        <text class="btn-icon">+</text>
-        <text>设置第一个奖励</text>
-      </view>
+  <view wx:else class="empty-state">
+    <view class="empty-illustration">
+      <text class="empty-gift">🎁</text>
+      <text class="empty-leaf empty-leaf-left">🌿</text>
+      <text class="empty-leaf empty-leaf-right">🌱</text>
     </view>
-  </block>
+    <text class="empty-title">还没有给自己准备奖励</text>
+    <text class="empty-desc">给坚持这件事留一点期待吧。</text>
+    <view class="empty-action">
+      <ui-soft-button
+        text="设置第一个奖励"
+        variant="primary"
+        size="lg"
+        full-width
+        bind:tap="onClickNewReward"
+      />
+    </view>
+  </view>
 
   <view class="bottom-space"></view>
+</view>
+
+<view
+  wx:if="{{redeemFeedbackVisible}}"
+  class="feedback-overlay"
+  catchtap="onCloseRedeemFeedback"
+  catchtouchmove="preventOverlayTap"
+>
+  <view class="feedback-dialog" catchtap="preventOverlayTap">
+    <view class="feedback-icon">🎁</view>
+    <text class="feedback-title">这份小礼物已经属于你啦</text>
+    <text class="feedback-reward">{{redeemFeedbackTitle}}</text>
+    <text class="feedback-copy">这是你自己一步一步走来的。<br />去好好享受它吧。</text>
+    <ui-soft-button
+      text="我知道啦"
+      variant="primary"
+      size="md"
+      full-width
+      bind:tap="onCloseRedeemFeedback"
+    />
+  </view>
 </view>
