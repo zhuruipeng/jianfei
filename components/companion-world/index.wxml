@@ -16,7 +16,7 @@
     <image
       wx:if="{{gardenAssetReady.base}}"
       class="garden-layer garden-base"
-      src="../../assets/world/ui2/garden_base.webp"
+      src="../../assets/world/ui2/garden_base.png"
       data-configured-src="{{gardenAssets.base}}"
       mode="aspectFill"
       data-layer="base"
@@ -87,7 +87,7 @@
       <image
         wx:if="{{plantAssetReady && state.plantLevel === 0}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_0.webp"
+        src="../../assets/world/ui2/plants/plant_0.png"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -95,7 +95,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 1}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_1.webp"
+        src="../../assets/world/ui2/plants/plant_1.png"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -103,7 +103,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 2}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_2.webp"
+        src="../../assets/world/ui2/plants/plant_2.png"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -111,7 +111,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 3}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_3.webp"
+        src="../../assets/world/ui2/plants/plant_3.png"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -119,7 +119,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 4}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_4.webp"
+        src="../../assets/world/ui2/plants/plant_4.png"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -175,7 +175,7 @@
     <image
       wx:if="{{gardenAssetReady.foreground}}"
       class="garden-layer garden-foreground"
-      src="../../assets/world/ui2/garden_foreground.webp"
+      src="../../assets/world/ui2/garden_foreground.png"
       data-configured-src="{{gardenAssets.foreground}}"
       mode="aspectFill"
       data-layer="foreground"
@@ -184,7 +184,7 @@
     <image
       wx:if="{{gardenAssetReady.light}}"
       class="garden-layer garden-light"
-      src="../../assets/world/ui2/garden_light.webp"
+      src="../../assets/world/ui2/garden_light.png"
       data-configured-src="{{gardenAssets.light}}"
       mode="aspectFill"
       data-layer="light"

@@ -42,18 +42,18 @@ export const WORLD_ASSET_DIR = '/assets/world';
 
 /** UI 2.0 花园固定环境层。动态道路、水面、植物和发现物仍由组件按真实状态绘制。 */
 export const UI2_GARDEN_ASSETS = {
-  base: `${WORLD_ASSET_DIR}/ui2/garden_base.webp`,
-  foreground: `${WORLD_ASSET_DIR}/ui2/garden_foreground.webp`,
-  light: `${WORLD_ASSET_DIR}/ui2/garden_light.webp`,
+  base: `${WORLD_ASSET_DIR}/ui2/garden_base.png`,
+  foreground: `${WORLD_ASSET_DIR}/ui2/garden_foreground.png`,
+  light: `${WORLD_ASSET_DIR}/ui2/garden_light.png`,
 } as const;
 
 /** UI 2.0 动态植物素材；数组索引与现有 plantLevel 0～4 严格对应。 */
 export const UI2_PLANT_ASSETS = [
-  `${WORLD_ASSET_DIR}/ui2/plants/plant_0.webp`,
-  `${WORLD_ASSET_DIR}/ui2/plants/plant_1.webp`,
-  `${WORLD_ASSET_DIR}/ui2/plants/plant_2.webp`,
-  `${WORLD_ASSET_DIR}/ui2/plants/plant_3.webp`,
-  `${WORLD_ASSET_DIR}/ui2/plants/plant_4.webp`,
+  `${WORLD_ASSET_DIR}/ui2/plants/plant_0.png`,
+  `${WORLD_ASSET_DIR}/ui2/plants/plant_1.png`,
+  `${WORLD_ASSET_DIR}/ui2/plants/plant_2.png`,
+  `${WORLD_ASSET_DIR}/ui2/plants/plant_3.png`,
+  `${WORLD_ASSET_DIR}/ui2/plants/plant_4.png`,
 ] as const;
 
 /** 美术素材到齐后切成 true；业务开发期间使用组件内的 CSS / Emoji 分层占位。 */
