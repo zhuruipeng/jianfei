@@ -1415,6 +1415,34 @@ Page({
     const next = (this.data as IndexPageData).worldState.nextUnlock;
     if (!next) return;
     trackEvent(USAGE_EVENT_NAMES.NEXT_UNLOCK_VIEWED, { unlockType: next.type, remaining: next.remaining });
+
+    if (next.type === 'journey') {
+      this.onOpenJourney();
+      return;
+    }
+
+    if (next.type === 'plant') {
+      this.onClickDailyTask({ detail: { taskId: 'meal_any' } });
+      return;
+    }
+
+    if (next.type === 'path') {
+      this.onClickDailyTask({ detail: { taskId: 'exercise_min' } });
+      return;
+    }
+
+    const showWaterHint = () => {
+      this._showFeedbackToast('在喝水任务中记录今天的水量', 'water', '💧');
+    };
+    try {
+      (wx as any).pageScrollTo({
+        selector: '.daily-tasks',
+        duration: 320,
+        complete: showWaterHint,
+      });
+    } catch {
+      showWaterHint();
+    }
   },
 
   // ---------------- 点击：三餐 → 进入 meal 页 ----------------
