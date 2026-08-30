@@ -27,10 +27,6 @@
         <view class="core-num">{{coreRedeemedRewards}}</view>
         <view class="core-label">奖励领取</view>
       </view>
-      <view class="core-cell">
-        <view class="core-num">{{coreAiStarted}}</view>
-        <view class="core-label">AI 分析</view>
-      </view>
     </view>
   </view>
 
@@ -105,7 +101,7 @@
     </view>
   </view>
 
-  <!-- ===== 运动 / 体重 / 奖励 / AI ===== -->
+  <!-- ===== 运动 / 体重 / 奖励 ===== -->
   <view class="card">
     <view class="sec-title">运动 / 体重 / 奖励</view>
     <view class="kv-list">
@@ -114,16 +110,6 @@
       <view class="kv-row"><text class="kv-k">创建奖励</text><text class="kv-v">{{rewardsCreated}} 个</text></view>
       <view class="kv-row"><text class="kv-k">奖励解锁</text><text class="kv-v">{{rewardsUnlocked}} 个</text></view>
       <view class="kv-row"><text class="kv-k">奖励领取</text><text class="kv-v good">{{rewardsRedeemed}} 个</text></view>
-    </view>
-  </view>
-
-  <view class="card">
-    <view class="sec-title">AI 分析使用情况</view>
-    <view class="kv-list">
-      <view class="kv-row"><text class="kv-k">点击分析（started）</text><text class="kv-v hero">{{aiStarted}} 次</text></view>
-      <view class="kv-row"><text class="kv-k">AI 成功</text><text class="kv-v good">{{aiSucceeded}} 次</text></view>
-      <view class="kv-row"><text class="kv-k">AI 失败</text><text class="kv-v bad">{{aiFailed}} 次</text></view>
-      <view class="kv-row"><text class="kv-k">成功率</text><text class="kv-v">{{aiSuccessRateText}}</text></view>
     </view>
   </view>
 

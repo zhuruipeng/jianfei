@@ -34,10 +34,6 @@
       <view class="metric-label">获得积分</view>
       <view class="metric-value">{{summary.pointsEarned}}</view>
     </view>
-    <view class="metric-row">
-      <view class="metric-label">AI 分析</view>
-      <view class="metric-value">{{summary.aiAnalysisCount}} 次</view>
-    </view>
   </view>
 
   <!-- 体重变化 -->
