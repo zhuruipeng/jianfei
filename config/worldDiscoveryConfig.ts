@@ -43,18 +43,18 @@ export const WORLD_DISCOVERY_BY_ID = WORLD_DISCOVERY_CONFIG.reduce((map, item) =
 }, {} as Record<WorldDiscoveryId, WorldDiscoveryConfigItem>);
 
 export const WORLD_DISCOVERY_ASSETS: Record<WorldDiscoveryId, string> = {
-  butterfly: '/assets/world/discoveries/butterfly.png',
-  bird: '/assets/world/discoveries/bird.png',
-  mushroom: '/assets/world/discoveries/mushroom.png',
-  bench: '/assets/world/discoveries/bench.png',
-  firefly: '/assets/world/discoveries/firefly.png',
-  rainbow: '/assets/world/discoveries/rainbow.png',
+  butterfly: '/assets/world/discoveries/butterfly.webp',
+  bird: '/assets/world/discoveries/bird.webp',
+  mushroom: '/assets/world/discoveries/mushroom.webp',
+  bench: '/assets/world/discoveries/bench.webp',
+  firefly: '/assets/world/discoveries/firefly.webp',
+  rainbow: '/assets/world/discoveries/rainbow.webp',
 };
 
 export const WORLD_DECOR_ASSETS = {
-  flower: '/assets/world/decor/flower.png',
-  stone: '/assets/world/decor/stone.png',
-  grass: '/assets/world/decor/grass.png',
+  flower: '/assets/world/decor/flower.webp',
+  stone: '/assets/world/decor/stone.webp',
+  grass: '/assets/world/decor/grass.webp',
 } as const;
 
 export function getWorldDiscoveryAsset(imageKey: string): string {

@@ -16,7 +16,7 @@
     <image
       wx:if="{{gardenAssetReady.base}}"
       class="garden-layer garden-base"
-      src="../../assets/world/ui2/garden_base.png"
+      src="../../assets/world/ui2/garden_base.webp"
       data-configured-src="{{gardenAssets.base}}"
       mode="aspectFill"
       data-layer="base"
@@ -48,7 +48,7 @@
         bindtap="onDiscoveryTap"
         hover-class="world-discovery-hover"
       >
-        <image class="world-discovery-image" src="../../assets/world/discoveries/rainbow.png" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
+        <image class="world-discovery-image" src="../../assets/world/discoveries/rainbow.webp" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
       </view>
     </block>
 
@@ -87,7 +87,7 @@
       <image
         wx:if="{{plantAssetReady && state.plantLevel === 0}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_0.png"
+        src="../../assets/world/ui2/plants/plant_0.webp"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -95,7 +95,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 1}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_1.png"
+        src="../../assets/world/ui2/plants/plant_1.webp"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -103,7 +103,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 2}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_2.png"
+        src="../../assets/world/ui2/plants/plant_2.webp"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -111,7 +111,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 3}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_3.png"
+        src="../../assets/world/ui2/plants/plant_3.webp"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -119,7 +119,7 @@
       <image
         wx:elif="{{plantAssetReady && state.plantLevel === 4}}"
         class="plant-stage-image plant-stage-{{state.plantLevel}}"
-        src="../../assets/world/ui2/plants/plant_4.png"
+        src="../../assets/world/ui2/plants/plant_4.webp"
         data-configured-src="{{plantStageAsset}}"
         mode="aspectFit"
         binderror="onPlantAssetError"
@@ -128,9 +128,9 @@
     </view>
 
     <!-- 固定地面装饰和发现物位于植物之后、小轻之前。 -->
-    <image class="world-decor decor-flower" src="../../assets/world/decor/flower.png" data-configured-src="{{decorAssets.flower}}" mode="aspectFit"></image>
-    <image class="world-decor decor-stone" src="../../assets/world/decor/stone.png" data-configured-src="{{decorAssets.stone}}" mode="aspectFit"></image>
-    <image class="world-decor decor-grass" src="../../assets/world/decor/grass.png" data-configured-src="{{decorAssets.grass}}" mode="aspectFit"></image>
+    <image class="world-decor decor-flower" src="../../assets/world/decor/flower.webp" data-configured-src="{{decorAssets.flower}}" mode="aspectFit"></image>
+    <image class="world-decor decor-stone" src="../../assets/world/decor/stone.webp" data-configured-src="{{decorAssets.stone}}" mode="aspectFit"></image>
+    <image class="world-decor decor-grass" src="../../assets/world/decor/grass.webp" data-configured-src="{{decorAssets.grass}}" mode="aspectFit"></image>
 
     <block wx:for="{{discoveries}}" wx:for-item="discovery" wx:key="id">
       <view
@@ -140,8 +140,8 @@
         bindtap="onDiscoveryTap"
         hover-class="world-discovery-hover"
       >
-        <image wx:if="{{discovery.state.discoveryId === 'mushroom'}}" class="world-discovery-image" src="../../assets/world/discoveries/mushroom.png" data-configured-src="{{discovery.asset}}" mode="aspectFit"></image>
-        <image wx:else class="world-discovery-image" src="../../assets/world/discoveries/bench.png" data-configured-src="{{discovery.asset}}" mode="aspectFit"></image>
+        <image wx:if="{{discovery.state.discoveryId === 'mushroom'}}" class="world-discovery-image" src="../../assets/world/discoveries/mushroom.webp" data-configured-src="{{discovery.asset}}" mode="aspectFit"></image>
+        <image wx:else class="world-discovery-image" src="../../assets/world/discoveries/bench.webp" data-configured-src="{{discovery.asset}}" mode="aspectFit"></image>
       </view>
     </block>
 
@@ -166,16 +166,16 @@
         bindtap="onDiscoveryTap"
         hover-class="world-discovery-hover"
       >
-        <image wx:if="{{discovery.state.discoveryId === 'butterfly'}}" class="world-discovery-image" src="../../assets/world/discoveries/butterfly.png" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
-        <image wx:elif="{{discovery.state.discoveryId === 'bird'}}" class="world-discovery-image" src="../../assets/world/discoveries/bird.png" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
-        <image wx:else class="world-discovery-image" src="../../assets/world/discoveries/firefly.png" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
+        <image wx:if="{{discovery.state.discoveryId === 'butterfly'}}" class="world-discovery-image" src="../../assets/world/discoveries/butterfly.webp" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
+        <image wx:elif="{{discovery.state.discoveryId === 'bird'}}" class="world-discovery-image" src="../../assets/world/discoveries/bird.webp" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
+        <image wx:else class="world-discovery-image" src="../../assets/world/discoveries/firefly.webp" data-configured-src="{{discovery.asset}}" mode="aspectFit" />
       </view>
     </block>
 
     <image
       wx:if="{{gardenAssetReady.foreground}}"
       class="garden-layer garden-foreground"
-      src="../../assets/world/ui2/garden_foreground.png"
+      src="../../assets/world/ui2/garden_foreground.webp"
       data-configured-src="{{gardenAssets.foreground}}"
       mode="aspectFill"
       data-layer="foreground"
@@ -184,7 +184,7 @@
     <image
       wx:if="{{gardenAssetReady.light}}"
       class="garden-layer garden-light"
-      src="../../assets/world/ui2/garden_light.png"
+      src="../../assets/world/ui2/garden_light.webp"
       data-configured-src="{{gardenAssets.light}}"
       mode="aspectFill"
       data-layer="light"

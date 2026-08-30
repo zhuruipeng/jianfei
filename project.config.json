@@ -26,12 +26,6 @@
         "type": "file",
         "value": "tsconfig.json"
       }
-    ],
-    "include": [
-      {
-        "type": "folder",
-        "value": "assets/world"
-      }
     ]
   },
   "setting": {
