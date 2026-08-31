@@ -1,76 +1,78 @@
-<!--pages/meal/meal.wxml  V8：快速记录顶置，其余字段可选-->
+<!-- pages/meal/meal.wxml  饮食记录页 UI 2.0 -->
 <view class="meal-page">
-  <!-- 头部大卡片 -->
-  <view class="hero-card">
-    <view class="hero-head">
-      <view class="hero-title">{{pageTitle}}</view>
-      <view class="hero-tip">不用每顿都完美，先记下来就好。</view>
+  <view class="meal-hero">
+    <view class="hero-orb hero-orb-left"></view>
+    <view class="hero-orb hero-orb-right"></view>
+    <view class="hero-kicker">今天的饮食记录</view>
+    <view class="hero-main">
+      <view class="hero-copy">
+        <view class="hero-title">{{pageTitle}}</view>
+        <view class="hero-tip">不用每顿都完美，先温柔地记下来。</view>
+      </view>
+      <view class="hero-icon">{{mealType === 'breakfast' ? '🌤️' : mealType === 'lunch' ? '🌿' : '🌙'}}</view>
+    </view>
+    <view class="hero-note">
+      <text class="hero-note-leaf">🌱</text>
+      <text>保存后，花园里的植物也会收到今天的滋养。</text>
     </view>
   </view>
 
-  <!-- 快速记录（顶置，2 步完成：一键饱腹 + 保存） -->
-  <view class="section quick-section">
-    <view class="section-title">
-      <text>快速记录</text>
-      <text class="section-subtitle muted">点一下，再点保存就完成</text>
+  <view class="record-section first-section">
+    <view class="section-heading">
+      <view class="section-icon tone-leaf">🍃</view>
+      <view class="section-copy">
+        <view class="section-title">大概吃到什么程度？</view>
+        <view class="section-subtitle">选一个最接近的感觉就好</view>
+      </view>
+      <view class="optional-tag">可选</view>
     </view>
-    <view class="quick-grid">
+    <view class="satiety-grid">
       <block wx:for="{{satietyOptions}}" wx:key="level">
         <view
-          class="quick-item {{item.emoji === '✅' ? 'quick-item-on' : ''}}"
+          class="satiety-item {{item.emoji === '✅' ? 'satiety-item-on' : ''}}"
           data-level="{{item.level}}"
           bindtap="selectSatiety"
-          hover-class="quick-item-hover"
+          hover-class="soft-press"
         >
-          <view class="quick-icon">{{item.emoji === '✅' ? '🟟' : '🟟'}}</view>
-          <view class="quick-label">{{item.label}}</view>
+          <view class="satiety-symbol">{{index === 0 ? '🌱' : index === 1 ? '🌿' : index === 2 ? '🍃' : '🌾'}}</view>
+          <view class="satiety-label">{{item.label}}</view>
+          <view class="choice-mark">{{item.emoji === '✅' ? '✓' : ''}}</view>
         </view>
       </block>
     </view>
   </view>
 
-  <!-- ========= 新增：照片区域（这一餐） ========= -->
-  <view class="section photo-section">
-    <view class="section-title">这一餐</view>
+  <view class="record-section photo-section">
+    <view class="section-heading">
+      <view class="section-icon tone-sun">📷</view>
+      <view class="section-copy">
+        <view class="section-title">留下一张这一餐</view>
+        <view class="section-subtitle">以后回看，也能记得今天</view>
+      </view>
+      <view class="optional-tag">可选</view>
+    </view>
 
-    <!-- 未选照片：大占位卡 -->
     <block wx:if="{{!photoPath || photoError}}">
-      <view
-        class="photo-empty"
-        bindtap="onClickPickPhoto"
-        hover-class="photo-empty-hover"
-      >
+      <view class="photo-empty" bindtap="onClickPickPhoto" hover-class="soft-press">
         <block wx:if="{{photoPath && photoError}}">
-          <view class="photo-empty-icon">🟠</view>
+          <view class="photo-empty-art photo-error-art">!</view>
           <view class="photo-empty-main">照片暂时无法显示</view>
-          <view class="photo-empty-sub">可以重新选择或删除</view>
-          <view class="photo-empty-actions">
-            <view class="photo-pick-btn photo-pick-btn-primary">
-              <text>重新选择</text>
-            </view>
-          </view>
+          <view class="photo-empty-sub">可以重新选择一张照片</view>
+          <view class="photo-pick-btn">重新选择</view>
         </block>
         <block wx:else>
-          <view class="photo-empty-icon">🟟</view>
-          <view class="photo-empty-main">拍下这一餐</view>
-          <view class="photo-empty-sub">留下一张今天的饮食记录</view>
-          <view class="photo-empty-actions">
-            <view class="photo-pick-btn">
-              <text>📷 拍照 / 从相册选择</text>
-            </view>
+          <view class="photo-empty-art">
+            <text class="camera-symbol">＋</text>
           </view>
+          <view class="photo-empty-main">拍照或从相册选择</view>
+          <view class="photo-empty-sub">照片只作为你的饮食记录保存在本地</view>
         </block>
       </view>
     </block>
 
-    <!-- 已有照片：预览 + 重新选择/删除 -->
     <block wx:else>
       <view class="photo-wrap">
-        <view
-          class="photo-preview"
-          bindtap="onClickPreviewPhoto"
-          hover-class="photo-preview-hover"
-        >
+        <view class="photo-preview" bindtap="onClickPreviewPhoto" hover-class="photo-preview-hover">
           <image
             class="photo-img"
             src="{{photoPath}}"
@@ -78,33 +80,28 @@
             binderror="onPhotoError"
             show-menu-by-longpress="{{false}}"
           />
+          <view class="photo-preview-tip">点击查看大图</view>
         </view>
         <view class="photo-action-row">
-          <view
-            class="photo-action-btn outline"
-            bindtap="onClickPickPhoto"
-            hover-class="photo-action-btn-hover"
-          >
-            <text>重新选择</text>
-          </view>
-          <view
-            class="photo-action-btn danger-outline"
-            bindtap="onClickDeletePhoto"
-            hover-class="photo-action-btn-hover"
-          >
-            <text>删除照片</text>
-          </view>
+          <view class="photo-action-btn" bindtap="onClickPickPhoto" hover-class="soft-press">重新选择</view>
+          <view class="photo-action-btn danger" bindtap="onClickDeletePhoto" hover-class="soft-press">删除照片</view>
         </view>
       </view>
     </block>
   </view>
 
-  <!-- 吃了什么 -->
-  <view class="section">
-    <view class="section-title">今天吃了什么？</view>
-    <view class="textarea-card">
+  <view class="record-section">
+    <view class="section-heading">
+      <view class="section-icon tone-wood">🥣</view>
+      <view class="section-copy">
+        <view class="section-title">今天吃了什么？</view>
+        <view class="section-subtitle">简单写几个关键词就可以</view>
+      </view>
+      <view class="optional-tag">可选</view>
+    </view>
+    <view class="input-paper">
       <textarea
-        class="textarea"
+        class="textarea food-textarea"
         placeholder="例如：米饭、鸡肉、青菜"
         placeholder-class="textarea-placeholder"
         maxlength="100"
@@ -112,77 +109,68 @@
         auto-height
         bindinput="onInputFood"
       />
-      <view class="count-line">
-        <text class="count-text muted">{{foodText.length}}/100（可空）</text>
+      <view class="count-line">{{foodText.length}} / 100</view>
+    </view>
+  </view>
+
+  <view class="record-section">
+    <view class="section-heading">
+      <view class="section-icon tone-water">🥗</view>
+      <view class="section-copy">
+        <view class="section-title">这一餐有什么？</view>
+        <view class="section-subtitle">可以选择多个</view>
       </view>
+      <view class="optional-tag">可选</view>
     </view>
-  </view>
-
-  <!-- 饱腹程度 -->
-  <view class="section">
-    <view class="section-title">吃到什么程度？</view>
-    <view class="satiety-grid">
-      <block wx:for="{{satietyOptions}}" wx:key="level">
-        <view
-          class="satiety-item {{item.emoji === '✅' ? 'satiety-item-on' : ''}}"
-          data-level="{{item.level}}"
-          bindtap="selectSatiety"
-          hover-class="satiety-item-hover"
-        >
-          <view class="satiety-head">{{item.emoji}}</view>
-          <view class="satiety-label">{{item.label}}</view>
-        </view>
-      </block>
-    </view>
-  </view>
-
-  <!-- 标签多选 -->
-  <view class="section">
-    <view class="section-title">这一餐有什么？</view>
     <view class="tag-grid">
       <block wx:for="{{tagOptions}}" wx:key="key">
         <view
           class="tag-chip {{item.selected ? 'tag-chip-on' : ''}}"
           data-key="{{item.key}}"
           bindtap="toggleTag"
-          hover-class="tag-chip-hover"
+          hover-class="soft-press"
         >
-          <text class="tag-check">{{item.selected ? '✅' : '🟟'}}</text>
+          <text class="tag-emoji">{{item.visualEmoji}}</text>
           <text class="tag-label">{{item.label}}</text>
+          <text class="tag-mark">{{item.selected ? '✓' : ''}}</text>
         </view>
       </block>
     </view>
   </view>
 
-  <!-- 备注 -->
-  <view class="section">
-    <view class="section-title">备注</view>
-    <view class="textarea-card">
+  <view class="record-section">
+    <view class="section-heading">
+      <view class="section-icon tone-paper">✎</view>
+      <view class="section-copy">
+        <view class="section-title">给今天留句话</view>
+        <view class="section-subtitle">写下聚餐、心情或任何想记住的事</view>
+      </view>
+      <view class="optional-tag">可选</view>
+    </view>
+    <view class="input-paper">
       <textarea
-        class="textarea"
-        placeholder="今天聚餐，吃得比平时多一点"
+        class="textarea note-textarea"
+        placeholder="例如：今天和朋友一起吃饭，很开心"
         placeholder-class="textarea-placeholder"
         maxlength="200"
         value="{{note}}"
         auto-height
         bindinput="onInputNote"
       />
-      <view class="count-line">
-        <text class="count-text muted">{{note.length}}/200（可空）</text>
-      </view>
+      <view class="count-line">{{note.length}} / 200</view>
     </view>
   </view>
 
-  <!-- 底部按钮区 -->
+  <view class="gentle-reminder">
+    <text class="reminder-icon">🌼</text>
+    <text>记录是为了更了解自己，不是给这一餐打分。</text>
+  </view>
+
   <view class="bottom-actions">
-    <block wx:if="{{hasRecord}}">
-      <view class="btn-delete" bindtap="onClickDelete" hover-class="btn-delete-hover">
-        <text>删除本次记录</text>
-      </view>
-    </block>
+    <view wx:if="{{hasRecord}}" class="btn-delete" bindtap="onClickDelete" hover-class="soft-press">删除记录</view>
     <view class="btn-primary" bindtap="onClickSave" hover-class="btn-primary-hover">
-      <text>{{isEdit ? '保存修改' : '保存'}}</text>
+      <text>{{isEdit ? '保存这次修改' : '保存这一餐'}}</text>
+      <text class="btn-arrow">→</text>
     </view>
   </view>
-  <view class="bottom-safe"/>
 </view>

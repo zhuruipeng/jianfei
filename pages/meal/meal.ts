@@ -45,8 +45,11 @@ interface TagOption {
   key: MealTagKey;
   label: string;
   emoji: string;
+  visualEmoji: string;
   selected: boolean;
 }
+
+const TAG_VISUAL_EMOJIS = ['🥬', '🥚', '🍚', '🥣', '🍎', '🍪', '🧂', '🍳', '🥡'];
 
 interface MealPageData {
   mealType: MealType;
@@ -82,8 +85,9 @@ Page<MealPageData>({
     satietyOptions: SATIETY_ORDER.map(level => ({
       level, label: SATIETY_LABEL[level], emoji: '🟟'
     })),
-    tagOptions: MEAL_TAG_LIST.map(t => ({
-      key: t.key, label: t.label, emoji: t.emoji, selected: false
+    tagOptions: MEAL_TAG_LIST.map((t, index) => ({
+      key: t.key, label: t.label, emoji: t.emoji,
+      visualEmoji: TAG_VISUAL_EMOJIS[index] || '🍽️', selected: false
     })),
     photoPath: '',
     photoError: false,
@@ -118,8 +122,9 @@ Page<MealPageData>({
       satietyOptions: SATIETY_ORDER.map(level => ({
         level, label: SATIETY_LABEL[level], emoji: '🟟'
       })),
-      tagOptions: MEAL_TAG_LIST.map(t => ({
+      tagOptions: MEAL_TAG_LIST.map((t, index) => ({
         key: t.key, label: t.label, emoji: t.emoji,
+        visualEmoji: TAG_VISUAL_EMOJIS[index] || '🍽️',
         selected: !!(existing && existing.tags && existing.tags.indexOf(t.key) !== -1)
       })),
       photoPath,
