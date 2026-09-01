@@ -29,6 +29,7 @@ import {
 // ---------------- 支持的扩展名（按优先级尝试；目前优先 webp → png → svg） ----------------
 const COMPANION_EXT = 'webp';       // 美术以后换成 webp 直接改这里
 const JOURNEY_CARD_EXT = 'webp';
+const JOURNEY_CARD_IMAGE_KEYS: string[] = ['day1', 'day7', 'day14', 'day21', 'day28'];
 
 // ---------------- 4 阶段 × 3 情绪（共 12 张）imageKey 列表 ----------------
 export const COMPANION_STAGE_KEYS: CompanionVisualStage[] = ['seed', 'baby', 'growing', 'grown'];
@@ -82,7 +83,7 @@ export const JOURNEY_LOCKED_EMOJI: string = '❔';
  * 美术给图后，把下面常量改为 true（再做一次文件存在性自检即可）。
  */
 export const COMPANION_HAS_ASSETS: boolean = false;
-export const JOURNEY_CARDS_HAVE_ASSETS: boolean = false;
+export const JOURNEY_CARDS_HAVE_ASSETS: boolean = true;
 
 /** 给业务层用：返回最终渲染所需的 {src, emoji}，让 UI 统一判断 */
 export interface ResolvedCompanionAsset {
@@ -129,9 +130,10 @@ export function getJourneyCardRenderAsset(
   shortTitleHint: string = '',
 ): ResolvedJourneyCardAsset {
   const src = resolveJourneyCardAsset(imageKey);
-  const realSrc = JOURNEY_CARDS_HAVE_ASSETS ? src : '';
+  const hasImage = JOURNEY_CARDS_HAVE_ASSETS && JOURNEY_CARD_IMAGE_KEYS.indexOf(imageKey) >= 0;
+  const realSrc = hasImage ? src : '';
   return {
-    useImage: JOURNEY_CARDS_HAVE_ASSETS,
+    useImage: hasImage,
     src: realSrc,
     emoji: fallbackEmoji || '🟟',
     imageKey: String(imageKey || ''),

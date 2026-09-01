@@ -1,303 +1,494 @@
-/* pages/journey/journey.wxss - V12 旅程地图 */
+/* pages/journey/journey.wxss - UI 2.0 旅程插画页 */
 .page {
   min-height: 100vh;
-  background: #F3FBFB;
-  padding: 40rpx 32rpx 60rpx;
+  padding: 28rpx 28rpx calc(80rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
+  color: var(--ui-color-text);
+  background:
+    radial-gradient(circle at 92% 2%, rgba(241, 206, 112, 0.13), transparent 260rpx),
+    var(--ui-color-page);
 }
 
 .hero {
-  padding: 16rpx 8rpx 28rpx;
+  position: relative;
+  padding: 18rpx 12rpx 30rpx 86rpx;
 }
+
+.back-btn {
+  position: absolute;
+  top: 12rpx;
+  left: 0;
+  display: flex;
+  width: 64rpx;
+  height: 64rpx;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid rgba(217, 190, 150, 0.32);
+  border-radius: 50%;
+  color: var(--ui-color-green-deep);
+  background: rgba(255, 252, 245, 0.82);
+  box-shadow: 0 6rpx 18rpx rgba(88, 96, 76, 0.07);
+  font-size: 48rpx;
+  line-height: 1;
+}
+
+.back-btn-hover {
+  opacity: 0.75;
+  transform: scale(0.97);
+}
+
 .hero-title {
-  font-size: 44rpx;
+  color: var(--ui-color-text);
+  font-size: 40rpx;
   font-weight: 700;
-  color: #1F2937;
+  line-height: 54rpx;
 }
+
 .hero-sub {
-  margin-top: 12rpx;
-  font-size: 28rpx;
-  color: #8A93A5;
+  margin-top: 6rpx;
+  color: var(--ui-color-text-secondary);
+  font-size: 24rpx;
+  line-height: 36rpx;
+}
+
+.stops-card,
+.jc-section {
+  border: 1rpx solid rgba(217, 190, 150, 0.25);
+  background: var(--ui-color-card);
+  box-shadow: var(--ui-shadow-soft);
 }
 
 .stops-card {
-  background: #FFFFFF;
-  border-radius: 28rpx;
-  padding: 40rpx 36rpx 8rpx;
-  box-shadow: 0 6rpx 24rpx rgba(46, 179, 169, 0.06);
+  padding: 34rpx 34rpx 10rpx;
+  border-radius: var(--ui-radius-hero);
 }
 
 .stop-row {
   display: flex;
   align-items: flex-start;
 }
+
 .stop-anchor {
-  width: 56rpx;
-  height: 56rpx;
-  border-radius: 50%;
   display: flex;
+  width: 52rpx;
+  height: 52rpx;
+  flex: none;
   align-items: center;
   justify-content: center;
-  font-size: 32rpx;
-  flex-shrink: 0;
   margin-top: 4rpx;
   border: 4rpx solid transparent;
-}
-.stop-reached {
-  background: #4ECDC4;
-  color: #FFFFFF;
-}
-.stop-future {
-  background: #F7F8FA;
-  color: #C6CDD8;
-}
-.stop-current {
-  border-color: #A8E8E2;
-  background: #FFFFFF;
-  color: #4ECDC4;
-  transform: scale(1.12);
-}
-.stop-icon-done {
+  border-radius: 50%;
   font-size: 28rpx;
 }
+
+.stop-reached {
+  color: var(--ui-color-on-strong);
+  background: var(--ui-color-green);
+}
+
+.stop-future {
+  color: #b7bdb2;
+  background: #f1f2eb;
+}
+
+.stop-current {
+  border-color: #cbdcbe;
+  color: var(--ui-color-green-deep);
+  background: var(--ui-color-card);
+  box-shadow: 0 4rpx 12rpx rgba(92, 125, 77, 0.12);
+  transform: scale(1.08);
+}
+
+.stop-icon-done,
 .stop-icon-dot {
-  font-size: 32rpx;
+  font-size: 26rpx;
 }
 
 .stop-body {
-  margin-left: 24rpx;
   flex: 1;
+  margin-left: 22rpx;
   padding-bottom: 20rpx;
 }
+
 .stop-head {
   display: flex;
   align-items: baseline;
   gap: 16rpx;
 }
-.stop-day {
-  font-size: 26rpx;
-  color: #8A93A5;
-  font-weight: 500;
-}
+
+.stop-day,
 .stop-date {
-  font-size: 24rpx;
-}
-.stop-name {
-  margin-top: 6rpx;
-  font-size: 34rpx;
-  font-weight: 700;
-}
-.stop-name-on {
-  color: #1F2937;
-}
-.stop-name-off {
-  color: #B7BFCE;
-}
-.stop-current-tag {
-  display: inline-block;
-  margin-top: 12rpx;
-  padding: 6rpx 18rpx;
-  border-radius: 999rpx;
-  background: #E7FAF8;
-  color: #22B3AA;
+  color: var(--ui-color-text-weak);
   font-size: 22rpx;
+  line-height: 32rpx;
+}
+
+.stop-day {
+  color: var(--ui-color-wood);
   font-weight: 600;
+}
+
+.stop-name {
+  margin-top: 2rpx;
+  font-size: 30rpx;
+  font-weight: 650;
+  line-height: 42rpx;
+}
+
+.stop-name-on {
+  color: var(--ui-color-text);
+}
+
+.stop-name-off {
+  color: #a9afa4;
+}
+
+.stop-current-tag {
+  display: inline-flex;
+  margin-top: 9rpx;
+  padding: 4rpx 16rpx;
+  border-radius: var(--ui-radius-pill);
+  color: var(--ui-color-green-deep);
+  background: var(--ui-color-green-soft);
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 30rpx;
 }
 
 .stop-connector {
   width: 4rpx;
-  height: 72rpx;
-  margin-left: 26rpx;
-  margin-top: -12rpx;
-  margin-bottom: 4rpx;
+  height: 64rpx;
+  margin: -12rpx 0 5rpx 24rpx;
   border-radius: 4rpx;
-  background: #EEF0F4;
 }
-.stop-connector.conn-reached { background: #B7E8E2; }
-.stop-connector.conn-future { background: #EEF0F4; }
+
+.stop-connector.conn-reached {
+  background: #c4d9b8;
+}
+
+.stop-connector.conn-future {
+  background: #e7e7df;
+}
 
 .tip-card {
-  margin-top: 32rpx;
-  padding: 24rpx 28rpx;
-  background: #FFF8E8;
-  color: #7A6B35;
-  font-size: 26rpx;
-  line-height: 1.6;
-  border-radius: 20rpx;
-}
-
-.bottom-space { height: 80rpx; }
-
-.muted { color: #8A93A5; }
-
-/* V12.1：旅程页补充（back + 旅程卡网格 + 详情） */
-.hero {
   position: relative;
+  margin-top: 28rpx;
+  padding: 26rpx 30rpx 28rpx;
+  border: 1rpx solid rgba(217, 190, 150, 0.28);
+  border-radius: 24rpx 28rpx 24rpx 22rpx;
+  color: var(--ui-color-text-secondary);
+  background: #fffaf0;
+  box-shadow: 0 8rpx 22rpx rgba(113, 96, 72, 0.06);
+  transform: rotate(-0.25deg);
 }
-.back-btn {
-  position: absolute;
-  left: 0;
-  top: 18rpx;
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  color: #4E5B70;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48rpx;
-  line-height: 1;
-  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
-}
-.back-btn-hover { background: #E9FAF7; }
 
-/* 旅程卡 Section */
-.jc-section {
-  margin-top: 36rpx;
-  background: #FFFFFF;
-  border-radius: 28rpx;
-  padding: 30rpx 28rpx 18rpx;
-  box-shadow: 0 6rpx 24rpx rgba(46, 179, 169, 0.05);
+.tip-card::before {
+  position: absolute;
+  top: -10rpx;
+  left: 42rpx;
+  width: 58rpx;
+  height: 18rpx;
+  border-radius: 4rpx;
+  background: rgba(217, 190, 150, 0.5);
+  content: '';
+  transform: rotate(-4deg);
 }
+
+.tip-label {
+  color: var(--ui-color-wood);
+  font-size: 22rpx;
+  font-weight: 600;
+  line-height: 32rpx;
+}
+
+.tip-text {
+  display: block;
+  margin-top: 5rpx;
+  font-size: 25rpx;
+  line-height: 40rpx;
+}
+
+.jc-section {
+  margin-top: 32rpx;
+  padding: 30rpx 26rpx 26rpx;
+  border-radius: var(--ui-radius-hero);
+}
+
 .jc-head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 6rpx 18rpx;
+  justify-content: space-between;
+  padding: 0 6rpx 20rpx;
 }
+
 .jc-title {
-  font-size: 30rpx;
+  color: var(--ui-color-text);
+  font-size: 31rpx;
   font-weight: 700;
-  color: #1F2937;
+  line-height: 44rpx;
 }
+
 .jc-count {
-  font-size: 24rpx;
-  color: #8A93A5;
+  color: var(--ui-color-text-weak);
+  font-size: 22rpx;
+  line-height: 32rpx;
 }
 
 .jc-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 20rpx;
+  gap: 18rpx;
 }
+
 .jc-card {
-  width: calc((100% - 20rpx) / 2);
-  border-radius: 22rpx;
+  width: calc((100% - 18rpx) / 2);
   overflow: hidden;
-  background: #F7F8FA;
-  transition: transform 0.2s ease;
+  border: 1rpx solid rgba(217, 190, 150, 0.24);
+  border-radius: 24rpx;
+  background: #fffdf8;
+  box-shadow: 0 7rpx 20rpx rgba(88, 96, 76, 0.07);
+  transition: transform 160ms ease, opacity 160ms ease;
 }
-.jc-card-hover { transform: scale(0.98); }
+
+.jc-card-hover {
+  opacity: 0.9;
+  transform: scale(0.985);
+}
 
 .jc-cover {
   position: relative;
-  height: 220rpx;
   display: flex;
+  width: 100%;
+  height: 218rpx;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
-.jc-cover-on {
-  background: linear-gradient(160deg, #F1FBFA 0%, #FDF8EE 100%);
-}
-.jc-cover-off {
-  background: #F0F2F6;
-}
-.jc-cover-img {
-  width: 260rpx;
-  height: 200rpx;
-}
-.jc-cover-emoji { line-height: 1; }
-.jc-cover-emoji.on  { font-size: 140rpx; }
-.jc-cover-emoji.off { font-size: 120rpx; color: #C6CDD8; opacity: 0.55; }
 
-/* 未解锁遮罩：轮廓 + ? */
-.jc-cover-mask {
-  position: absolute;
-  inset: 0;
+.jc-cover-on {
+  background: #f2f3e8;
+}
+
+.jc-cover-off {
+  background: linear-gradient(145deg, #f5f2e9 0%, #eaf0e3 100%);
+}
+
+.jc-cover-img {
+  width: 100%;
+  height: 100%;
+}
+
+.jc-lock-shape {
+  position: relative;
   display: flex;
+  width: 78rpx;
+  height: 88rpx;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0.62;
+}
+
+.jc-lock-arc {
+  position: absolute;
+  top: 0;
+  left: 18rpx;
+  width: 42rpx;
+  height: 44rpx;
+  border: 6rpx solid #98a28f;
+  border-bottom: 0;
+  border-radius: 24rpx 24rpx 0 0;
+}
+
+.jc-lock-body {
+  display: flex;
+  width: 72rpx;
+  height: 58rpx;
   align-items: center;
   justify-content: center;
-  background: rgba(240, 242, 246, 0.72);
+  border-radius: 16rpx;
+  color: #fffdf8;
+  background: #98a28f;
+  font-size: 28rpx;
+  font-weight: 700;
 }
-.jc-q {
-  font-size: 92rpx;
-  font-weight: 800;
-  color: #B7BFCE;
-  line-height: 1;
-  text-shadow: 0 0 0 rgba(0,0,0,0);
+
+.jc-cover-mask {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  padding: 18rpx 12rpx 14rpx;
+  color: #7f897a;
+  background: linear-gradient(180deg, rgba(245, 242, 233, 0) 0%, rgba(245, 242, 233, 0.92) 52%);
+}
+
+.jc-lock-hint {
+  font-size: 20rpx;
+  line-height: 30rpx;
 }
 
 .jc-foot {
-  padding: 14rpx 18rpx 18rpx;
+  min-height: 78rpx;
+  padding: 14rpx 16rpx 16rpx;
 }
-.jc-foot-text {
-  font-size: 24rpx;
-  font-weight: 600;
-  line-height: 1.5;
-}
-.jc-foot-text.on  { color: #2B3544; }
-.jc-foot-text.off { color: #A1AABE; }
 
-/* 旅程卡详情 */
-.jc-detail-card { padding: 38rpx 32rpx 32rpx; }
-.jc-d-head {
-  text-align: center;
+.jc-foot-text {
+  font-size: 23rpx;
+  font-weight: 600;
+  line-height: 34rpx;
 }
-.jc-d-title {
-  display: block;
-  font-size: 36rpx;
-  font-weight: 800;
-  color: #1F2937;
+
+.jc-foot-text.on {
+  color: var(--ui-color-text);
 }
-.jc-d-day {
-  display: inline-block;
-  margin-top: 10rpx;
-  font-size: 24rpx;
-  color: #8A93A5;
-  background: #F3FBFB;
-  padding: 6rpx 20rpx;
-  border-radius: 999rpx;
+
+.jc-foot-text.off {
+  color: var(--ui-color-text-secondary);
 }
-.jc-d-cover {
-  margin-top: 22rpx;
-  background: linear-gradient(160deg, #F1FBFA 0%, #FDF8EE 100%);
-  border-radius: 22rpx;
-  min-height: 280rpx;
+
+.bottom-space {
+  height: 36rpx;
+}
+
+.welcome-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20rpx;
-  box-sizing: border-box;
+  padding: 32rpx;
+  background: rgba(55, 64, 52, 0.42);
 }
+
+.welcome-card {
+  width: 100%;
+  max-height: 86vh;
+  overflow-y: auto;
+  border: 1rpx solid rgba(217, 190, 150, 0.32);
+  border-radius: 34rpx;
+  background: var(--ui-color-card);
+  box-shadow: var(--ui-shadow-float);
+}
+
+.jc-detail-card {
+  padding: 36rpx 30rpx 30rpx;
+}
+
+.jc-d-head {
+  text-align: center;
+}
+
+.jc-d-title {
+  display: block;
+  color: var(--ui-color-text);
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 48rpx;
+}
+
+.jc-d-day {
+  display: inline-block;
+  margin-top: 8rpx;
+  padding: 5rpx 18rpx;
+  border-radius: var(--ui-radius-pill);
+  color: var(--ui-color-wood);
+  background: #f5efe4;
+  font-size: 22rpx;
+  line-height: 32rpx;
+}
+
+.jc-d-cover {
+  display: flex;
+  min-height: 300rpx;
+  align-items: center;
+  justify-content: center;
+  margin-top: 22rpx;
+  overflow: hidden;
+  border-radius: 24rpx;
+  background: #f2f3e8;
+}
+
 .jc-d-img {
   width: 100%;
-  max-width: 480rpx;
-  border-radius: 16rpx;
+  border-radius: 24rpx;
 }
-.jc-d-emoji {
-  font-size: 200rpx;
-  line-height: 1;
+
+.jc-d-fallback {
+  color: var(--ui-color-text-weak);
+  font-size: 24rpx;
 }
+
 .jc-d-desc {
-  margin-top: 24rpx;
-  font-size: 30rpx;
-  line-height: 1.7;
-  color: #2B3544;
+  margin-top: 22rpx;
+  color: var(--ui-color-text);
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 44rpx;
   text-align: center;
+}
+
+.jc-d-extra {
+  margin-top: 8rpx;
+  color: var(--ui-color-text-secondary);
+  font-size: 24rpx;
+  line-height: 40rpx;
+  text-align: center;
+}
+
+.jc-d-unlocked {
+  margin-top: 16rpx;
+  color: var(--ui-color-text-weak);
+  font-size: 21rpx;
+  line-height: 32rpx;
+  text-align: center;
+}
+
+.welcome-actions {
+  margin-top: 24rpx;
+}
+
+.btn-primary {
+  display: flex;
+  height: 80rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ui-radius-pill);
+  color: var(--ui-color-on-strong);
+  background: var(--ui-color-green);
+  box-shadow: 0 8rpx 20rpx rgba(98, 132, 78, 0.17);
+  font-size: 27rpx;
   font-weight: 600;
 }
-.jc-d-extra {
-  margin-top: 10rpx;
-  font-size: 26rpx;
-  line-height: 1.8;
-  color: #6B7388;
-  text-align: center;
+
+.btn-primary-hover {
+  opacity: 0.88;
+  transform: scale(0.995);
 }
-.jc-d-unlocked {
-  margin-top: 18rpx;
-  font-size: 22rpx;
-  color: #8A93A5;
-  text-align: center;
+
+.muted {
+  color: var(--ui-color-text-weak);
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding-right: 22rpx;
+    padding-left: 22rpx;
+  }
+
+  .stops-card {
+    padding-right: 28rpx;
+    padding-left: 28rpx;
+  }
+
+  .jc-section {
+    padding-right: 22rpx;
+    padding-left: 22rpx;
+  }
+
+  .jc-cover {
+    height: 210rpx;
+  }
 }

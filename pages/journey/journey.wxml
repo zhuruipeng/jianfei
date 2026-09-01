@@ -34,7 +34,8 @@
   </view>
 
   <view class="tip-card">
-    <text>{{tipText}}</text>
+    <view class="tip-label">下一站</view>
+    <text class="tip-text">{{tipText}}</text>
   </view>
 
   <!-- V12.1：我的旅程卡（网格 2列，未解锁显示轮廓 + ?） -->
@@ -57,10 +58,13 @@
               <image class="jc-cover-img" src="{{c.asset.src}}" mode="aspectFit"></image>
             </block>
             <block wx:else>
-              <text class="jc-cover-emoji {{c.unlocked ? 'on' : 'off'}}">{{c.emoji}}</text>
+              <view class="jc-lock-shape" aria-hidden="true">
+                <view class="jc-lock-arc"></view>
+                <view class="jc-lock-body"><text>?</text></view>
+              </view>
             </block>
             <view wx:if="{{!c.unlocked}}" class="jc-cover-mask">
-              <text class="jc-q">?</text>
+              <text class="jc-lock-hint">继续旅程解锁</text>
             </view>
           </view>
           <view class="jc-foot">
@@ -86,7 +90,7 @@
         <image class="jc-d-img" src="{{cardDetail.asset.src}}" mode="widthFix"></image>
       </block>
       <block wx:else>
-        <text class="jc-d-emoji">{{cardDetail.asset.emoji}}</text>
+        <text class="jc-d-fallback">旅程插画准备中</text>
       </block>
     </view>
     <view class="jc-d-desc">{{cardDetail.description}}</view>

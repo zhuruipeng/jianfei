@@ -1,7 +1,7 @@
 {
   "navigationBarTitleText": "旅程",
-  "navigationBarBackgroundColor": "#F3FBFB",
+  "navigationBarBackgroundColor": "#F7F4EA",
   "navigationBarTextStyle": "black",
-  "backgroundColor": "#F3FBFB",
+  "backgroundColor": "#F7F4EA",
   "usingComponents": {}
 }

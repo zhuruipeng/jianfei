@@ -10,10 +10,5 @@ card_day21.webp  Day 21 星光营地
 card_day28.webp  Day 28 山顶
 ```
 
-当前 `utils/companionAssets.ts` 中 `JOURNEY_CARDS_HAVE_ASSETS = false`，
-代码自动降级到每个卡的 emoji 占位（🌱 / 🌲 / 💧 / 🌙 / ⛰️）。
-等素材就位后：
-
-1. 把 5 张图放进本目录；
-2. 打开 `utils/companionAssets.ts`，把 `JOURNEY_CARDS_HAVE_ASSETS` 改为 `true`；
-3. 如需改后缀，同步把 `JOURNEY_CARD_EXT = 'webp'` 改为对应后缀。
+5 张 UI 2.0 WebP 已接入，`utils/companionAssets.ts` 通过统一映射加载这些文件。
+未解锁卡不会请求不存在的图片，也不会提前展示正式插画。
