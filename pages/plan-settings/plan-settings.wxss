@@ -235,6 +235,28 @@
   line-height: 1;
 }
 
+.reset-section {
+  padding-top: 24rpx;
+  padding-bottom: 14rpx;
+}
+
+.reset-title {
+  margin-bottom: 6rpx;
+  color: var(--ui-color-danger);
+  font-size: var(--ui-font-size-label);
+  letter-spacing: 2rpx;
+}
+
+.reset-action-row .action-label,
+.reset-action-row .action-arrow {
+  color: var(--ui-color-danger);
+}
+
+.action-row-disabled {
+  opacity: 0.48;
+  pointer-events: none;
+}
+
 .err-msg {
   margin-top: 22rpx;
   padding: 18rpx 22rpx;

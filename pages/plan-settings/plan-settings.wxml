@@ -110,6 +110,24 @@
     </view>
 
     <!-- 错误提示 -->
-    <view wx:if="{{errorMsg}}" class="err-msg">{{errorMsg}}</view>
   </block>
+
+  <!-- 全量重置在有无当前计划时都可用，且与“结束计划”明确分开。 -->
+  <view class="section reset-section">
+    <view class="section-title reset-title">清除资料</view>
+    <view
+      class="action-row reset-action-row {{isResetting ? 'action-row-disabled' : ''}}"
+      bindtap="onResetAllData"
+      hover-class="action-row-hover"
+    >
+      <view class="action-main">
+        <view class="action-label">删除所有资料并重新开始</view>
+        <view class="action-sub muted">清除本机记录、照片、计划、奖励和花园数据</view>
+      </view>
+      <view class="action-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view wx:if="{{errorMsg}}" class="err-msg">{{errorMsg}}</view>
 </view>

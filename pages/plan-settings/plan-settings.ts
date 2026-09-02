@@ -13,6 +13,7 @@ import {
   UI_MSG,
 } from '../../types/index';
 import * as planService from '../../services/planService';
+import * as userDataService from '../../services/userDataService';
 import {
   getTodayString,
   formatDateCN,
@@ -41,6 +42,7 @@ interface PlanSettingsPageData {
   goalsChanged: boolean;     // pending 与当前 plan 目标是否不一致
 
   errorMsg: string;
+  isResetting: boolean;
 }
 
 Page({
@@ -59,6 +61,7 @@ Page({
     goalsChanged: false,
 
     errorMsg: '',
+    isResetting: false,
   } as PlanSettingsPageData,
 
   onLoad() {
@@ -199,6 +202,56 @@ Page({
       url: '/pages/plan-setup/plan-setup',
       fail: () => {
         this.setData({ errorMsg: '暂时打不开，请稍后再试。' });
+      },
+    });
+  },
+
+  onResetAllData() {
+    if ((this.data as PlanSettingsPageData).isResetting) return;
+    wx.showModal({
+      title: '删除所有资料？',
+      content: '这会删除此设备上的饮食记录和照片、体重、计划、轻能量、奖励、花园与旅程资料。\n\n删除后无法恢复。',
+      confirmText: '继续删除',
+      cancelText: '取消',
+      confirmColor: '#C65F55',
+      success: (first) => {
+        if (!first.confirm) return;
+        wx.showModal({
+          title: '最后确认',
+          content: '确认删除全部本机资料，并回到首次设置吗？',
+          confirmText: '确认删除',
+          cancelText: '保留资料',
+          confirmColor: '#C65F55',
+          success: (second) => {
+            if (!second.confirm) return;
+            this.setData({ isResetting: true, errorMsg: '' });
+            const wxApi = wx as any;
+            wxApi.showLoading({ title: '正在重置…', mask: true });
+            userDataService.deleteAllLocalUserData((result) => {
+              try { wxApi.hideLoading(); } catch { /* ignore */ }
+              if (!result.ok) {
+                console.error('[plan-settings] deleteAllLocalUserData failed', result.message);
+                this.setData({
+                  isResetting: false,
+                  errorMsg: '资料删除失败，请稍后再试。',
+                });
+                return;
+              }
+              if (result.failedSavedFiles > 0) {
+                console.warn('[plan-settings] some saved files could not be removed', result.failedSavedFiles);
+              }
+              wxApi.reLaunch({
+                url: '/pages/onboarding/onboarding',
+                fail: () => {
+                  this.setData({
+                    isResetting: false,
+                    errorMsg: '资料已删除，请重新打开小程序开始设置。',
+                  });
+                },
+              });
+            });
+          },
+        });
       },
     });
   },
