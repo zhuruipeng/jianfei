@@ -1,5 +1,8 @@
 {
   "navigationBarTitleText": "开始计划",
+  "navigationBarBackgroundColor": "#F7F4EA",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F7F4EA",
   "navigationStyle": "default",
   "disableScroll": false
 }

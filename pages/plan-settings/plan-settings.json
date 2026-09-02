@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "我的计划",
+  "navigationBarBackgroundColor": "#F7F4EA",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#F7F4EA",
   "navigationStyle": "default"
 }

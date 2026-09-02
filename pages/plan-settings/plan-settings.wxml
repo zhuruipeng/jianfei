@@ -7,7 +7,9 @@
   <!-- 无 plan 状态 -->
   <block wx:if="{{!hasPlan}}">
     <view class="empty-hero">
-      <view class="brand">轻步 🟟</view>
+      <view class="hero-leaf hero-leaf-a"></view>
+      <view class="hero-leaf hero-leaf-b"></view>
+      <view class="brand">小步轻计划</view>
       <view class="empty-title">还没有计划</view>
       <view class="empty-sub muted">想给自己定一个小目标吗？</view>
       <view
@@ -23,7 +25,9 @@
   <!-- 有 plan 状态 -->
   <block wx:else>
     <view class="hero">
-      <view class="brand">轻步 🟟</view>
+      <view class="hero-leaf hero-leaf-a"></view>
+      <view class="hero-leaf hero-leaf-b"></view>
+      <view class="brand">小步轻计划</view>
       <view class="title">{{planTitle}}</view>
       <view class="subtitle muted">{{planStartDateText}} · 第{{planDay}}天 / {{plan.durationDays}}天</view>
     </view>
@@ -62,7 +66,10 @@
       </view>
     </view>
 
-    <view class="hint muted">修改目标只影响今天及以后，已经完成的历史记录不会变。</view>
+    <view class="hint muted">
+      <view class="hint-mark"></view>
+      <text>修改目标只影响今天及以后，已经完成的历史记录不会变。</text>
+    </view>
 
     <!-- 保存按钮 -->
     <view wx:if="{{goalsChanged}}" class="save-bar">

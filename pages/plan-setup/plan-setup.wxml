@@ -5,11 +5,11 @@
 <view class="psp">
   <!-- Hero -->
   <view class="hero">
-    <view class="brand">轻步 🟟</view>
+    <view class="hero-leaf hero-leaf-a"></view>
+    <view class="hero-leaf hero-leaf-b"></view>
+    <view class="brand">小步轻计划</view>
     <view class="title">开始我的轻步计划</view>
-    <view class="subtitle">不用一下改变很多。</view>
-    <view class="subtitle">先给自己28天，</view>
-    <view class="subtitle">每天完成一点点就够了。</view>
+    <view class="subtitle">不用一下改变很多。先给自己一段时间，每天完成一点点就够了。</view>
   </view>
 
   <!-- 计划周期 -->
